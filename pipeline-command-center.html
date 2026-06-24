@@ -570,6 +570,33 @@
   .email-copy{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 11px;border-radius:8px}
   .email-copy:hover{filter:brightness(.97)}
   .email-body{font-family:inherit;font-size:12.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;padding:14px;margin:0}
+  /* Deservedness glass-box */
+  .dvd-box{margin-top:12px;background:var(--surface-2);border:1px solid var(--hair);border-radius:var(--r-m);padding:12px 13px}
+  .dvd-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--text-2);font-weight:600;margin-bottom:10px;flex-wrap:wrap}
+  .dvd-sug{color:var(--text-3);font-weight:600}
+  .dvd-apply{font-size:11px;font-weight:700;color:#fff;background:var(--accent);padding:3px 10px;border-radius:7px;margin-left:4px}
+  .dvd-apply:hover{filter:brightness(1.06)}
+  .dvd-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  @media(max-width:560px){.dvd-grid{grid-template-columns:1fr}}
+  .dvd-chip{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-2);background:var(--fill);border:1px solid transparent;border-radius:9px;padding:8px 10px;cursor:pointer;transition:.14s var(--ease);user-select:none}
+  .dvd-chip[data-auto]{cursor:default}
+  .dvd-chip:hover[data-dvd]{border-color:var(--hair-strong,var(--hair))}
+  .dvd-chip .dvd-tick{display:flex;align-items:center;justify-content:center;width:17px;height:17px;flex-shrink:0;border-radius:5px;background:var(--fill-2);color:transparent;transition:.14s var(--ease)}
+  .dvd-chip .dvd-tick svg{width:12px;height:12px}
+  .dvd-chip.on{background:var(--green-soft,rgba(52,168,83,.1));color:var(--text)}
+  .dvd-chip.on .dvd-tick{background:var(--green);color:#fff}
+  .dvd-auto{margin-left:auto;font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-3);background:var(--fill-2);padding:2px 6px;border-radius:5px}
+  /* AI artifacts */
+  .ai-art{background:var(--surface-2);border:1px solid var(--hair);border-radius:var(--r-m);padding:12px 13px;margin-bottom:10px}
+  .ai-art-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .ai-art-t{font-size:12.5px;font-weight:650;color:var(--text)}
+  .ai-art-actions{display:flex;gap:6px;flex-shrink:0}
+  .ai-gen{font-size:11.5px;font-weight:650;color:var(--indigo,#6366f1);background:var(--indigo-soft,rgba(99,102,241,.12));padding:4px 11px;border-radius:8px}
+  .ai-gen:hover{filter:brightness(.98)}
+  .ai-gen:disabled{opacity:.7;cursor:default}
+  .ai-copy{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 11px;border-radius:8px}
+  .ai-art-sub{font-size:11.5px;color:var(--text-3);margin-top:3px}
+  .ai-art-body{font-family:inherit;font-size:12.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;margin:10px 0 0;padding-top:10px;border-top:1px solid var(--hair)}
   .cmd-scrim{position:fixed;inset:0;background:rgba(20,15,40,.34);backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:.2s var(--ease);z-index:120;display:flex;justify-content:center;align-items:flex-start;padding-top:13vh}
   .cmd-scrim.open{opacity:1;pointer-events:auto}
   .cmd-bar{width:min(620px,92%);background:rgba(252,251,254,.97);backdrop-filter:blur(40px) saturate(1.4);-webkit-backdrop-filter:blur(40px) saturate(1.4);border-radius:20px;box-shadow:var(--shadow-l);border:1px solid var(--hair);overflow:hidden;transform:translateY(-10px) scale(.98);transition:.2s var(--ease)}
@@ -752,7 +779,8 @@ const SYNC_DOC_ID = 'state';
 /* Optional: paste a Cloudflare Worker URL here to enable true Claude-AI understanding of your
    plain-English updates (deep parsing + draft business case + next-best-action). Until then,
    the built-in keyword parser handles updates. Setup guide is in the chat. */
-const AI_ENDPOINT = null;
+const AI_ENDPOINT = "https://helm-ai.cliftonmhlanga.workers.dev/";
+const AI_MODEL = "claude-haiku-4-5-20251001";
 
 /* ════════ CONFIG ════════ */
 const STATUSES={
@@ -894,6 +922,11 @@ function migrate(){
     if(d.likelihood==null) d.likelihood='';
     if(d.lossReason==null) d.lossReason='';
     if(d.lossDetail==null) d.lossDetail='';
+    if(d.slips==null) d.slips=0;
+    if(!Array.isArray(d.slipLog)) d.slipLog=[];
+    if(!d.dvd||typeof d.dvd!=='object') d.dvd={eb:false,problem:false,event:false,champion:false};
+    ['eb','problem','event','champion'].forEach(k=>{ if(d.dvd[k]==null) d.dvd[k]=false; });
+    if(!d.artifacts||typeof d.artifacts!=='object') d.artifacts={};
   });
 }
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify({deals,meta})); }catch(e){} pushRemote(); }
@@ -901,6 +934,10 @@ function saveD(d){ if(d) d.updated=Date.now(); save(); }
 
 /* ── live sync ── */
 let syncReady=false, syncDoc=null, applyingRemote=false, saveTimer=null;
+/* Each browser/tab gets a stable id so we can recognise — and ignore — the echo of our OWN writes.
+   Without this, Firestore replays every write back to us and replaces the whole deals array,
+   which wiped in-progress edits and brought deleted/renamed deals back to life. */
+const CLIENT_ID=(Math.random().toString(36).slice(2)+Date.now().toString(36));
 function initSync(){
   if(!FIREBASE_CONFIG || !window.firebase){ updateSyncBadge(false); return; }
   try{
@@ -908,7 +945,9 @@ function initSync(){
     syncDoc=firebase.firestore().collection('pipeline').doc(SYNC_DOC_ID);
     syncDoc.onSnapshot(snap=>{
       if(!snap.exists){ pushRemote(true); return; }
+      if(snap.metadata&&snap.metadata.hasPendingWrites) return;   // our own write, not yet confirmed by the server — ignore the optimistic echo
       const data=snap.data(); if(!data||!data.payload) return;
+      if(data.writer===CLIENT_ID) return;                         // our own confirmed write — we already hold this state; never overwrite local edits with it
       try{
         const parsed=JSON.parse(data.payload);
         applyingRemote=true;
@@ -927,7 +966,7 @@ function initSync(){
 function pushRemote(force){
   if(!syncReady||!syncDoc||(applyingRemote&&!force)) return;
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{ syncDoc.set({payload:JSON.stringify({deals,meta}),updated:Date.now()}).catch(()=>{}); },400);
+  saveTimer=setTimeout(()=>{ syncDoc.set({payload:JSON.stringify({deals,meta}),updated:Date.now(),writer:CLIENT_ID}).catch(()=>{}); },400);
 }
 function updateSyncBadge(on){ const b=$('#syncBadge'); if(!b)return; b.style.display=FIREBASE_CONFIG?'':'none'; b.textContent=on?'● Live':'○ Offline'; b.style.color=on?'var(--green)':'var(--text-3)'; }
 
@@ -1009,6 +1048,74 @@ function fmtFull(ts){ const d=new Date(ts); return d.getDate()+' '+MONTHS[d.getM
 function fmtD(dt){ return MONTHS[dt.getMonth()]+' '+dt.getDate(); }
 function daysUntil(iso){ if(!iso)return 9999; const d=new Date(iso+'T00:00'); return Math.round((d-new Date(new Date().toDateString()))/864e5); }
 function addDays(iso,n){ const d=new Date((iso||today)+'T00:00'); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+/* The default recovery play — same multi-channel cadence the seeded accounts use. */
+const DEFAULT_SPRINT_GOAL='Multi-channel re-engagement: reconnect with the prior contact (or find a new one), then email → call → LinkedIn until we get a conversation.';
+const DEFAULT_SPRINT_STEPS=[
+  'Check if our prior contact is still there, and email them',
+  'Email other relevant people in the account (in case the champion left)',
+  'Call the account / prior contact',
+  'Connect + message key people on LinkedIn',
+  'Follow up with value until we get a reply'
+];
+/* Start a 2-week sprint and pre-fill the default goal + steps (only adds steps not already there). */
+function startSprint(d,goal){
+  d.sprint={goal:(goal&&goal.trim())||DEFAULT_SPRINT_GOAL,start:today,end:addDays(today,14)};
+  d.steps=d.steps||[];
+  DEFAULT_SPRINT_STEPS.forEach((t,i)=>{ if(!d.steps.some(s=>(s.text||'').trim().toLowerCase()===t.toLowerCase())) d.steps.push({text:t,done:false,due:addDays(today,[1,2,6,7,10][i]||7)}); });
+}
+/* ── Slip tracking: count when a close date moves to a LATER quarter ── */
+function recordSlip(d,oldDate,newDate){
+  if(!oldDate||!newDate) return;
+  const op=periodKey(oldDate), np=periodKey(newDate);
+  if(op&&np&&np>op){
+    d.slips=(d.slips||0)+1; d.slipLog=d.slipLog||[]; d.slipLog.push({from:op,to:np,ts:Date.now()});
+    d.comments=d.comments||[]; d.comments.push({id:uid(),author:'Helm',text:`Close date slipped ${periodShort(op)} → ${periodShort(np)} (slip #${d.slips}). A slipping date is the fastest tell of a soft forecast — re-check the compelling event.`,ts:Date.now()});
+  }
+}
+/* ── Deservedness glass-box: the 6 signals behind the score (4 you set, 2 auto-derived) ── */
+function dvdSignals(d){
+  d.dvd=d.dvd||{eb:false,problem:false,event:false,champion:false};
+  return [
+    {k:'eb',label:'Economic buyer engaged',on:!!d.dvd.eb,manual:true},
+    {k:'problem',label:'Quantified problem (with metrics)',on:!!d.dvd.problem,manual:true},
+    {k:'event',label:'Compelling event / decision date',on:!!d.dvd.event,manual:true},
+    {k:'multithread',label:'Multi-threaded (2+ stakeholders)',on:(d.people||[]).length>=2,manual:false},
+    {k:'champion',label:'Champion owns the business case',on:!!d.dvd.champion,manual:true},
+    {k:'stagefit',label:'Stage fit — not stalled',on:!needsAttention(d),manual:false},
+  ];
+}
+function dvdSuggested(d){ const s=dvdSignals(d); return Math.round(s.filter(i=>i.on).length/s.length*10); }
+function deservednessGlassBox(d){
+  const items=dvdSignals(d), met=items.filter(i=>i.on).length, sug=Math.round(met/items.length*10), match=sug===d.deserve;
+  const chips=items.map(i=>`<div class="dvd-chip ${i.on?'on':''}" ${i.manual?`data-dvd="${i.k}"`:'data-auto="1"'} title="${i.manual?'Click to toggle':'Derived automatically from the deal'}"><span class="dvd-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>${i.label}</span>${i.manual?'':'<span class="dvd-auto">auto</span>'}</div>`).join('');
+  return `<div class="dvd-box"><div class="dvd-head"><span><b>${met}/6</b> deservedness signals present</span><span class="dvd-sug">${match?'✓ matches your score':`suggests ${sug}/10 <button class="dvd-apply" id="dvdApply" data-s="${sug}">apply</button>`}</span></div><div class="dvd-grid">${chips}</div></div>`;
+}
+/* ── AI deal artifacts (Fluint-style) — drafts built from the one deal object ── */
+function dealContext(d){
+  const ppl=(d.people||[]).map(p=>`${p.name||'?'} (${p.role||'?'}, ${p.sent||'neutral'})`).join('; ')||'none mapped';
+  return `Account: ${d.name||'?'}\nDeal value: ${money(aud(d))} ARR\nProduct: ${d.type||'CPQ'} · ${d.users||'?'} users · CRM ${d.crm||'?'}\nStatus: ${STATUSES[d.status]?STATUSES[d.status].label:d.status}\nHeadline: ${d.oneLiner||'—'}\nWhy now / compelling event: ${d.whyNow||'—'}\nCost of inaction: ${d.costInaction||'—'}\nRisks / threats: ${d.threats||'—'}\nStakeholders: ${ppl}\nDeservedness signals present: ${dvdSignals(d).filter(i=>i.on).map(i=>i.label).join(', ')||'none'}\nNotes: ${(d.notes||'').slice(0,700)}\nLatest update: ${((d.comments||[]).filter(c=>c.author!=='Helm').slice(-1)[0]||{}).text||'—'}`;
+}
+async function genArtifact(d,key,btn){
+  if(!AI_ON())return;
+  const label=btn.textContent; btn.textContent='✨ Writing…'; btn.disabled=true;
+  let sys;
+  if(key==='nba') sys='You are an elite B2B sales coach for DealHub CPQ (AU/NZ). From the deal below, name the SINGLE highest-leverage next action, then draft it (the exact email, or the precise question to ask, or the multithread move). Be specific to THIS deal and its gaps. Start with the action as one plain-text line, then the draft underneath. No preamble, no markdown headers. Invent no facts or pricing.';
+  else if(key==='case') sys='You are a Fluint-style business-case writer. Write a crisp one-page business case the CHAMPION can use to sell this internally, in their own voice. Sections (plain text, short): The problem (with any metrics given), Impact / cost of inaction, Why now, The recommendation, Expected outcome. Buyer-credible, no fluff, no pricing unless given. Keep under ~250 words.';
+  else sys='You are writing a one-page executive brief the champion will forward to their CFO. Ruthlessly concise, scannable, under 180 words. Lead with the business outcome. Cover: the problem, the cost of doing nothing, the proposed move, and the expected return. Plain text. Invent no figures.';
+  const out=await aiText(sys,dealContext(d),900);
+  btn.disabled=false; btn.textContent=label;
+  if(out){ d.artifacts=d.artifacts||{}; d.artifacts[key]=out; saveD(d); renderPanel(); toast('✨ Draft ready'); }
+  else toast('AI unavailable — try again');
+}
+function aiArtifactsHTML(d){
+  const a=d.artifacts||{};
+  const box=(key,title,sub)=>`<div class="ai-art"><div class="ai-art-h"><span class="ai-art-t">${title}</span><span class="ai-art-actions"><button class="ai-gen" data-k="${key}">${a[key]?'Regenerate':'Generate'}</button>${a[key]?`<button class="ai-copy" data-k="${key}">Copy</button>`:''}</span></div><div class="ai-art-sub">${sub}</div>${a[key]?`<pre class="ai-art-body">${esc(a[key])}</pre>`:''}</div>`;
+  return `<div class="sec"><div class="sec-title">✨ AI copilot <span class="st-hint">drafts built from this deal — for you and your champion</span></div>
+    ${box('nba','Next best action','The single highest-leverage move right now — with the draft to do it.')}
+    ${box('case','1-page business case','Buyer-ready, in your champion&#39;s voice — problem, impact, why now, recommendation.')}
+    ${box('onepager','Forward-to-CFO one-pager','A tight exec brief your champion can send up the chain.')}
+  </div>`;
+}
 function checkSprints(){ if(RO)return; let changed=false;
   deals.forEach(d=>{ if(d.sprint&&d.sprint.end&&d.sprint.end<today){
     if(d.status==='recovery'){ d.status='dormant'; d.retryDate=addDays(today,90); d.comments=d.comments||[];
@@ -1039,7 +1146,9 @@ function buildBrief(){
   const changed=deals.filter(d=>d.updated&&(Date.now()-d.updated)<7*864e5).sort((a,b)=>b.updated-a.updated);
   t+=`CHANGES THIS WEEK (${changed.length})\n${changed.map(d=>`- ${d.name} — updated ${relTime(d.updated)}${trend(d)?` · health ${trend(d)>0?'+':''}${trend(d)}`:''}`).join('\n')||'- none'}\n\n`;
   const attn=open.map(d=>({d,a:needsAttention(d)})).filter(x=>x.a);
-  t+=`NEEDS ATTENTION (${attn.length})\n${attn.map(x=>`- ${x.d.name}: ${x.a}`).join('\n')||'- none'}\n`;
+  t+=`NEEDS ATTENTION (${attn.length})\n${attn.map(x=>`- ${x.d.name}: ${x.a}`).join('\n')||'- none'}\n\n`;
+  const slipped=open.filter(d=>d.slips>0).sort((a,b)=>b.slips-a.slips);
+  t+=`SLIPPING (${slipped.length})\n${slipped.map(d=>`- ${d.name} — slipped ${d.slips}× · now ${quarterOf(d)?periodShort(quarterOf(d)):'unscheduled'}`).join('\n')||'- none'}\n`;
   return t;
 }
 
@@ -1056,18 +1165,21 @@ function renderActive(){ const a=$('#seg button.active').dataset.view; if(a==='d
 /* ════════ PLAN (week / sprint) ════════ */
 function renderPlan(){
   const open=OPEN();
-  $('#planToggle').innerHTML=`<div class="seg" style="width:fit-content">
+  $('#planToggle').innerHTML=`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><div class="seg" style="width:fit-content">
     <button data-h="7" class="${planHorizon===7?'active':''}">This week</button>
-    <button data-h="14" class="${planHorizon===14?'active':''}">Next 2 weeks</button></div>`;
+    <button data-h="14" class="${planHorizon===14?'active':''}">Next 2 weeks</button></div>
+    <span style="font-size:12.5px;color:var(--text-3);font-weight:500">Filters your planned actions to everything due in the <b style="color:var(--text-2)">${planHorizon===7?'next 7 days':'next 14 days'}</b> — switch to look further ahead.</span></div>`;
   $('#planToggle').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ planHorizon=+b.dataset.h; renderPlan(); }));
   let html='';
   if(!meta.okrs) meta.okrs={};
   const period=currentPeriod, okrs=meta.okrs[period]||[];
   const wonQ=deals.filter(d=>d.status==='won'&&quarterOf(d)===period), wonRev=wonQ.reduce((s,d)=>s+aud(d),0);
-  html+=`<div class="plan-card okr-card"><div class="plan-card-t">🎯 Objectives · ${periodLabel(period)}</div>
+  const okDone=okrs.filter(o=>o.target&&(o.current||0)>=o.target).length;
+  const okPct=okrs.length?Math.round(okrs.reduce((s,o)=>s+(o.target?Math.min(1,(o.current||0)/o.target):0),0)/okrs.length*100):0;
+  html+=`<div class="plan-card okr-card"><div class="plan-card-t">🎯 Objectives · ${periodLabel(period)}${okrs.length?`<span style="margin-left:10px;font-size:12px;font-weight:600;color:${okPct>=100?'var(--green)':'var(--text-3)'}">${okDone}/${okrs.length} hit · ${okPct}% there</span>`:''}</div>
     <div class="okr-actuals">Closed-won so far this quarter: <b>${wonQ.length}</b> ${wonQ.length===1?'deal':'deals'} · <b>${money(wonRev)}</b></div>
     ${okrs.map((o,i)=>{ const pct=o.target?Math.min(100,Math.round((o.current/o.target)*100)):0, done=o.target&&o.current>=o.target;
-      return `<div class="okr-row" data-i="${i}"><div class="okr-main"><input class="okr-text" value="${esc(o.text)}" data-act="otext" placeholder="Objective…"><div class="okr-track"><div class="okr-fill ${done?'done':''}" style="width:${pct}%"></div></div></div><div class="okr-prog"><button class="okr-btn" data-act="ominus">−</button><span class="okr-num ${done?'done':''}">${o.current}/${o.target}</span><button class="okr-btn" data-act="oplus">+</button></div><button class="okr-del" data-act="odel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`; }).join('')||'<div class="plan-empty">No objectives set for this quarter yet.</div>'}
+      return `<div class="okr-row" data-i="${i}"><div class="okr-main"><input class="okr-text" value="${esc(o.text)}" data-act="otext" placeholder="Objective…"><div class="okr-track"><div class="okr-fill ${done?'done':''}" style="width:${pct}%"></div></div></div><div class="okr-prog"><button class="okr-btn" data-act="ominus">−</button><span class="okr-num ${done?'done':''}">${o.current}/${o.target}</span><button class="okr-btn" data-act="oplus">+</button></div><button class="okr-del" data-act="odel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`; }).join('')||'<div class="plan-empty">No objectives yet — set what winning this quarter looks like (e.g. 3 displacement wins, reactivate 2 dormant accounts). Each one tracks with the −/+ buttons, and closed-won shows above so you always see actuals vs goal.</div>'}
     <div class="okr-add"><input id="okrText" placeholder="New objective — e.g. 3 displacement wins, reactivate 2 dormant accounts"><input id="okrTarget" inputmode="numeric" placeholder="Target" style="width:74px"><button id="okrAdd" class="okr-addbtn">Add</button></div>
   </div>`;
   const sp=deals.filter(d=>d.sprint);
@@ -1202,6 +1314,10 @@ function renderSummary(){
 
 /* ════════ FOCUS + ACTIVITY ════════ */
 function renderFocus(){
+  const el=$('#focus');
+  /* "Focus this week" is a near-term, this-week view — only show it on the current quarter or All,
+     not while browsing a future quarter / Unscheduled / Recovery (those have their own context). */
+  if(!(activeFilter==='all'||activeFilter===currentPeriod)){ el.innerHTML=''; return; }
   const seen=new Set(), items=[];
   OPEN().forEach(d=>{ if(d.focus){ const ts=topStep(d); items.push({d,kind:'flag',label:d.name,sub:ts?ts.text:(STATUSES[d.status].label),sort:-10}); seen.add(d.id); } });
   OPEN().forEach(d=>{ (d.steps||[]).forEach(s=>{ if(!s.done&&s.due&&daysUntil(s.due)<=7&&!seen.has(d.id)){ items.push({d,kind:'task',when:daysUntil(s.due),label:s.text,sub:d.name,sort:daysUntil(s.due)}); seen.add(d.id);} }); });
@@ -1210,7 +1326,7 @@ function renderFocus(){
   deals.forEach(d=>{ if(d.status==='dormant'&&d.retryDate&&daysUntil(d.retryDate)<=14&&!seen.has(d.id)){ items.push({d,kind:'retry',label:'Retry '+d.name,sub:'Dormant since the last sprint — worth another go?',sort:daysUntil(d.retryDate)}); seen.add(d.id);} });
   OPEN().forEach(d=>{ if(trend(d)<=-8&&!seen.has(d.id)){ items.push({d,kind:'cool',label:d.name+' is cooling off',sub:'Health '+health(d)+'% · down '+Math.abs(trend(d))+' pts',sort:50}); seen.add(d.id);} });
   items.sort((a,b)=>a.sort-b.sort);
-  const top=items.slice(0,5), el=$('#focus');
+  const top=items.slice(0,5);
   if(!top.length){ el.innerHTML=''; return; }
   el.innerHTML=`<div class="focus"><div class="focus-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Focus this week</div><div class="focus-items">${top.map(focusItem).join('')}</div></div>`;
   el.querySelectorAll('.focus-item').forEach(n=>n.addEventListener('click',()=>openDeal(n.dataset.id)));
@@ -1318,7 +1434,7 @@ function cardHTML(d){
     <div class="dc-top">
       <span class="dc-logo">${logoHTML(d,34)}</span>
       <div class="dc-id">
-        <div class="dc-name"><span class="dc-sdot" style="background:${col}"></span>${d.focus?'<span class="dc-star"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>':''}${esc(d.name)||'Untitled'}${open?`<span class="cat-tag ${cat}">${CAT_LABEL[cat]}</span>`:''}${q?`<span class="cat-tag pipe" style="background:var(--fill);color:var(--text-3)" title="${periodLabel(q)}">${periodShort(q)}</span>`:''}${d.likelihood?`<span class="cat-tag" style="color:${LIKE_COLOR[d.likelihood]};background:var(--fill)" title="Revival likelihood">${d.likelihood}</span>`:''}${attn?`<span class="dc-attn" title="${esc(attn)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>`:''}</div>
+        <div class="dc-name"><span class="dc-sdot" style="background:${col}"></span>${d.focus?'<span class="dc-star"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>':''}${esc(d.name)||'Untitled'}${open?`<span class="cat-tag ${cat}">${CAT_LABEL[cat]}</span>`:''}${q?`<span class="cat-tag pipe" style="background:var(--fill);color:var(--text-3)" title="${periodLabel(q)}">${periodShort(q)}</span>`:''}${d.likelihood?`<span class="cat-tag" style="color:${LIKE_COLOR[d.likelihood]};background:var(--fill)" title="Revival likelihood">${d.likelihood}</span>`:''}${d.slips?`<span class="cat-tag" style="color:var(--orange);background:var(--fill)" title="Close date has slipped ${d.slips}× to a later quarter">⤳ ${d.slips}× slip</span>`:''}${attn?`<span class="dc-attn" title="${esc(attn)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>`:''}</div>
         <div class="dc-meta">${esc(metaBits)||'—'}</div>
       </div>
       <div class="dc-money"><div class="dc-arr">${money(aud(d))}</div>${showBoth()?`<div class="dc-arr2">${secondary(aud(d))}</div>`:''}</div>
@@ -1506,7 +1622,7 @@ function renderPanel(){
     } else if(d.status==='dormant'){
       sprintHTML=`<div class="sec"><div class="sec-title">Dormant</div><div class="sprint-box dormant"><div class="sprint-dates">Parked — not counted in the pipeline.${d.retryDate?` Helm will remind you to retry around <b>${fmtShort(d.retryDate)}</b>.`:''}</div><div class="sprint-actions"><button class="sprint-start" id="sprintRetry">Start a fresh 2-week recovery sprint</button></div></div></div>`;
     } else {
-      sprintHTML=`<div class="sec"><div class="sec-title">Recovery sprint</div><div class="sprint-box"><div class="sprint-dates">Run a focused 2-week push. If it doesn't move, Helm parks it as <b>Dormant</b> and reminds you to retry in 90 days.</div><input class="sprint-goal-input" id="sprintGoal" placeholder="Sprint goal — e.g. Re-engage Tammy and confirm the problem is still live"><button class="sprint-start" id="sprintStart">Start 2-week sprint</button></div></div>`;
+      sprintHTML=`<div class="sec"><div class="sec-title">Recovery sprint</div><div class="sprint-box"><div class="sprint-dates">Run a focused 2-week push. Starting one drops in the default multi-channel play (email → call → LinkedIn) and 5 ready next steps — leave the goal blank to use it, or write your own. If it doesn't move, Helm parks it as <b>Dormant</b> and reminds you to retry in 90 days.</div><input class="sprint-goal-input" id="sprintGoal" placeholder="Custom goal (optional) — defaults to the multi-channel re-engagement play"><button class="sprint-start" id="sprintStart">Start 2-week sprint + fill the plan</button></div></div>`;
     }
   }
   let lossHTML='';
@@ -1536,6 +1652,7 @@ function renderPanel(){
       ${ageDays(d)!=null?`<div class="vital"><div class="vk">Days in stage</div><div class="vv">${ageDays(d)}<span style="font-size:11px;color:var(--text-3);font-weight:600">d</span></div></div>`:''}
       ${d.closeDate?`<div class="vital"><div class="vk">Days to close</div><div class="vv">${daysUntil(d.closeDate)>=0?daysUntil(d.closeDate)+'<span style="font-size:11px;color:var(--text-3);font-weight:600">d</span>':'<span style="color:var(--orange)">overdue</span>'}</div></div>`:''}
       <div class="vital"><div class="vk">Threads</div><div class="vv">${(d.people||[]).length}${(d.people||[]).length<2?'<span style="font-size:11px;color:var(--orange);font-weight:600">⚠</span>':''}</div></div>
+      ${d.slips?`<div class="vital"><div class="vk">Slips</div><div class="vv" style="color:var(--orange)">${d.slips}×</div></div>`:''}
       ${d.updated?`<div class="vital"><div class="vk">Last touch</div><div class="vv" style="font-size:13px">${relTime(d.updated)}</div></div>`:''}
     </div>
 
@@ -1552,11 +1669,11 @@ function renderPanel(){
       ${(d.comments&&d.comments.length)?`<button class="sf-copy keep-enabled" id="sfCopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy latest update for Salesforce (with today's date)</button>`:''}
       <div class="cmt-compose"><input class="cmt-name keep-enabled" id="cmtName" placeholder="Your name" value="${esc(userName)}">
         <textarea class="cmt-input keep-enabled" id="cmtInput" rows="2" placeholder="Post an update — what's happening, the blocker, the risk, your next steps…"></textarea>
-        <div class="cmt-actions"><div class="cmt-left"><button class="cmt-mic keep-enabled" id="cmtMic" title="Dictate by voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button><label class="auto-toggle"><input type="checkbox" id="autoApply" class="keep-enabled" checked> Auto-fill from this update</label></div><button class="cmt-send keep-enabled" id="cmtSend">Post update</button></div>
+        <div class="cmt-actions"><div class="cmt-left"><button class="cmt-mic keep-enabled" id="cmtMic" title="Dictate by voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button><label class="auto-toggle"><input type="checkbox" id="autoApply" class="keep-enabled" checked> ${AI_ON()?'✨ AI auto-fill from this update':'Auto-fill from this update'}</label></div><button class="cmt-send keep-enabled" id="cmtSend">Post update</button></div>
       </div></div>
 
     ${d.revival?`<div class="sec"><div class="sec-title">Revival emails <span class="st-hint">drafted for you — copy &amp; send</span></div>
-      <div class="email-box"><div class="email-head">Re-engagement → ${esc(d.contact||'your contact')} <button class="email-copy" data-copy="re">Copy</button></div><pre class="email-body">${esc(d.revival.reEngage)}</pre></div>
+      <div class="email-box"><div class="email-head">Re-engagement → ${esc(d.contact||'your contact')} <span style="display:flex;gap:6px">${AI_ON()?`<button class="email-copy" id="aiSharpen" style="background:var(--indigo-soft,rgba(99,102,241,.12));color:var(--indigo,#6366f1)">✨ Sharpen with AI</button>`:''}<button class="email-copy" data-copy="re">Copy</button></span></div><pre class="email-body">${esc(d.revival.reEngage)}</pre></div>
       <div class="email-box"><div class="email-head">Coverage → people you didn't speak with <button class="email-copy" data-copy="cov">Copy</button></div><pre class="email-body">${esc(d.revival.coverage)}</pre></div>
     </div>`:''}
 
@@ -1569,6 +1686,7 @@ function renderPanel(){
         <div class="fw-meter"><div class="fw-meter-top"><span class="fw-meter-name">Belief <span class="hint">conviction</span></span><span class="fw-meter-val" id="beliefVal">${d.belief}/10</span></div><input type="range" min="0" max="10" step="1" value="${d.belief}" class="fw-slider" id="fBelief"></div>
         <div class="fw-meter"><div class="fw-meter-top"><span class="fw-meter-name">Proof <span class="hint">tick what's true</span></span><span class="fw-meter-val" id="proofVal">${proofScore(d)}/10</span></div><div class="fw-proofbar"><div class="f" id="proofFill" style="width:${proofScore(d)*10}%"></div></div><div class="proof-list" id="proofList">${proof}</div></div>
         <div class="fw-meter"><div class="fw-meter-top"><span class="fw-meter-name">Deservedness <span class="hint">forecast gate</span></span><span class="fw-meter-val" id="deserveVal">${d.deserve}/10</span></div><input type="range" min="0" max="10" step="1" value="${d.deserve}" class="fw-slider" id="fDeserve"></div>
+        ${deservednessGlassBox(d)}
         ${coach}
       </div></div>
 
@@ -1582,6 +1700,8 @@ function renderPanel(){
         <div class="field full"><label>Cost of inaction</label><textarea id="fCost" placeholder="What happens if they do nothing?">${esc(d.costInaction)}</textarea></div>
         <div class="field full"><label>Risks & threats</label><textarea id="fThreats" placeholder="What could kill this deal?">${esc(d.threats)}</textarea></div>
       </div></div>
+
+    ${AI_ON()?aiArtifactsHTML(d):''}
 
     <div class="sec"><div class="sec-title">Details</div>
       <div class="field-grid">
@@ -1604,7 +1724,10 @@ function renderPanel(){
   </div>`;
   if(RO) applyReadOnly(); else wirePanel(d);
   wireComments(d);
-  $('#panelBody').querySelectorAll('.email-copy').forEach(b=>b.addEventListener('click',async()=>{ const t=b.dataset.copy==='re'?d.revival.reEngage:d.revival.coverage; try{ await navigator.clipboard.writeText(t); toast('Email copied'); }catch(e){ toast('Copy failed'); } }));
+  $('#panelBody').querySelectorAll('.email-copy[data-copy]').forEach(b=>b.addEventListener('click',async()=>{ const t=b.dataset.copy==='re'?d.revival.reEngage:d.revival.coverage; try{ await navigator.clipboard.writeText(t); toast('Email copied'); }catch(e){ toast('Copy failed'); } }));
+  const sharpen=$('#aiSharpen'); if(sharpen) sharpen.addEventListener('click',async()=>{ sharpen.textContent='✨ Writing…'; sharpen.disabled=true; const out=await aiSharpenEmail(d); if(out){ d.revival.reEngage=out; saveD(d); renderPanel(); toast('✨ Email sharpened by AI'); } else { sharpen.textContent='✨ Sharpen with AI'; sharpen.disabled=false; toast('AI unavailable — try again'); } });
+  $('#panelBody').querySelectorAll('.ai-gen').forEach(b=>b.addEventListener('click',()=>genArtifact(d,b.dataset.k,b)));
+  $('#panelBody').querySelectorAll('.ai-art .ai-copy').forEach(b=>b.addEventListener('click',async()=>{ const t=(d.artifacts||{})[b.dataset.k]||''; try{ await navigator.clipboard.writeText(t); toast('Copied'); }catch(e){ toast('Copy failed'); } }));
 }
 function applyReadOnly(){
   const b=$('#panelBody');
@@ -1623,7 +1746,7 @@ function wirePanel(d){
   bind('fType','type'); bind('fLoc','location'); bind('fDomain','domain'); bind('fClose','closeLabel'); bind('fRisk','risk'); bind('fLast','lastActivity'); bind('fNotes','notes');
   bind('fWhy','whyNow'); bind('fCost','costInaction'); bind('fThreats','threats'); bind('fOneLiner','oneLiner');
   ['fWhy','fCost','fThreats','fNotes'].forEach(id=>{ const el=$('#'+id); if(el){autosize(el);el.addEventListener('input',()=>autosize(el));} });
-  $('#fCloseDate').addEventListener('input',e=>{ d.closeDate=e.target.value; saveD(d); renderDeals(); renderPanel(); });
+  $('#fCloseDate').addEventListener('change',e=>{ const old=d.closeDate; d.closeDate=e.target.value; recordSlip(d,old,e.target.value); saveD(d); renderDeals(); renderPanel(); });
 
   const arr=$('#fArr'),cur=$('#fCur'),audHint=$('#audHint');
   const refreshAud=()=>{ const line=(d.cur&&d.cur!=='AUD')?'≈ '+fmtA(aud(d))+' AUD':(showBoth()?secondary(aud(d)):''); audHint.style.display=line?'':'none'; audHint.textContent=line; };
@@ -1633,6 +1756,8 @@ function wirePanel(d){
   const bSl=$('#fBelief'),dSl=$('#fDeserve');
   bSl.addEventListener('input',()=>{ d.belief=+bSl.value; $('#beliefVal').textContent=d.belief+'/10'; saveD(d); renderGrade(d); renderDeals(); });
   dSl.addEventListener('input',()=>{ d.deserve=+dSl.value; $('#deserveVal').textContent=d.deserve+'/10'; saveD(d); renderGrade(d); renderDeals(); });
+  $('#panelBody').querySelectorAll('.dvd-chip[data-dvd]').forEach(c=>c.addEventListener('click',()=>{ const k=c.dataset.dvd; d.dvd=d.dvd||{}; d.dvd[k]=!d.dvd[k]; saveD(d); renderPanel(); }));
+  const dvdA=$('#dvdApply'); if(dvdA) dvdA.addEventListener('click',()=>{ d.deserve=+dvdA.dataset.s; saveD(d); renderPanel(); renderDeals(); toast('Deservedness set from the signals'); });
 
   $('#proofList').querySelectorAll('.proof-item').forEach(p=>p.addEventListener('click',()=>{ const i=+p.dataset.i; d.proof[i]=!d.proof[i]; p.classList.toggle('on',d.proof[i]); saveD(d); renderGrade(d); renderDeals(); }));
 
@@ -1646,8 +1771,8 @@ function wirePanel(d){
   const likeSel=$('#likeSel'); if(likeSel) likeSel.addEventListener('change',e=>{ d.likelihood=e.target.value; e.target.style.borderColor=d.likelihood?LIKE_COLOR[d.likelihood]:'transparent'; saveD(d); renderDeals(); });
   const lossSel=$('#lossSel'); if(lossSel) lossSel.addEventListener('change',e=>{ d.lossReason=e.target.value; saveD(d); renderDeals(); });
   const fld=$('#fLossDetail'); if(fld){ autosize(fld); fld.addEventListener('input',()=>{ d.lossDetail=fld.value; autosize(fld); saveD(d); }); }
-  const spStart=$('#sprintStart'); if(spStart) spStart.addEventListener('click',()=>{ d.sprint={goal:($('#sprintGoal')?.value||'').trim(),start:today,end:addDays(today,14)}; saveD(d); renderPanel(); renderDeals(); toast('2-week sprint started'); });
-  const spRetry=$('#sprintRetry'); if(spRetry) spRetry.addEventListener('click',()=>{ d.status='recovery'; d.retryDate=''; d.sprint={goal:'',start:today,end:addDays(today,14)}; saveD(d); paintStatusPill(d); renderPanel(); renderDeals(); toast('Fresh recovery sprint started'); });
+  const spStart=$('#sprintStart'); if(spStart) spStart.addEventListener('click',()=>{ startSprint(d,$('#sprintGoal')?.value); saveD(d); renderPanel(); renderDeals(); toast('2-week sprint started — plan filled in'); });
+  const spRetry=$('#sprintRetry'); if(spRetry) spRetry.addEventListener('click',()=>{ d.status='recovery'; d.retryDate=''; startSprint(d); saveD(d); paintStatusPill(d); renderPanel(); renderDeals(); toast('Fresh recovery sprint started — plan filled in'); });
   const spWin=$('#sprintWin'); if(spWin) spWin.addEventListener('click',()=>{ d.sprint=null; d.retryDate=''; if(d.status==='recovery'||d.status==='dormant')d.status='engaged'; saveD(d); paintStatusPill(d); renderGrade(d); renderPanel(); renderDeals(); toast('Back in the pipeline 🎉'); });
   const spFail=$('#sprintFail'); if(spFail) spFail.addEventListener('click',()=>{ d.sprint=null; d.status='dormant'; d.retryDate=addDays(today,90); saveD(d); paintStatusPill(d); renderPanel(); renderDeals(); toast('Parked as Dormant · retry reminder set for 90 days'); });
 
@@ -1676,11 +1801,13 @@ function wirePanel(d){
 function wireComments(d){
   const send=$('#cmtSend'), input=$('#cmtInput'), nameI=$('#cmtName'); if(!send)return;
   autosize(input); input.addEventListener('input',()=>autosize(input));
-  const doSend=()=>{ const t=input.value.trim(); if(!t)return; userName=(nameI.value.trim()||'Anon'); try{localStorage.setItem('pcc_user',userName);}catch(e){}
+  const doSend=async()=>{ const t=input.value.trim(); if(!t)return; userName=(nameI.value.trim()||'Anon'); try{localStorage.setItem('pcc_user',userName);}catch(e){}
+    const autoEl=$('#autoApply'); const doApply=autoEl?autoEl.checked:false;
     d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName,text:t,ts:Date.now()});
-    let summary='Update posted';
-    const auto=$('#autoApply'); if(auto&&auto.checked) summary=applyUpdate(d,t);
-    d.updated=Date.now(); save(); renderPanel(); renderDeals(); toast(summary); };
+    d.updated=Date.now(); save(); renderPanel(); renderDeals();
+    if(!doApply){ toast('Update posted'); return; }
+    if(AI_ON()){ toast('✨ AI reading your update…'); const s=await applyUpdateAI(d,t); save(); renderPanel(); renderDeals(); toast(s); }
+    else { const s=applyUpdate(d,t); save(); renderPanel(); renderDeals(); toast(s); } };
   send.addEventListener('click',doSend);
   input.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='Enter')doSend(); });
   const mic=$('#cmtMic');
@@ -1805,6 +1932,35 @@ function genRevival({person,when,topic,summary,firstOther,me}){
   return {reEngage,coverage};
 }
 async function aiAssist(payload){ if(!AI_ENDPOINT)return null; try{ const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); return await r.json(); }catch(e){ return null; } }
+const AI_ON=()=>!!AI_ENDPOINT;
+async function aiText(system,prompt,max_tokens){ const r=await aiAssist({system,prompt,model:AI_MODEL,max_tokens:max_tokens||800}); if(!r||!r.ok||!r.text) return null; return r.text.trim(); }
+async function aiJSON(system,prompt,max_tokens){
+  const t=await aiText(system,prompt,max_tokens); if(!t) return null;
+  let s=t.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+  try{ return JSON.parse(s); }catch(e){ const m=s.match(/\{[\s\S]*\}/); if(m){ try{ return JSON.parse(m[0]); }catch(_){} } return null; }
+}
+/* Claude-powered update understanding — falls back to the keyword parser if AI is off or fails */
+async function applyUpdateAI(d,text){
+  const sys='You are a sales assistant for an account executive selling DealHub CPQ. Read a plain-English deal update and extract structured changes. Reply with ONLY valid JSON (no prose, no markdown) in exactly this shape: {"nextSteps":["short imperative action"],"blocker":"","risk":"","whyNow":"","summary":"one short sentence on what changed"}. Rules: nextSteps = concrete actions the AE said they will take next (omit if none). blocker = anything stalling the deal, else "". risk = any deal risk mentioned, else "". whyNow = a compelling event / driver if mentioned, else "". Be faithful to the text; never invent facts.';
+  const ctx='Deal: '+(d.name||'Untitled')+' ('+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+').\nUpdate:\n"""'+text+'"""';
+  const j=await aiJSON(sys,ctx,600);
+  if(!j) return applyUpdate(d,text);
+  const changes=[];
+  if(Array.isArray(j.nextSteps)&&j.nextSteps.length){ d.steps=d.steps||[]; let n=0; j.nextSteps.forEach(s=>{ s=(''+(s||'')).trim(); if(s.length>3 && !d.steps.some(x=>(x.text||'').toLowerCase()===s.toLowerCase())){ d.steps.push({text:s,done:false,due:''}); n++; } }); if(n)changes.push(n+' next step'+(n>1?'s':'')); }
+  if(j.blocker&&(''+j.blocker).trim()){ d.blocker=(''+j.blocker).trim(); changes.push('blocker'); }
+  if(j.risk&&(''+j.risk).trim()){ const add=(''+j.risk).trim(); d.threats=d.threats?(d.threats+' '+add):add; changes.push('risk'); }
+  if(j.whyNow&&(''+j.whyNow).trim()&&!d.whyNow){ d.whyNow=(''+j.whyNow).trim(); changes.push('why-now'); }
+  return changes.length?('✨ AI updated '+changes.join(', ')):'Update posted';
+}
+/* Claude-powered re-engagement email for a stalled/recovery account */
+async function aiSharpenEmail(d){
+  const sys='You are an expert SaaS account executive (DealHub CPQ, AU/NZ). Write a concise, warm, non-pushy re-engagement email to a prospect a deal stalled with. 90-130 words. No subject line. Plain text. Reference the specific context. End with a soft ask for a short catch-up and sign off as the rep. Do not invent facts or pricing.';
+  const read=d.lossDetail?('\nMy read on the account: '+d.lossDetail):'';
+  const why=d.lossReason?('\nWhy it stalled: '+d.lossReason):'';
+  const notes=d.notes?('\nContext/notes: '+d.notes):'';
+  const ctx='Account: '+(d.name||'the account')+'\nContact: '+(d.contact||'the prior contact')+'\nMy name: '+(userName||'Clifton')+why+read+notes;
+  return await aiText(sys,ctx,500);
+}
 $('#curBtn').addEventListener('click',()=>{ const o={both:'AUD',AUD:'USD',USD:'both'}; meta.displayMode=o[meta.displayMode]||'both'; save(); applyChrome(); renderActive(); if(openId)renderPanel(); });
 $('#mgrBtn').addEventListener('click',()=>{ RO=!RO; applyChrome(); closePanel(); renderActive(); toast(RO?'Manager view — read only':'Back to editing'); });
 $('#briefBtn').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(buildBrief()); toast('1:1 brief copied — paste into your notes'); }catch(e){ toast('Copy failed'); } });
