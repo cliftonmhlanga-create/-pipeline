@@ -597,6 +597,65 @@
   .ai-copy{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 11px;border-radius:8px}
   .ai-art-sub{font-size:11.5px;color:var(--text-3);margin-top:3px}
   .ai-art-body{font-family:inherit;font-size:12.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;margin:10px 0 0;padding-top:10px;border-top:1px solid var(--hair)}
+  /* transcript intake */
+  .tx-open{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 15px;margin-bottom:12px;border-radius:var(--r-m);border:1px dashed var(--accent);background:var(--accent-soft);color:var(--text);cursor:pointer;transition:.15s var(--ease)}
+  .tx-open:hover{filter:brightness(.99);transform:translateY(-1px)}
+  .tx-open-ic{font-size:20px;line-height:1}
+  .tx-open b{font-size:13px;display:block}
+  .tx-open-sub{font-size:11.5px;color:var(--text-3);display:block;margin-top:1px}
+  .tx-open-arr{margin-left:auto;color:var(--accent);font-weight:700;font-size:16px}
+  .tx-sub{font-size:12px;color:var(--text-3);margin-bottom:10px}
+  .tx-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px;flex-wrap:wrap}
+  .tx-note{font-size:11.5px;color:var(--text-3);flex:1;min-width:180px}
+  #txText{width:100%;font-family:inherit;font-size:13px;line-height:1.55;resize:vertical}
+  /* Notifications */
+  .notif-wrap{position:relative}
+  .notif-badge{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+  .notif-pop{position:absolute;top:42px;right:0;width:min(340px,92vw);max-height:64vh;overflow-y:auto;background:var(--bg);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow-l);z-index:95;padding:6px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:.16s var(--ease)}
+  .notif-pop.open{opacity:1;pointer-events:auto;transform:none}
+  .notif-head{font-size:12px;font-weight:700;color:var(--text-2);padding:9px 11px 6px;letter-spacing:.02em}
+  .notif-item{display:flex;gap:10px;align-items:flex-start;padding:10px 11px;border-radius:10px;cursor:pointer;transition:.12s var(--ease)}
+  .notif-item:hover{background:var(--fill)}
+  .notif-dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;margin-top:5px}
+  .notif-main{flex:1;min-width:0}
+  .notif-t{font-size:13px;font-weight:600;color:var(--text);line-height:1.35}
+  .notif-sub{font-size:11.5px;color:var(--text-3);margin-top:1px}
+  .notif-when{font-size:11px;font-weight:600;flex-shrink:0}
+  .notif-empty{padding:22px 14px;text-align:center;color:var(--text-3);font-size:13px}
+  /* Floating assistant */
+  .chat-fab{position:fixed;right:26px;bottom:26px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--indigo,#6366f1));color:#fff;box-shadow:0 10px 30px rgba(99,102,241,.42);display:flex;align-items:center;justify-content:center;z-index:90;transition:.18s var(--ease)}
+  .chat-fab:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 14px 36px rgba(99,102,241,.5)}
+  .chat-fab svg{width:26px;height:26px}
+  .chat-pop{position:fixed;right:26px;bottom:94px;width:min(400px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));background:var(--bg);border:1px solid var(--hair);border-radius:20px;box-shadow:var(--shadow-l);z-index:91;display:flex;flex-direction:column;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(12px) scale(.98);transform-origin:bottom right;transition:.2s var(--ease)}
+  .chat-pop.open{opacity:1;pointer-events:auto;transform:none}
+  .chat-pop-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--hair);flex-shrink:0}
+  .chat-pop-title{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:650;color:var(--text)}
+  .chat-pop-head>div{display:flex;gap:2px}
+  .chat-pop-x{width:30px;height:30px;border-radius:8px;color:var(--text-3);display:flex;align-items:center;justify-content:center}
+  .chat-pop-x:hover{background:var(--fill);color:var(--text)}
+  .chat-pop-x svg{width:16px;height:16px}
+  .chat-log{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:16px}
+  .chat-empty{color:var(--text-2);font-size:14px;line-height:1.6;text-align:center;margin:auto;padding:20px}
+  .chat-empty .ce-big{font-size:17px;font-weight:650;color:var(--text);margin-bottom:6px}
+  .chat-empty .ce-sub{font-size:12.5px;color:var(--text-3)}
+  .chat-msg{max-width:88%;font-size:13.5px;line-height:1.55;white-space:pre-wrap;border-radius:15px;padding:10px 13px}
+  .chat-msg.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:5px}
+  .chat-msg.ai{align-self:flex-start;background:var(--surface-2);border:1px solid var(--hair);color:var(--text);border-bottom-left-radius:5px}
+  .chat-msg.ai.thinking{color:var(--text-3)}
+  .chat-acts{align-self:flex-start;max-width:92%;display:flex;flex-wrap:wrap;gap:6px;margin-top:-4px}
+  .chat-act{font-size:11px;font-weight:600;color:var(--green);background:var(--green-soft,rgba(52,168,83,.1));border:1px solid transparent;border-radius:8px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:6px}
+  .chat-act:hover{filter:brightness(.97)}
+  .chat-act.warn{color:var(--orange);background:rgba(240,132,0,.1)}
+  .chat-compose{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid var(--hair);flex-shrink:0}
+  .chat-compose textarea{flex:1;font-family:inherit;font-size:13.5px;line-height:1.5;padding:10px 13px;border-radius:12px;border:1px solid var(--hair);background:var(--surface-2);resize:none;max-height:120px}
+  .chat-compose textarea:focus{border-color:var(--accent)}
+  .chat-mic{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:var(--fill);color:var(--text-2);display:flex;align-items:center;justify-content:center}
+  .chat-mic svg{width:18px;height:18px}
+  .chat-mic.listening{background:var(--red);color:#fff;animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  .chat-send{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center}
+  .chat-send svg{width:18px;height:18px}
+  .chat-send:disabled{opacity:.5}
   .cmd-scrim{position:fixed;inset:0;background:rgba(20,15,40,.34);backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:.2s var(--ease);z-index:120;display:flex;justify-content:center;align-items:flex-start;padding-top:13vh}
   .cmd-scrim.open{opacity:1;pointer-events:auto}
   .cmd-bar{width:min(620px,92%);background:rgba(252,251,254,.97);backdrop-filter:blur(40px) saturate(1.4);-webkit-backdrop-filter:blur(40px) saturate(1.4);border-radius:20px;box-shadow:var(--shadow-l);border:1px solid var(--hair);overflow:hidden;transform:translateY(-10px) scale(.98);transition:.2s var(--ease)}
@@ -664,6 +723,10 @@
     <div class="topbar-actions">
       <button class="cur-btn" id="cmdBtn" title="Command bar (⌘K / Ctrl+K)">⌘K</button>
       <button class="cur-btn" id="curBtn" title="Switch display currency">A$ + US$</button>
+      <div class="notif-wrap">
+        <button class="icon-top" id="notifBtn" title="What needs you"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-badge" id="notifBadge" style="display:none">0</span></button>
+        <div class="notif-pop" id="notifPop"></div>
+      </div>
       <button class="icon-top" id="settingsBtn" title="Settings & targets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
       <button class="btn btn-ghost" id="mgrBtn" title="Toggle a clean read-only view for your manager"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span class="lbl">Manager view</span></button>
       <button class="btn btn-ghost" id="shareBtn" title="Copy a link with your current data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg><span class="lbl">Share</span></button>
@@ -702,8 +765,22 @@
     <div class="breakdown" id="breakdown"></div>
     <div class="breakdown" id="velocity"></div>
     <div id="prodgap"></div>
+    <div id="patterns"></div>
     <div class="belowbar" id="belowbar"></div>
   </section>
+
+</div>
+
+<!-- floating assistant -->
+<button class="chat-fab" id="chatFab" title="Ask Helm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"/><path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"/></svg></button>
+<div class="chat-pop" id="chatPop">
+  <div class="chat-pop-head"><span class="chat-pop-title"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z"/></svg> Assistant</span><div><button class="chat-pop-x" id="chatClear" title="Clear chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button><button class="chat-pop-x" id="chatPopClose" title="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-compose">
+    <button class="chat-mic" id="chatMic" title="Dictate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></button>
+    <textarea id="chatInput" rows="1" placeholder="How can I help?"></textarea>
+    <button class="chat-send" id="chatSend" title="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+  </div>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -725,10 +802,22 @@
   </div>
 </div>
 
+<!-- transcript intake modal -->
+<div class="modal-scrim" id="txScrim">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Build from a call / transcript</div><button class="icon-btn" id="txClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="tx-sub" id="txFor"></div>
+      <div class="field full" style="margin-bottom:6px"><textarea id="txText" rows="11" placeholder="Paste the whole thing — call transcript, your notes, an email thread. Claude folds it into the deal: updates why-now, cost of inaction, risks, stakeholders &amp; sentiment, adds next steps, lights up deservedness signals, and refreshes the business case. On a follow-up call it keeps what's still true and notes what changed."></textarea></div>
+      <div class="tx-foot"><span class="tx-note" id="txNote">Merges this call in · updates sentiment &amp; moves your forecast · schedules the steps · logs what changed.</span><button class="cmt-send" id="txRun">Build the deal</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- new deal modal -->
 <div class="modal-scrim" id="newScrim">
   <div class="modal">
-    <div class="modal-head"><div class="seg-cur" id="ndMode"><button data-m="new" class="active">New deal</button><button data-m="revive">Revive lost deal</button></div><button class="icon-btn" id="newClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-head"><div class="seg-cur" id="ndMode"><button data-m="new" class="active">New deal</button><button data-m="revive">Revive lost deal</button><button data-m="prep">Prep a meeting</button></div><button class="icon-btn" id="newClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="modal-body">
       <div id="ndNewFields">
         <div class="field full" style="margin-bottom:14px"><label>Account name</label><input id="ndName" placeholder="Company name"></div>
@@ -748,6 +837,18 @@
           <div class="field" style="flex:1"><label>When (optional)</label><input id="rvWhen" placeholder="e.g. last year / Feb 2025"></div>
           <div class="field" style="flex:1"><label>Other people to cover (optional)</label><input id="rvOthers" placeholder="e.g. Sarah, Tom"></div>
         </div>
+      </div>
+      <div id="ndPrepFields" style="display:none">
+        <div class="tx-sub" style="margin-bottom:12px">Tell Claude who you're meeting and what you know. It builds your discovery framework — agenda, questions, the outcomes to land — and creates the account workspace, pre-filled.</div>
+        <div style="display:flex;gap:12px;margin-bottom:12px">
+          <div class="field" style="flex:1"><label>Account name</label><input id="pgName" placeholder="Company you're meeting"></div>
+          <div class="field" style="flex:1"><label>Pipeline (ARR, optional)</label><input id="pgArr" inputmode="numeric" placeholder="0"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:12px">
+          <div class="field" style="flex:1"><label>Who you're meeting</label><input id="pgPerson" placeholder="e.g. Sarah"></div>
+          <div class="field" style="flex:1"><label>Their role</label><input id="pgRole" placeholder="e.g. RevOps Manager"></div>
+        </div>
+        <div class="field full" style="margin-bottom:18px"><label>Notes &amp; anything you know</label><textarea id="pgNotes" rows="6" placeholder="What you know about them, why the meeting, what triggered it, what you want out of it, anything from the intro or LinkedIn. The more you give, the sharper the prep."></textarea></div>
       </div>
       <button class="cmt-send" id="ndCreate" style="width:100%;display:flex;align-items:center;justify-content:center;padding:13px;font-size:14px">Create deal</button>
     </div>
@@ -1095,14 +1196,19 @@ function dealContext(d){
   const ppl=(d.people||[]).map(p=>`${p.name||'?'} (${p.role||'?'}, ${p.sent||'neutral'})`).join('; ')||'none mapped';
   return `Account: ${d.name||'?'}\nDeal value: ${money(aud(d))} ARR\nProduct: ${d.type||'CPQ'} · ${d.users||'?'} users · CRM ${d.crm||'?'}\nStatus: ${STATUSES[d.status]?STATUSES[d.status].label:d.status}\nHeadline: ${d.oneLiner||'—'}\nWhy now / compelling event: ${d.whyNow||'—'}\nCost of inaction: ${d.costInaction||'—'}\nRisks / threats: ${d.threats||'—'}\nStakeholders: ${ppl}\nDeservedness signals present: ${dvdSignals(d).filter(i=>i.on).map(i=>i.label).join(', ')||'none'}\nNotes: ${(d.notes||'').slice(0,700)}\nLatest update: ${((d.comments||[]).filter(c=>c.author!=='Helm').slice(-1)[0]||{}).text||'—'}`;
 }
+const ARTIFACT_SYS={
+  nba:'You are an elite B2B sales coach for DealHub CPQ (AU/NZ). From the deal below, name the SINGLE highest-leverage next action, then draft it (the exact email, or the precise question to ask, or the multithread move). Be specific to THIS deal and its gaps. Start with the action as one plain-text line, then the draft underneath. No preamble, no markdown headers. Invent no facts or pricing.',
+  review:'You are a sales manager doing a 60-second deal review. Give a tight, scannable read: 1) a one-line health verdict, 2) What\'s strong (2-3 bullets), 3) What\'s missing / the biggest risk (2-3 bullets, lean on the deservedness signals and any single-threading), 4) The single most important next move. Under 150 words. Direct, no fluff. Invent no facts.',
+  case:'You are a Fluint-style business-case writer. Write a crisp one-page business case the CHAMPION can use to sell this internally, in their own voice. Sections (plain text, short): The problem (with any metrics given), Impact / cost of inaction, Why now, The recommendation, Expected outcome. Buyer-credible, no fluff, no pricing unless given. Keep under ~250 words.',
+  onepager:'You are writing a one-page executive brief the champion will forward to their CFO. Ruthlessly concise, scannable, under 180 words. Lead with the business outcome. Cover: the problem, the cost of doing nothing, the proposed move, and the expected return. Plain text. Invent no figures.',
+  multithread:'You are an expert AE (DealHub CPQ, AU/NZ). Using the stakeholders listed, draft a SHORT, tailored email to each stakeholder who is NOT the primary champion — angle each to that person\'s role and likely priorities (CFO=cost/ROI, IT/Ops=integration & time saved, exec=strategic outcome). 60-90 words each, label each with the recipient name. Plain text. If fewer than two stakeholders are mapped, draft one email and name the roles worth multithreading to next. Invent no facts or pricing.',
+  objections:'You are a sales strategist. Produce a concise internal objection crib sheet the CHAMPION can use to defend this deal to colleagues. Cover the objections most likely for THIS deal: security/IT, procurement/legal, "why not build it ourselves", "why now / why not wait", and budget/cost. For each: the objection on one line, then a crisp 1-2 sentence rebuttal grounded in the deal context. Plain text, scannable. Invent no facts or pricing.'
+};
 async function genArtifact(d,key,btn){
   if(!AI_ON())return;
   const label=btn.textContent; btn.textContent='✨ Writing…'; btn.disabled=true;
-  let sys;
-  if(key==='nba') sys='You are an elite B2B sales coach for DealHub CPQ (AU/NZ). From the deal below, name the SINGLE highest-leverage next action, then draft it (the exact email, or the precise question to ask, or the multithread move). Be specific to THIS deal and its gaps. Start with the action as one plain-text line, then the draft underneath. No preamble, no markdown headers. Invent no facts or pricing.';
-  else if(key==='case') sys='You are a Fluint-style business-case writer. Write a crisp one-page business case the CHAMPION can use to sell this internally, in their own voice. Sections (plain text, short): The problem (with any metrics given), Impact / cost of inaction, Why now, The recommendation, Expected outcome. Buyer-credible, no fluff, no pricing unless given. Keep under ~250 words.';
-  else sys='You are writing a one-page executive brief the champion will forward to their CFO. Ruthlessly concise, scannable, under 180 words. Lead with the business outcome. Cover: the problem, the cost of doing nothing, the proposed move, and the expected return. Plain text. Invent no figures.';
-  const out=await aiText(sys,dealContext(d),900);
+  const sys=ARTIFACT_SYS[key]||ARTIFACT_SYS.nba;
+  const out=await aiText(sys,dealContext(d),(key==='nba'||key==='review')?700:1100);
   btn.disabled=false; btn.textContent=label;
   if(out){ d.artifacts=d.artifacts||{}; d.artifacts[key]=out; saveD(d); renderPanel(); toast('✨ Draft ready'); }
   else toast('AI unavailable — try again');
@@ -1111,10 +1217,124 @@ function aiArtifactsHTML(d){
   const a=d.artifacts||{};
   const box=(key,title,sub)=>`<div class="ai-art"><div class="ai-art-h"><span class="ai-art-t">${title}</span><span class="ai-art-actions"><button class="ai-gen" data-k="${key}">${a[key]?'Regenerate':'Generate'}</button>${a[key]?`<button class="ai-copy" data-k="${key}">Copy</button>`:''}</span></div><div class="ai-art-sub">${sub}</div>${a[key]?`<pre class="ai-art-body">${esc(a[key])}</pre>`:''}</div>`;
   return `<div class="sec"><div class="sec-title">✨ AI copilot <span class="st-hint">drafts built from this deal — for you and your champion</span></div>
+    ${a.prep?`<div class="ai-art" style="border-color:var(--accent)"><div class="ai-art-h"><span class="ai-art-t">📋 Meeting prep</span><span class="ai-art-actions"><button class="ai-copy" data-k="prep">Copy</button></span></div><pre class="ai-art-body" style="margin-top:10px">${esc(a.prep)}</pre></div>`:''}
+    <button class="tx-open" id="txOpen"><span class="tx-open-ic">📄</span><span><b>Paste a call or transcript</b><span class="tx-open-sub">One step → fills the deal &amp; drafts the business case</span></span><span class="tx-open-arr">→</span></button>
     ${box('nba','Next best action','The single highest-leverage move right now — with the draft to do it.')}
+    ${box('review','60-second deal review','What&#39;s strong, what&#39;s missing, the one move now — built on the deservedness signals.')}
     ${box('case','1-page business case','Buyer-ready, in your champion&#39;s voice — problem, impact, why now, recommendation.')}
     ${box('onepager','Forward-to-CFO one-pager','A tight exec brief your champion can send up the chain.')}
+    ${box('multithread','Multithread emails','Tailored notes to the other stakeholders — widen the deal beyond your champion.')}
+    ${box('objections','Objection crib sheet','The internal questions your champion will face — with crisp answers.')}
   </div>`;
+}
+/* ════════ ASSISTANT CHAT — talk to your pipeline ════════ */
+function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
+function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]}; }
+async function chatAgent(text){
+  const book=deals.map(d=>'- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']').join('\n');
+  const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
+  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","arr":0,"status":"engaged","note":"any context"}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\nRules: map every action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When you CREATE a new deal from a call, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are 0-10. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
+  const ctx='THE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
+  return await aiJSON(sys,ctx,1300);
+}
+function applyChatActions(actions){
+  const chips=[], FLD=['oneLiner','whyNow','costInaction','threats','blocker','risk','lastActivity','contact','role','crm','type','location','closeLabel','closeDate'], NUM=['arr','users'];
+  (actions||[]).forEach(a=>{
+    if(!a||!a.type) return;
+    if(a.type==='create_deal'){ const nm=(a.name||'').trim(); if(!nm)return; const d=blankDeal(nm); if(a.status&&STATUSES[a.status])d.status=a.status; if(a.arr)d.arr=parseFloat((''+a.arr).replace(/[^0-9.]/g,''))||0; if(a.note){ d.notes=a.note; d.comments.push({id:uid(),author:userName||'Me',text:a.note,ts:Date.now()}); } deals.push(d); chips.push({label:'＋ Created '+nm,dealId:d.id}); return; }
+    const d=findDealByName(a.deal); if(!d){ chips.push({label:'？ Couldn’t find “'+(a.deal||'?')+'”',warn:true}); return; }
+    if(a.type==='update_deal'&&a.updates&&typeof a.updates==='object'){ const ch=[]; FLD.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).trim()){ d[k]=(''+a.updates[k]).trim(); ch.push(k); } }); NUM.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).toString().trim()){ d[k]=parseFloat((''+a.updates[k]).replace(/[^0-9.]/g,''))||0; ch.push(k); } }); if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
+    else if(a.type==='log_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:note,ts:Date.now()}); d.lastActivity=note.slice(0,80); saveD(d); chips.push({label:'✓ Logged on '+d.name,dealId:d.id}); } }
+    else if(a.type==='add_step'){ const t=(a.text||'').trim(); if(t){ d.steps=d.steps||[]; d.steps.push({text:t,done:false,due:addDays(today,5)}); saveD(d); chips.push({label:'✓ Next step · '+d.name,dealId:d.id}); } }
+    else if(a.type==='add_stakeholder'){ const nm=(a.name||'').trim(); if(nm){ d.people=d.people||[]; const sent=['positive','neutral','negative'].includes(a.sentiment)?a.sentiment:'neutral'; const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ ex.sent=sent; if((a.role||'').trim()&&!(ex.role||'').trim())ex.role=a.role; } else d.people.push({name:nm,role:a.role||'Influencer',sent}); saveD(d); chips.push({label:'✓ '+nm+' → '+d.name,dealId:d.id}); } }
+    else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open; if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
+    else if(a.type==='sprint_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'Sprint update: '+note,ts:Date.now()}); d.lastActivity=note.slice(0,80); } const na=(a.nextAction||'').trim(); if(na){ d.steps=d.steps||[]; d.steps.push({text:na,done:false,due:addDays(today,5)}); } saveD(d); chips.push({label:'✓ Sprint · '+d.name,dealId:d.id}); }
+    else if(a.type==='set_scores'){ const ch=[]; const clamp=v=>Math.max(0,Math.min(10,Math.round(parseFloat(v)))); if(a.belief!=null&&(''+a.belief).trim()!==''){ d.belief=clamp(a.belief); ch.push('belief '+d.belief); } if(a.deservedness!=null&&(''+a.deservedness).trim()!==''){ d.deserve=clamp(a.deservedness); ch.push('deservedness '+d.deserve); } if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
+    else if(a.type==='open_deal'){ chips.push({label:'↗ Open '+d.name,dealId:d.id}); }
+  });
+  return chips;
+}
+let chatBusy=false;
+async function sendChat(){
+  const inp=$('#chatInput'); if(!inp)return; const text=(inp.value||'').trim(); if(!text||chatBusy)return;
+  if(RO){ toast('Manager view is read-only'); return; }
+  if(!AI_ON()){ toast('The assistant runs on the live site'); return; }
+  chatBusy=true; const sb=$('#chatSend'); if(sb)sb.disabled=true;
+  meta.chat=meta.chat||[]; meta.chat.push({role:'me',text}); inp.value=''; autosize(inp);
+  meta.chat.push({role:'ai',text:'Thinking…',thinking:true}); renderChat();
+  const res=await chatAgent(text);
+  if(meta.chat.length&&meta.chat[meta.chat.length-1].thinking) meta.chat.pop();
+  const acts=(res&&res.actions)?applyChatActions(res.actions):[];
+  const reply=(res&&res.reply)?(''+res.reply).trim():(acts.length?'Done — updated for you.':'Sorry, I had trouble with that one. Mind rephrasing?');
+  meta.chat.push({role:'ai',text:reply,acts});
+  if(meta.chat.length>24) meta.chat=meta.chat.slice(-24);
+  save(); renderChat(); renderDeals();
+  chatBusy=false; if($('#chatSend'))$('#chatSend').disabled=false; if($('#chatInput'))$('#chatInput').focus();
+}
+function renderChat(){
+  const log=$('#chatLog'); if(!log)return;
+  const msgs=meta.chat||[];
+  if(!msgs.length){
+    log.innerHTML='<div class="chat-empty"><div class="ce-big">How can I help?</div><div class="ce-sub">Type or talk — log a call, update a deal, add an account, set a task. I\'ll handle the rest.</div></div>';
+    return;
+  }
+  log.innerHTML=msgs.map(m=>{
+    if(m.role==='me') return '<div class="chat-msg me">'+esc(m.text)+'</div>';
+    let h='<div class="chat-msg ai'+(m.thinking?' thinking':'')+'">'+esc(m.text)+'</div>';
+    if(m.acts&&m.acts.length) h+='<div class="chat-acts">'+m.acts.map(a=>'<span class="chat-act '+(a.warn?'warn':'')+'" data-id="'+(a.dealId||'')+'">'+esc(a.label)+'</span>').join('')+'</div>';
+    return h;
+  }).join('');
+  log.querySelectorAll('.chat-act').forEach(c=>c.addEventListener('click',()=>{ if(c.dataset.id) openDeal(c.dataset.id); }));
+  log.scrollTop=log.scrollHeight;
+}
+/* ════════ NOTIFICATIONS — what needs you ════════ */
+function notifItems(){
+  const items=[];
+  OPEN().forEach(d=>{ (d.steps||[]).forEach(s=>{ if(s.done||!s.due)return; const du=daysUntil(s.due);
+    if(du<0) items.push({color:'var(--red)',title:s.text,sub:d.name,when:(-du)+'d overdue',whenC:'var(--red)',dealId:d.id,sort:du});
+    else if(du===0) items.push({color:'var(--orange)',title:s.text,sub:d.name,when:'today',whenC:'var(--orange)',dealId:d.id,sort:0.5}); }); });
+  deals.forEach(d=>{ if(d.sprint&&d.sprint.end){ const du=daysUntil(d.sprint.end);
+    if(du<0) items.push({color:'var(--red)',title:d.name+' — recovery sprint ended',sub:d.sprint.goal||'Recovery sprint',when:'ended',whenC:'var(--red)',dealId:d.id,sort:du-0.1});
+    else if(du<=2) items.push({color:'var(--orange)',title:d.name+' — sprint ending',sub:d.sprint.goal||'Recovery sprint',when:du+'d left',whenC:'var(--orange)',dealId:d.id,sort:du}); } });
+  deals.forEach(d=>{ if(d.status==='dormant'&&d.retryDate&&daysUntil(d.retryDate)<=0) items.push({color:'var(--indigo,#6366f1)',title:'Retry '+d.name,sub:'Dormant — worth another go',when:'due',whenC:'var(--indigo,#6366f1)',dealId:d.id,sort:0.3}); });
+  return items.sort((a,b)=>a.sort-b.sort);
+}
+function updateNotifBadge(){ const b=$('#notifBadge'); if(!b)return; const n=RO?0:notifItems().length; b.textContent=n>9?'9+':n; b.style.display=n?'':'none'; }
+function renderNotifs(){
+  const el=$('#notifPop'); if(!el)return; const items=notifItems();
+  if(!items.length){ el.innerHTML='<div class="notif-empty">You\'re all caught up ✓<br><span style="font-size:11.5px">Overdue steps and ending sprints land here.</span></div>'; return; }
+  el.innerHTML='<div class="notif-head">'+items.length+' need'+(items.length===1?'s':'')+' you</div>'+items.map(it=>'<div class="notif-item" data-id="'+it.dealId+'"><span class="notif-dot" style="background:'+it.color+'"></span><div class="notif-main"><div class="notif-t">'+esc(it.title)+'</div><div class="notif-sub">'+esc(it.sub)+'</div></div><span class="notif-when" style="color:'+it.whenC+'">'+esc(it.when)+'</span></div>').join('');
+  el.querySelectorAll('.notif-item').forEach(n=>n.addEventListener('click',()=>{ $('#notifPop').classList.remove('open'); openDeal(n.dataset.id); }));
+}
+/* ── One-step transcript intake → fill the deal + draft the business case ── */
+let txDealId=null;
+function openTranscript(){ const d=deal(); if(!d||RO) return; txDealId=d.id; $('#txFor').textContent='For '+(d.name||'this account')+' — Claude merges this call into the deal, keeping what’s still true.'; $('#txText').value=''; $('#txScrim').classList.add('open'); setTimeout(()=>$('#txText').focus(),60); }
+function closeTranscript(){ $('#txScrim').classList.remove('open'); }
+async function processTranscript(){
+  const d=deals.find(x=>x.id===txDealId)||deal(); if(!d) return;
+  const text=$('#txText').value.trim(); if(text.length<20){ toast('Paste a bit more so the AI has something to work with'); return; }
+  if(!AI_ON()){ toast('AI runs on the live site — open Helm there to use this'); return; }
+  const btn=$('#txRun'); btn.textContent='✨ Reading the call…'; btn.disabled=true;
+  const sys='You update a sales deal from a NEW call transcript for an AE selling DealHub CPQ. You are given the deal AS IT STANDS plus a new transcript. Reply with ONLY valid JSON (no prose, no markdown) in exactly this shape: {"oneLiner":"","whyNow":"","costInaction":"","risks":"","nextSteps":["short imperative action"],"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"deservedness":{"eb":false,"problem":false,"event":false,"champion":false},"businessCase":"a tight one-page business case in the champion\'s voice using the FULL picture: problem with metrics, impact / cost of inaction, why now, recommendation, expected outcome","whatChanged":"2-4 short bullets on what is new or different in THIS call vs the prior state, or empty string if nothing new"}. Rules for narrative fields (oneLiner, whyNow, costInaction, risks): return the UPDATED merged version that keeps still-true prior facts and folds in anything new — never drop specific numbers already present; if the call adds nothing to a field, return the existing value unchanged. nextSteps = new actions from this call. stakeholders = anyone mentioned, with their CURRENT sentiment (include an existing person if their sentiment changed). Set a deservedness flag true ONLY with clear evidence. Invent no facts or pricing.';
+  const cur='CURRENT DEAL STATE:\nAccount: '+(d.name||'?')+' ('+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+')\nHeadline: '+(d.oneLiner||'—')+'\nWhy now: '+(d.whyNow||'—')+'\nCost of inaction: '+(d.costInaction||'—')+'\nRisks: '+(d.threats||'—')+'\nStakeholders: '+((d.people||[]).map(p=>p.name+' ('+(p.role||'?')+', '+(p.sent||'neutral')+')').join('; ')||'none')+'\nOpen next steps: '+((d.steps||[]).filter(s=>!s.done).map(s=>s.text).join('; ')||'none')+'\nDeservedness signals already on: '+(['eb','problem','event','champion'].filter(k=>d.dvd&&d.dvd[k]).join(', ')||'none');
+  const ctx=cur+'\n\nNEW CALL TRANSCRIPT / NOTES:\n"""\n'+text+'\n"""';
+  const j=await aiJSON(sys,ctx,2000);
+  btn.disabled=false; btn.textContent='Build the deal';
+  if(!j){ toast('AI could not parse that — try again or shorten it'); return; }
+  const filled=[];
+  const setField=(key,val,label)=>{ const nv=(''+(val||'')).trim(); if(nv && nv!==(d[key]||'').trim()){ d[key]=nv; filled.push(label); } };
+  setField('oneLiner',j.oneLiner,'headline'); setField('whyNow',j.whyNow,'why-now'); setField('costInaction',j.costInaction,'cost of inaction'); setField('threats',j.risks,'risks');
+  if(Array.isArray(j.nextSteps)){ d.steps=d.steps||[]; let n=0; j.nextSteps.forEach(s=>{ s=(''+(s||'')).trim(); if(s.length>3 && !d.steps.some(x=>(x.text||'').toLowerCase()===s.toLowerCase())){ d.steps.push({text:s,done:false,due:addDays(today,5)}); n++; } }); if(n)filled.push(n+' next step'+(n>1?'s':'')); }
+  if(Array.isArray(j.stakeholders)){ d.people=d.people||[]; let added=0,upd=0; j.stakeholders.forEach(p=>{ const nm=((p&&p.name)||'').trim(); if(!nm)return; const sent=(['positive','neutral','negative'].includes(p.sentiment)?p.sentiment:'neutral'); const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ if(p.sentiment && ex.sent!==sent){ ex.sent=sent; upd++; } if((p.role||'').trim() && !(ex.role||'').trim()) ex.role=p.role; } else { d.people.push({name:nm,role:(p.role||'Influencer'),sent}); added++; } }); if(added)filled.push(added+' stakeholder'+(added>1?'s':'')); if(upd)filled.push(upd+' sentiment update'+(upd>1?'s':'')); }
+  if(j.deservedness&&typeof j.deservedness==='object'){ d.dvd=d.dvd||{}; ['eb','problem','event','champion'].forEach(k=>{ if(j.deservedness[k]===true && !d.dvd[k]) d.dvd[k]=true; }); }
+  if(j.businessCase&&(''+j.businessCase).trim()){ d.artifacts=d.artifacts||{}; d.artifacts.case=(''+j.businessCase).trim(); filled.push('business case'); }
+  d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'📄 Call / transcript added:\n'+text,ts:Date.now()});
+  const wc=(''+(j.whatChanged||'')).trim(); if(wc) d.comments.push({id:uid(),author:'Helm',text:'What changed this call:\n'+wc,ts:Date.now()});
+  /* fully automatic: move the forecast to match the new deservedness signals */
+  const oldCat=category(d), sug=dvdSuggested(d);
+  if(sug!==d.deserve){ d.deserve=sug; const newCat=category(d); filled.push('forecast → Deservedness '+sug+'/10'); if(newCat!==oldCat) d.comments.push({id:uid(),author:'Helm',text:'Forecast moved: this call took '+(d.name||'this deal')+' to '+CAT_LABEL[newCat]+' — Deservedness '+sug+'/10, Health '+health(d)+'%.',ts:Date.now()}); }
+  saveD(d); closeTranscript(); renderPanel(); renderDeals();
+  toast(filled.length?('✨ Updated from call — '+filled.join(', ')):'Transcript logged');
 }
 function checkSprints(){ if(RO)return; let changed=false;
   deals.forEach(d=>{ if(d.sprint&&d.sprint.end&&d.sprint.end<today){
@@ -1156,6 +1376,7 @@ function buildBrief(){
 function applyChrome(){
   $('#addBtn').style.display=RO?'none':'';
   $('#settingsBtn').style.display=RO?'none':'';
+  { const cf=$('#chatFab'); if(cf){ cf.style.display=RO?'none':''; if(RO)closeChatPop(); } updateNotifBadge(); }
   $('#mgrBtn').querySelector('.lbl').textContent=RO?'Exit manager view':'Manager view';
   $('#roBanner').style.display=RO?'':'none';
   $('#curBtn').textContent=meta.displayMode==='both'?'A$ + US$':(meta.displayMode==='USD'?'US$':'A$');
@@ -1357,7 +1578,7 @@ function renderActivity(){
 
 /* ════════ DEAL CARDS ════════ */
 function renderDeals(){
-  renderFilters(); renderSummary(); renderFocus(); renderActivity();
+  renderFilters(); renderSummary(); renderFocus(); renderActivity(); updateNotifBadge();
   const wrap=$('#dealGroups'); wrap.innerHTML='';
   if(activeFilter==='Closed'){ $('#focus').innerHTML=''; $('#activity').innerHTML=''; renderClosed(wrap); return; }
   if(activeFilter==='Dormant'){ $('#focus').innerHTML=''; $('#activity').innerHTML=''; renderDormant(wrap); return; }
@@ -1493,8 +1714,32 @@ function renderProdGap(){
     ${inhouse.length?`<div class="gap-inhouse"><b>${inhouse.length}</b> ${inhouse.length===1?'account':'accounts'} built their own tool: ${inhouse.map(d=>esc(d.name)+' ('+money(aud(d))+')').join(', ')}.</div>`:''}
   </div>`;
 }
+/* ── Cross-deal pattern intelligence ── */
+function portfolioSummary(){
+  const line=d=>{ const dvdOff=['eb','problem','event','champion'].filter(k=>!(d.dvd&&d.dvd[k])); const ppl=(d.people||[]).length;
+    return '- '+(d.name||'?')+' | '+money(aud(d))+' | '+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+' | '+(d.type||'?')+(d.lossReason?' | lost: '+d.lossReason:'')+(d.slips?' | slipped '+d.slips+'x':'')+(ppl<2?' | single-threaded':'')+(dvdOff.length?' | missing: '+dvdOff.join(',')+'':'')+(d.threats?' | risk: '+(''+d.threats).slice(0,90):'')+(d.blocker?' | blocker: '+(''+d.blocker).slice(0,80):''); };
+  return deals.map(line).join('\n');
+}
+async function genPatterns(btn){
+  if(!AI_ON())return;
+  const label=btn.textContent; btn.textContent='✨ Reading your book…'; btn.disabled=true;
+  const sys='You are a sales operations analyst for an AE selling DealHub CPQ (AU/NZ). Given the rep\'s whole book (one line per deal with value, status, type, loss reason, slips, threats, single-threading, and missing deservedness signals), find the RECURRING patterns — not per-deal noise. Output plain text, scannable, with these short sections: 1) "What keeps stalling deals" — 2-4 recurring blockers, each naming HOW MANY deals and WHICH ones (by name), ranked by how often it recurs. 2) "Report up" — 2-3 sentences a manager/ERC could read verbatim (name product gaps or systemic issues). 3) "Plays" — for each top pattern, one concrete move to make now. CRITICAL: do NOT state, sum, or invent any dollar amounts — refer to deals by name and count only (the dashboard reports exact $ separately). If a pattern appears in 2+ deals, say so explicitly. Invent no facts.';
+  const out=await aiText(sys,'THE BOOK ('+deals.length+' deals):\n'+portfolioSummary(),1100);
+  btn.disabled=false; btn.textContent=label;
+  if(out){ meta.patterns={text:out,ts:Date.now()}; save(); renderPatterns(); toast('✨ Patterns read'); }
+  else toast('AI unavailable — try again');
+}
+function renderPatterns(){
+  const el=$('#patterns'); if(!el)return;
+  if(!AI_ON()){ el.innerHTML=''; return; }
+  const p=meta.patterns;
+  el.innerHTML=`<div class="gap-card" style="background:linear-gradient(135deg,#1e2553,#11183a)"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><div><h3>Patterns — why deals stall</h3><div class="sub">AI reads your whole book for recurring blockers, not one-off noise. Report-up ready.</div></div><button class="ai-gen" id="patGen" style="flex-shrink:0">${p?'Refresh':'Read my book'}</button></div>
+    ${p?`<pre class="ai-art-body" style="border-top-color:rgba(255,255,255,.14);color:#e7ebf5">${esc(p.text)}</pre><div class="sub" style="margin-top:8px">Read ${relTime(p.ts)} · across ${deals.length} deals</div>`:`<div class="sub" style="margin-top:10px">Click <b>Read my book</b> and Claude finds what keeps coming up — budget, product gaps, single-threading — how often each recurs and a play for each. (Exact $ is in the card above.)</div>`}
+  </div>`;
+  const b=$('#patGen'); if(b) b.addEventListener('click',()=>genPatterns(b));
+}
 function renderForecast(){
-  renderAccuracy(); renderVelocity(); renderProdGap();
+  renderAccuracy(); renderVelocity(); renderProdGap(); renderPatterns();
   const open=OPEN();
   const total=open.reduce((s,d)=>s+aud(d),0);
   const commitD=open.filter(d=>category(d)==='commit'), bestD=open.filter(d=>category(d)==='best');
@@ -1726,6 +1971,7 @@ function renderPanel(){
   wireComments(d);
   $('#panelBody').querySelectorAll('.email-copy[data-copy]').forEach(b=>b.addEventListener('click',async()=>{ const t=b.dataset.copy==='re'?d.revival.reEngage:d.revival.coverage; try{ await navigator.clipboard.writeText(t); toast('Email copied'); }catch(e){ toast('Copy failed'); } }));
   const sharpen=$('#aiSharpen'); if(sharpen) sharpen.addEventListener('click',async()=>{ sharpen.textContent='✨ Writing…'; sharpen.disabled=true; const out=await aiSharpenEmail(d); if(out){ d.revival.reEngage=out; saveD(d); renderPanel(); toast('✨ Email sharpened by AI'); } else { sharpen.textContent='✨ Sharpen with AI'; sharpen.disabled=false; toast('AI unavailable — try again'); } });
+  const txO=$('#txOpen'); if(txO) txO.addEventListener('click',openTranscript);
   $('#panelBody').querySelectorAll('.ai-gen').forEach(b=>b.addEventListener('click',()=>genArtifact(d,b.dataset.k,b)));
   $('#panelBody').querySelectorAll('.ai-art .ai-copy').forEach(b=>b.addEventListener('click',async()=>{ const t=(d.artifacts||{})[b.dataset.k]||''; try{ await navigator.clipboard.writeText(t); toast('Copied'); }catch(e){ toast('Copy failed'); } }));
 }
@@ -1887,18 +2133,18 @@ $('#statusPill').addEventListener('click',()=>{ if(!RO)$('#statusMenu').classLis
 document.addEventListener('click',e=>{ if(!e.target.closest('.status-select'))$('#statusMenu').classList.remove('open'); });
 $('#panelClose').addEventListener('click',closePanel); $('#scrim').addEventListener('click',closePanel);
 $('#focusBtn').addEventListener('click',()=>{ const d=deal(); if(!d||RO)return; d.focus=!d.focus; saveD(d); renderPanel(); renderDeals(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closePanel(); closeSettings(); closeNew(); closeCmd(); } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeTranscript(); closePanel(); closeSettings(); closeNew(); closeCmd(); } });
 $('#deleteBtn').addEventListener('click',()=>{ const d=deal(); if(!d)return; if(confirm('Delete '+(d.name||'this account')+'? This can’t be undone.')){ deals=deals.filter(x=>x.id!==openId); save(); closePanel(); renderDeals(); toast('Account deleted'); } });
 let ndModeVal='new';
-function openNew(){ ndModeVal='new'; $('#ndMode').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.m==='new')); $('#ndNewFields').style.display=''; $('#ndReviveFields').style.display='none'; $('#ndCreate').textContent='Create deal';
-  ['ndName','ndArr','ndNotes','rvName','rvPerson','rvWhen','rvTopic','rvSummary','rvOthers','rvArr'].forEach(id=>{const e=$('#'+id);if(e)e.value='';}); $('#ndCur').value='AUD';
+function openNew(){ ndModeVal='new'; $('#ndMode').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.m==='new')); $('#ndNewFields').style.display=''; $('#ndReviveFields').style.display='none'; $('#ndPrepFields').style.display='none'; $('#ndCreate').textContent='Create deal';
+  ['ndName','ndArr','ndNotes','rvName','rvPerson','rvWhen','rvTopic','rvSummary','rvOthers','rvArr','pgName','pgArr','pgPerson','pgRole','pgNotes'].forEach(id=>{const e=$('#'+id);if(e)e.value='';}); $('#ndCur').value='AUD';
   $('#newScrim').classList.add('open'); setTimeout(()=>$('#ndName').focus(),60); }
 function closeNew(){ $('#newScrim').classList.remove('open'); }
 $('#addBtn').addEventListener('click',openNew);
 $('#newClose').addEventListener('click',closeNew);
 $('#newScrim').addEventListener('click',e=>{ if(e.target===$('#newScrim'))closeNew(); });
-$('#ndMode').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ ndModeVal=b.dataset.m; $('#ndMode').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); const rev=ndModeVal==='revive'; $('#ndNewFields').style.display=rev?'none':''; $('#ndReviveFields').style.display=rev?'':'none'; $('#ndCreate').textContent=rev?'Create revival plan + emails':'Create deal'; setTimeout(()=>{const f=$(rev?'#rvName':'#ndName');if(f)f.focus();},40); }));
-$('#ndCreate').addEventListener('click',()=>{ if(ndModeVal==='revive') return createRevival();
+$('#ndMode').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ ndModeVal=b.dataset.m; $('#ndMode').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); const rev=ndModeVal==='revive', prep=ndModeVal==='prep'; $('#ndNewFields').style.display=(rev||prep)?'none':''; $('#ndReviveFields').style.display=rev?'':'none'; $('#ndPrepFields').style.display=prep?'':'none'; $('#ndCreate').textContent=rev?'Create revival plan + emails':(prep?'Build prep + workspace':'Create deal'); setTimeout(()=>{const f=$(prep?'#pgName':(rev?'#rvName':'#ndName'));if(f)f.focus();},40); }));
+$('#ndCreate').addEventListener('click',()=>{ if(ndModeVal==='revive') return createRevival(); if(ndModeVal==='prep') return createPrep();
   const name=$('#ndName').value.trim()||'Untitled';
   const arr=parseFloat(($('#ndArr').value||'').replace(/[^0-9.]/g,''))||0;
   const cur=$('#ndCur').value||'AUD'; const notes=$('#ndNotes').value.trim();
@@ -1906,6 +2152,34 @@ $('#ndCreate').addEventListener('click',()=>{ if(ndModeVal==='revive') return cr
   if(notes){ d.comments.push({id:uid(),author:userName||'Me',text:notes,ts:Date.now()}); applyUpdate(d,notes); d.notes=notes; }
   deals.push(d); save(); closeNew(); renderDeals(); openDeal(d.id);
 });
+async function createPrep(){
+  const name=$('#pgName').value.trim()||'New account';
+  const arr=parseFloat(($('#pgArr').value||'').replace(/[^0-9.]/g,''))||0;
+  const person=$('#pgPerson').value.trim(), role=$('#pgRole').value.trim(), notes=$('#pgNotes').value.trim();
+  const btn=$('#ndCreate'); btn.textContent='✨ Building your prep…'; btn.disabled=true;
+  const d={id:uid(),name,arr,cur:'AUD',status:'engaged',belief:5,deserve:3,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',
+    people:person?[{name:person,role:(role||'Contact'),sent:'neutral'}]:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:person,role:'',closeLabel:'Discovery booked',blocker:'',risk:'',lastActivity:'Meeting booked — prepping',steps:[],dates:[],notes:notes,snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]};
+  if(AI_ON()){
+    const sys='You are an elite discovery coach for an AE who sells DealHub CPQ (Configure-Price-Quote) into B2B companies in AU/NZ. The rep has a meeting booked. Using the account, the person and their role, and the rep\'s notes, build a tight discovery plan. Reply with ONLY valid JSON (no prose, no markdown) in this shape: {"oneLiner":"a one-line hypothesis of the value for this account","whyNow":"the likely compelling event / why they would look now","hypotheses":["likely CPQ pain hypotheses to test — manual quoting, pricing errors, approval bottlenecks, slow rep ramp, CRM/quote hygiene"],"agenda":["meeting agenda items in order"],"questions":["sharp open discovery questions tailored to this person\'s role"],"outcomes":["the key outcomes to land — the next step to secure, who else to multithread to"],"story":"1-2 sentences: a relevant proof-story angle or analogous customer pattern the rep can reference"}. Ground everything in DealHub CPQ value (faster accurate quotes, governed pricing and approvals, one source of truth). If you do not know the company, reason from its name and the notes. Invent no specific facts, names, or metrics about the company.';
+    const ctx='Account: '+name+'\nMeeting with: '+(person||'(unknown)')+(role?' — '+role:'')+'\nRep notes:\n"""\n'+(notes||'(none provided)')+'\n"""';
+    const j=await aiJSON(sys,ctx,1400);
+    if(j){
+      if(j.oneLiner) d.oneLiner=(''+j.oneLiner).trim();
+      if(j.whyNow) d.whyNow=(''+j.whyNow).trim();
+      if(Array.isArray(j.outcomes)) j.outcomes.forEach(o=>{ o=(''+(o||'')).trim(); if(o.length>3) d.steps.push({text:o,done:false,due:''}); });
+      const sec=(t,a)=>(Array.isArray(a)&&a.length)?(t+'\n'+a.map(x=>'• '+(''+x).trim()).join('\n')+'\n\n'):'';
+      let prep='MEETING PREP — '+name+(person?' · '+person+(role?' ('+role+')':''):'')+'\n\n';
+      if(j.whyNow) prep+='Why now: '+(''+j.whyNow).trim()+'\n\n';
+      prep+=sec('HYPOTHESES TO TEST',j.hypotheses)+sec('AGENDA',j.agenda)+sec('DISCOVERY QUESTIONS',j.questions)+sec('OUTCOMES TO LAND',j.outcomes);
+      if(j.story) prep+='STORY ANGLE\n'+(''+j.story).trim()+'\n';
+      d.artifacts.prep=prep.trim();
+      d.comments.push({id:uid(),author:'Helm',text:'Prep built for your meeting — see the Meeting prep card. Outcomes added as next steps. After the call, use “Paste a call or transcript” and it scores how you did against these.',ts:Date.now()});
+    }
+  }
+  btn.disabled=false; btn.textContent='Build prep + workspace';
+  deals.push(d); save(); closeNew(); renderDeals(); openDeal(d.id);
+  toast((d.artifacts&&d.artifacts.prep)?'✨ Prep built — workspace ready':'Workspace created');
+}
 function createRevival(){
   const name=$('#rvName').value.trim()||'Untitled', person=$('#rvPerson').value.trim()||'there', when=$('#rvWhen').value.trim()||'previously',
     paste=$('#rvSummary').value.trim(), others=$('#rvOthers').value.trim(), me=userName||'Clifton', arr=0;
@@ -2011,6 +2285,28 @@ document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowe
 $('#settingsBtn').addEventListener('click',openSettings);
 $('#settingsClose').addEventListener('click',closeSettings);
 $('#settingsScrim').addEventListener('click',e=>{ if(e.target===$('#settingsScrim'))closeSettings(); });
+$('#txClose').addEventListener('click',closeTranscript);
+$('#txScrim').addEventListener('click',e=>{ if(e.target===$('#txScrim'))closeTranscript(); });
+$('#txRun').addEventListener('click',processTranscript);
+$('#notifBtn').addEventListener('click',e=>{ e.stopPropagation(); const p=$('#notifPop'); if(p.classList.contains('open'))p.classList.remove('open'); else { renderNotifs(); p.classList.add('open'); } });
+document.addEventListener('click',e=>{ if(!e.target.closest('.notif-wrap')){ const p=$('#notifPop'); if(p)p.classList.remove('open'); } });
+function openChatPop(){ $('#chatPop').classList.add('open'); renderChat(); setTimeout(()=>{const i=$('#chatInput');if(i)i.focus();},80); }
+function closeChatPop(){ $('#chatPop').classList.remove('open'); }
+$('#chatFab').addEventListener('click',()=>{ const p=$('#chatPop'); if(p.classList.contains('open'))closeChatPop(); else openChatPop(); });
+$('#chatPopClose').addEventListener('click',closeChatPop);
+$('#chatClear').addEventListener('click',()=>{ if(meta.chat&&meta.chat.length&&confirm('Clear this conversation?')){ meta.chat=[]; save(); renderChat(); } });
+$('#chatSend').addEventListener('click',sendChat);
+$('#chatInput').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChat(); } });
+$('#chatInput').addEventListener('input',e=>autosize(e.target));
+(function(){ const mic=$('#chatMic'); if(!mic)return; const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){ mic.style.display='none'; return; }
+  let rec=null,on=false,base='';
+  mic.addEventListener('click',()=>{ if(on){ try{rec.stop();}catch(e){} return; }
+    try{ rec=new SR(); rec.lang='en-AU'; rec.interimResults=true; rec.continuous=true; const inp=$('#chatInput'); base=inp.value;
+      rec.onresult=ev=>{ let t=''; for(let i=0;i<ev.results.length;i++) t+=ev.results[i][0].transcript+(ev.results[i].isFinal?' ':''); inp.value=(base?base.trim()+' ':'')+t; autosize(inp); };
+      rec.onend=()=>{ on=false; mic.classList.remove('listening'); };
+      rec.onerror=()=>{ on=false; mic.classList.remove('listening'); toast('Voice needs the live (https) site or mic permission'); };
+      rec.start(); on=true; mic.classList.add('listening'); toast('Listening… tap the mic again to stop');
+    }catch(e){ toast('Voice not available here — works on the live site'); } }); })();
 $('#shareBtn').addEventListener('click',async()=>{ try{ const data=btoa(unescape(encodeURIComponent(JSON.stringify({deals,meta})))); const url=location.origin+location.pathname+'#d='+data+(RO?'&m=1':''); await navigator.clipboard.writeText(url); toast(RO?'Manager (read-only) link copied':'Share link copied to clipboard'); }catch(e){ toast('Couldn’t copy — try again'); } });
 let toastT;
 function toast(msg){ const t=$('#toast'); t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${msg}`; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400); }
