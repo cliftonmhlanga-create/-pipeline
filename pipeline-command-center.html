@@ -986,7 +986,7 @@ let userName=''; try{ userName=localStorage.getItem('pcc_user')||''; }catch(e){}
 function loadState(){
   let raw=null;
   try{ const h=new URLSearchParams(location.hash.slice(1)); if(h.get('d')) raw=JSON.parse(decodeURIComponent(escape(atob(h.get('d'))))); if(h.get('m')==='1')RO=true; }catch(e){}
-  if(!raw){ try{ const s=localStorage.getItem(KEY); if(s) raw=JSON.parse(s); }catch(e){} }
+  if(!raw) raw=Local.load();
   if(!raw) raw=JSON.parse(JSON.stringify({deals:SEED,meta:{targets:{Q1:0,Q2:0,Q3:0,Q4:0},displayMode:'both'}}));
   if(Array.isArray(raw)) raw={deals:raw,meta:{}};
   deals=raw.deals||[]; meta=raw.meta||{};
@@ -1030,44 +1030,77 @@ function migrate(){
     if(!d.artifacts||typeof d.artifacts!=='object') d.artifacts={};
   });
 }
-function save(){ try{ localStorage.setItem(KEY,JSON.stringify({deals,meta})); }catch(e){} pushRemote(); }
+/* ════════ DATA LAYER — all persistence behind one interface ════════
+   Vendor-specific code (Firebase, localStorage) lives ONLY in this block.
+   The rest of the app uses save() / saveD() and the deal repository below —
+   never Firestore or localStorage directly. Swapping the backend (e.g. a
+   staging Firebase) means changing this block only.
+   See docs/DECISIONS.md (D2, D7, D11) and docs/TECH_DEBT.md (TD2). */
+const CLIENT_ID=(Math.random().toString(36).slice(2)+Date.now().toString(36));
+function currentState(){ return {deals,meta}; }
+
+/* Local persistence adapter */
+const Local={
+  load(){ try{ const s=localStorage.getItem(KEY); return s?JSON.parse(s):null; }catch(e){ return null; } },
+  save(state){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+};
+
+/* Remote persistence adapter — the ONLY place Firestore is touched.
+   Tags every write with CLIENT_ID so we can ignore the echo of our own writes. */
+const DB={
+  _doc:null, _ready:false, _timer:null,
+  available(){ return !!(FIREBASE_CONFIG && window.firebase); },
+  ready(){ return this._ready && !!this._doc; },
+  init(){ firebase.initializeApp(FIREBASE_CONFIG); this._doc=firebase.firestore().collection('pipeline').doc(SYNC_DOC_ID); this._ready=true; },
+  subscribe(onSnap,onErr){ this._doc.onSnapshot(onSnap,onErr); },
+  push(payloadStr){ clearTimeout(this._timer); this._timer=setTimeout(()=>{ this._doc.set({payload:payloadStr,updated:Date.now(),writer:CLIENT_ID}).catch(()=>{}); },400); }
+};
+
+/* Public persistence API — used across the whole app */
+function save(){ Local.save(currentState()); pushRemote(); }
 function saveD(d){ if(d) d.updated=Date.now(); save(); }
 
+/* Deal repository — semantic vocabulary over the in-memory book.
+   Prefer these in new code instead of touching `deals` + save() directly. */
+function getDeals(){ return deals; }
+function getDeal(id){ return deals.find(d=>d.id===id)||null; }
+function addDeal(d){ deals.push(d); save(); return d; }
+function saveDeal(d){ saveD(d); return d; }
+function updateDeal(id,patch){ const d=getDeal(id); if(d&&patch){ Object.assign(d,patch); saveD(d); } return d; }
+function removeDeal(id){ deals=deals.filter(d=>d.id!==id); save(); }
+
 /* ── live sync ── */
-let syncReady=false, syncDoc=null, applyingRemote=false, saveTimer=null;
-/* Each browser/tab gets a stable id so we can recognise — and ignore — the echo of our OWN writes.
-   Without this, Firestore replays every write back to us and replaces the whole deals array,
-   which wiped in-progress edits and brought deleted/renamed deals back to life. */
-const CLIENT_ID=(Math.random().toString(36).slice(2)+Date.now().toString(36));
+let syncReady=false, applyingRemote=false;
 function initSync(){
-  if(!FIREBASE_CONFIG || !window.firebase){ updateSyncBadge(false); return; }
+  if(!DB.available()){ updateSyncBadge(false); return; }
   try{
-    firebase.initializeApp(FIREBASE_CONFIG);
-    syncDoc=firebase.firestore().collection('pipeline').doc(SYNC_DOC_ID);
-    syncDoc.onSnapshot(snap=>{
+    DB.init();
+    DB.subscribe(snap=>{
       if(!snap.exists){ pushRemote(true); return; }
-      if(snap.metadata&&snap.metadata.hasPendingWrites) return;   // our own write, not yet confirmed by the server — ignore the optimistic echo
+      if(snap.metadata&&snap.metadata.hasPendingWrites) return;   // our own optimistic echo — ignore
       const data=snap.data(); if(!data||!data.payload) return;
-      if(data.writer===CLIENT_ID) return;                         // our own confirmed write — we already hold this state; never overwrite local edits with it
-      try{
-        const parsed=JSON.parse(data.payload);
-        applyingRemote=true;
-        deals=parsed.deals||deals;
-        if(parsed.meta){ meta=Object.assign({},meta,parsed.meta); periodizeMeta(); }
-        migrate();
-        try{ localStorage.setItem(KEY,JSON.stringify({deals,meta})); }catch(e){}
-        const a=document.activeElement, typing=a&&$('#panel').contains(a);
-        applyChrome(); renderActive(); if(openId&&!typing) renderPanel();
-        applyingRemote=false;
-      }catch(e){ applyingRemote=false; }
+      if(data.writer===CLIENT_ID) return;                         // our own confirmed write — never overwrite local edits with it
+      applyRemoteState(data.payload);
     }, err=>{ updateSyncBadge(false); });
     syncReady=true; updateSyncBadge(true);
   }catch(e){ updateSyncBadge(false); }
 }
+function applyRemoteState(payloadStr){
+  try{
+    const parsed=JSON.parse(payloadStr);
+    applyingRemote=true;
+    deals=parsed.deals||deals;
+    if(parsed.meta){ meta=Object.assign({},meta,parsed.meta); periodizeMeta(); }
+    migrate();
+    Local.save(currentState());
+    const a=document.activeElement, typing=a&&$('#panel').contains(a);
+    applyChrome(); renderActive(); if(openId&&!typing) renderPanel();
+    applyingRemote=false;
+  }catch(e){ applyingRemote=false; }
+}
 function pushRemote(force){
-  if(!syncReady||!syncDoc||(applyingRemote&&!force)) return;
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>{ syncDoc.set({payload:JSON.stringify({deals,meta}),updated:Date.now(),writer:CLIENT_ID}).catch(()=>{}); },400);
+  if(!syncReady||!DB.ready()||(applyingRemote&&!force)) return;
+  DB.push(JSON.stringify(currentState()));
 }
 function updateSyncBadge(on){ const b=$('#syncBadge'); if(!b)return; b.style.display=FIREBASE_CONFIG?'':'none'; b.textContent=on?'● Live':'○ Offline'; b.style.color=on?'var(--green)':'var(--text-3)'; }
 
@@ -1231,10 +1264,10 @@ function aiArtifactsHTML(d){
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
 function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]}; }
 async function chatAgent(text){
-  const book=deals.map(d=>'- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']').join('\n');
+  const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
-  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","arr":0,"status":"engaged","note":"any context"}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\nRules: map every action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When you CREATE a new deal from a call, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are 0-10. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
-  const ctx='THE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
+  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","arr":0,"status":"engaged","note":"any context"}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\nRules: map every action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When you CREATE a new deal from a call, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are 0-10. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
+  const ctx='Today is '+today+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
   return await aiJSON(sys,ctx,1300);
 }
 function applyChatActions(actions){
@@ -1245,7 +1278,8 @@ function applyChatActions(actions){
     const d=findDealByName(a.deal); if(!d){ chips.push({label:'？ Couldn’t find “'+(a.deal||'?')+'”',warn:true}); return; }
     if(a.type==='update_deal'&&a.updates&&typeof a.updates==='object'){ const ch=[]; FLD.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).trim()){ d[k]=(''+a.updates[k]).trim(); ch.push(k); } }); NUM.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).toString().trim()){ d[k]=parseFloat((''+a.updates[k]).replace(/[^0-9.]/g,''))||0; ch.push(k); } }); if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
     else if(a.type==='log_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:note,ts:Date.now()}); d.lastActivity=note.slice(0,80); saveD(d); chips.push({label:'✓ Logged on '+d.name,dealId:d.id}); } }
-    else if(a.type==='add_step'){ const t=(a.text||'').trim(); if(t){ d.steps=d.steps||[]; d.steps.push({text:t,done:false,due:addDays(today,5)}); saveD(d); chips.push({label:'✓ Next step · '+d.name,dealId:d.id}); } }
+    else if(a.type==='add_step'){ const t=(a.text||'').trim(); if(t){ d.steps=d.steps||[]; const due=(a.due&&/^\d{4}-\d{2}-\d{2}$/.test(a.due))?a.due:addDays(today,5); d.steps.push({text:t,done:false,due}); saveD(d); chips.push({label:'✓ Next step · '+d.name,dealId:d.id}); } }
+    else if(a.type==='complete_step'){ const m=((a.match||a.text||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase()===m)||open.find(s=>{const t=(s.text||'').toLowerCase();return t.includes(m)||m.includes(t);}); if(!step){ const words=m.split(/\s+/).filter(w=>w.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return words.some(w=>t.includes(w));}); } } if(step){ step.done=true; saveD(d); chips.push({label:'✓ Done · '+d.name+' — '+(step.text||'').slice(0,28),dealId:d.id}); } else chips.push({label:'？ No matching open task on '+d.name,warn:true,dealId:d.id}); }
     else if(a.type==='add_stakeholder'){ const nm=(a.name||'').trim(); if(nm){ d.people=d.people||[]; const sent=['positive','neutral','negative'].includes(a.sentiment)?a.sentiment:'neutral'; const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ ex.sent=sent; if((a.role||'').trim()&&!(ex.role||'').trim())ex.role=a.role; } else d.people.push({name:nm,role:a.role||'Influencer',sent}); saveD(d); chips.push({label:'✓ '+nm+' → '+d.name,dealId:d.id}); } }
     else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open; if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
     else if(a.type==='sprint_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'Sprint update: '+note,ts:Date.now()}); d.lastActivity=note.slice(0,80); } const na=(a.nextAction||'').trim(); if(na){ d.steps=d.steps||[]; d.steps.push({text:na,done:false,due:addDays(today,5)}); } saveD(d); chips.push({label:'✓ Sprint · '+d.name,dealId:d.id}); }
