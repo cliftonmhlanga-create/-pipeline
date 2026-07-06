@@ -868,7 +868,18 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-const FIREBASE_CONFIG = {
+/* ── Environment ──────────────────────────────────────────────
+   PRODUCTION only when running on the real live host. Anywhere else
+   (your local file, localhost, a staging URL) uses STAGING — so you
+   can never test against live data by accident.
+   Manual override: add ?env=prod or ?env=staging to the URL. */
+const PROD_HOST = 'cliftonmhlanga-create.github.io';
+function activeEnv(){
+  try{ const q=new URLSearchParams(location.search).get('env'); if(q==='prod'||q==='staging') return q; }catch(e){}
+  return (location.hostname===PROD_HOST) ? 'prod' : 'staging';
+}
+
+const FIREBASE_PROD = {
   apiKey: "AIzaSyCLB8U0BUu9oDpzadrUx_bS2YebHmEB2So",
   authDomain: "deals-b97d3.firebaseapp.com",
   projectId: "deals-b97d3",
@@ -876,6 +887,19 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "935778493671",
   appId: "1:935778493671:web:05fb99cd57644f3bd56e42"
 };
+/* STAGING — paste your staging Firebase project's config here (setup guide in chat).
+   Until it's filled in, non-production runs LOCAL-ONLY (no cloud sync) — which is
+   safe: it will NEVER touch production data. */
+const FIREBASE_STAGING = {
+  apiKey: "AIzaSyD9Vo31jw20neEsEE_DQaSms932Q_TEp6w",
+  authDomain: "helm-staging-52061.firebaseapp.com",
+  projectId: "helm-staging-52061",
+  storageBucket: "helm-staging-52061.firebasestorage.app",
+  messagingSenderId: "22593108307",
+  appId: "1:22593108307:web:dc35fe8b1c333843c649a6"
+};
+function activeFbConfig(){ return activeEnv()==='prod' ? FIREBASE_PROD : FIREBASE_STAGING; }
+const FIREBASE_CONFIG = activeFbConfig();  /* back-compat alias */
 const SYNC_DOC_ID = 'state';
 /* Optional: paste a Cloudflare Worker URL here to enable true Claude-AI understanding of your
    plain-English updates (deep parsing + draft business case + next-best-action). Until then,
@@ -1049,9 +1073,9 @@ const Local={
    Tags every write with CLIENT_ID so we can ignore the echo of our own writes. */
 const DB={
   _doc:null, _ready:false, _timer:null,
-  available(){ return !!(FIREBASE_CONFIG && window.firebase); },
+  available(){ return !!(window.firebase && activeFbConfig().apiKey); },
   ready(){ return this._ready && !!this._doc; },
-  init(){ firebase.initializeApp(FIREBASE_CONFIG); this._doc=firebase.firestore().collection('pipeline').doc(SYNC_DOC_ID); this._ready=true; },
+  init(){ firebase.initializeApp(activeFbConfig()); this._doc=firebase.firestore().collection('pipeline').doc(SYNC_DOC_ID); this._ready=true; },
   subscribe(onSnap,onErr){ this._doc.onSnapshot(onSnap,onErr); },
   push(payloadStr){ clearTimeout(this._timer); this._timer=setTimeout(()=>{ this._doc.set({payload:payloadStr,updated:Date.now(),writer:CLIENT_ID}).catch(()=>{}); },400); }
 };
@@ -1102,7 +1126,9 @@ function pushRemote(force){
   if(!syncReady||!DB.ready()||(applyingRemote&&!force)) return;
   DB.push(JSON.stringify(currentState()));
 }
-function updateSyncBadge(on){ const b=$('#syncBadge'); if(!b)return; b.style.display=FIREBASE_CONFIG?'':'none'; b.textContent=on?'● Live':'○ Offline'; b.style.color=on?'var(--green)':'var(--text-3)'; }
+function updateSyncBadge(on){ const b=$('#syncBadge'); if(!b)return; b.style.display=''; const env=activeEnv(), hasCfg=!!activeFbConfig().apiKey;
+  if(env!=='prod'){ b.textContent = hasCfg?(on?'● Staging':'○ Staging offline'):'○ Local only (staging)'; b.style.color='var(--orange)'; }
+  else { b.textContent = on?'● Live':'○ Offline'; b.style.color = on?'var(--green)':'var(--text-3)'; } }
 
 /* ════════ ENGINE ════════ */
 const OPEN=()=>deals.filter(d=>STATUSES[d.status]&&STATUSES[d.status].open);
