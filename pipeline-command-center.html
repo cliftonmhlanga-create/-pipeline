@@ -1081,7 +1081,7 @@ const DB={
 };
 
 /* Public persistence API — used across the whole app */
-function save(){ Local.save(currentState()); pushRemote(); }
+function save(){ Local.save(currentState()); pushRemote(); try{ updateNotifBadge(); const np=$('#notifPop'); if(np&&np.classList.contains('open')) renderNotifs(); }catch(e){} }
 function saveD(d){ if(d) d.updated=Date.now(); save(); }
 
 /* Deal repository — semantic vocabulary over the in-memory book.
@@ -1217,11 +1217,20 @@ const DEFAULT_SPRINT_STEPS=[
   'Connect + message key people on LinkedIn',
   'Follow up with value until we get a reply'
 ];
-/* Start a 2-week sprint and pre-fill the default goal + steps (only adds steps not already there). */
+/* The active sprint defaults — user-configurable in Settings, else the built-ins. */
+function sprintDefaults(){
+  const sd=meta.sprintDefaults||{};
+  const goal=(sd.goal&&sd.goal.trim())?sd.goal.trim():DEFAULT_SPRINT_GOAL;
+  const steps=(Array.isArray(sd.steps)&&sd.steps.filter(s=>(s||'').trim()).length)?sd.steps.filter(s=>(s||'').trim()):DEFAULT_SPRINT_STEPS;
+  const days=(sd.days&&+sd.days>0)?+sd.days:14;
+  return {goal,steps,days};
+}
+/* Start a sprint and pre-fill the default goal + steps (only adds steps not already there). */
 function startSprint(d,goal){
-  d.sprint={goal:(goal&&goal.trim())||DEFAULT_SPRINT_GOAL,start:today,end:addDays(today,14)};
+  const def=sprintDefaults();
+  d.sprint={goal:(goal&&goal.trim())||def.goal,start:today,end:addDays(today,def.days)};
   d.steps=d.steps||[];
-  DEFAULT_SPRINT_STEPS.forEach((t,i)=>{ if(!d.steps.some(s=>(s.text||'').trim().toLowerCase()===t.toLowerCase())) d.steps.push({text:t,done:false,due:addDays(today,[1,2,6,7,10][i]||7)}); });
+  def.steps.forEach((t,i)=>{ t=(t||'').trim(); if(t&&!d.steps.some(s=>(s.text||'').trim().toLowerCase()===t.toLowerCase())) d.steps.push({text:t,done:false,due:addDays(today,Math.min(def.days,[1,2,6,7,10][i]||(i+1)*2))}); });
 }
 /* ── Slip tracking: count when a close date moves to a LATER quarter ── */
 function recordSlip(d,oldDate,newDate){
@@ -1290,16 +1299,19 @@ function aiArtifactsHTML(d){
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
 function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]}; }
 async function chatAgent(text){
-  const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+st; }).join('\n');
+  const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; const q=quarterOf(d); const sched=(d.status==='recovery'||d.status==='dormant')?' | NOT in a quarter yet (recovery/dormant — needs an active status + a close date to get scheduled)':(d.closeDate?(' | closes '+d.closeDate+(q?' ('+periodShort(q)+')':'')):' | no close date'); return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+sched+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
-  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","arr":0,"status":"engaged","note":"any context"}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\nRules: map every action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When you CREATE a new deal from a call, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are 0-10. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
-  const ctx='Today is '+today+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
+  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","arr":0,"status":"engaged","note":"any context"}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\nRules: map every action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. When you CREATE a new deal from a call, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are 0-10. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
+  const quarters=activePeriods().map(k=>{ const dr=quarterDates(k); return periodShort(k)+' = '+dr[0].toISOString().slice(0,10)+'…'+dr[1].toISOString().slice(0,10); }).join('; ');
+  const ctx='Today is '+today+'. Fiscal quarters (for setting close dates): '+quarters+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
   return await aiJSON(sys,ctx,1300);
 }
 function applyChatActions(actions){
   const chips=[], FLD=['oneLiner','whyNow','costInaction','threats','blocker','risk','lastActivity','contact','role','crm','type','location','closeLabel','closeDate'], NUM=['arr','users'];
   (actions||[]).forEach(a=>{
-    if(!a||!a.type) return;
+    if(!a) return;
+    if(!a.type && a.action) a.type=a.action;   // tolerate the model labelling it "action"
+    if(!a.type) return;
     if(a.type==='create_deal'){ const nm=(a.name||'').trim(); if(!nm)return; const d=blankDeal(nm); if(a.status&&STATUSES[a.status])d.status=a.status; if(a.arr)d.arr=parseFloat((''+a.arr).replace(/[^0-9.]/g,''))||0; if(a.note){ d.notes=a.note; d.comments.push({id:uid(),author:userName||'Me',text:a.note,ts:Date.now()}); } deals.push(d); chips.push({label:'＋ Created '+nm,dealId:d.id}); return; }
     const d=findDealByName(a.deal); if(!d){ chips.push({label:'？ Couldn’t find “'+(a.deal||'?')+'”',warn:true}); return; }
     if(a.type==='update_deal'&&a.updates&&typeof a.updates==='object'){ const ch=[]; FLD.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).trim()){ d[k]=(''+a.updates[k]).trim(); ch.push(k); } }); NUM.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).toString().trim()){ d[k]=parseFloat((''+a.updates[k]).replace(/[^0-9.]/g,''))||0; ch.push(k); } }); if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
@@ -1307,7 +1319,7 @@ function applyChatActions(actions){
     else if(a.type==='add_step'){ const t=(a.text||'').trim(); if(t){ d.steps=d.steps||[]; const due=(a.due&&/^\d{4}-\d{2}-\d{2}$/.test(a.due))?a.due:addDays(today,5); d.steps.push({text:t,done:false,due}); saveD(d); chips.push({label:'✓ Next step · '+d.name,dealId:d.id}); } }
     else if(a.type==='complete_step'){ const m=((a.match||a.text||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase()===m)||open.find(s=>{const t=(s.text||'').toLowerCase();return t.includes(m)||m.includes(t);}); if(!step){ const words=m.split(/\s+/).filter(w=>w.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return words.some(w=>t.includes(w));}); } } if(step){ step.done=true; saveD(d); chips.push({label:'✓ Done · '+d.name+' — '+(step.text||'').slice(0,28),dealId:d.id}); } else chips.push({label:'？ No matching open task on '+d.name,warn:true,dealId:d.id}); }
     else if(a.type==='add_stakeholder'){ const nm=(a.name||'').trim(); if(nm){ d.people=d.people||[]; const sent=['positive','neutral','negative'].includes(a.sentiment)?a.sentiment:'neutral'; const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ ex.sent=sent; if((a.role||'').trim()&&!(ex.role||'').trim())ex.role=a.role; } else d.people.push({name:nm,role:a.role||'Influencer',sent}); saveD(d); chips.push({label:'✓ '+nm+' → '+d.name,dealId:d.id}); } }
-    else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open; if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
+    else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open, fromRec=(d.status==='recovery'||d.status==='dormant'); if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; if(fromRec && STATUSES[ns].open && ns!=='recovery' && ns!=='dormant'){ d.sprint=null; d.retryDate=''; } saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
     else if(a.type==='sprint_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'Sprint update: '+note,ts:Date.now()}); d.lastActivity=note.slice(0,80); } const na=(a.nextAction||'').trim(); if(na){ d.steps=d.steps||[]; d.steps.push({text:na,done:false,due:addDays(today,5)}); } saveD(d); chips.push({label:'✓ Sprint · '+d.name,dealId:d.id}); }
     else if(a.type==='set_scores'){ const ch=[]; const clamp=v=>Math.max(0,Math.min(10,Math.round(parseFloat(v)))); if(a.belief!=null&&(''+a.belief).trim()!==''){ d.belief=clamp(a.belief); ch.push('belief '+d.belief); } if(a.deservedness!=null&&(''+a.deservedness).trim()!==''){ d.deserve=clamp(a.deservedness); ch.push('deservedness '+d.deserve); } if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
     else if(a.type==='open_deal'){ chips.push({label:'↗ Open '+d.name,dealId:d.id}); }
@@ -1328,7 +1340,7 @@ async function sendChat(){
   const reply=(res&&res.reply)?(''+res.reply).trim():(acts.length?'Done — updated for you.':'Sorry, I had trouble with that one. Mind rephrasing?');
   meta.chat.push({role:'ai',text:reply,acts});
   if(meta.chat.length>24) meta.chat=meta.chat.slice(-24);
-  save(); renderChat(); renderDeals();
+  save(); renderChat(); renderDeals(); if(openId){ try{ renderPanel(); }catch(e){} }
   chatBusy=false; if($('#chatSend'))$('#chatSend').disabled=false; if($('#chatInput'))$('#chatInput').focus();
 }
 function renderChat(){
@@ -2170,6 +2182,11 @@ function openSettings(){ renderSettings(); $('#settingsScrim').classList.add('op
 function closeSettings(){ $('#settingsScrim').classList.remove('open'); }
 function renderSettings(){
   const qs=activePeriods();
+  const sd=meta.sprintDefaults||{};
+  const sdGoal=(sd.goal!=null&&sd.goal!=='')?sd.goal:DEFAULT_SPRINT_GOAL;
+  const sdSteps=(Array.isArray(sd.steps)&&sd.steps.length)?sd.steps:DEFAULT_SPRINT_STEPS;
+  const sdDays=sd.days||14;
+  const spStyle='width:100%;font-family:inherit;font-size:13px;line-height:1.5;padding:9px 11px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);resize:vertical;color:var(--text)';
   $('#settingsBody').innerHTML=`
     <div class="modal-sec"><div class="modal-sec-t">Quarterly targets (AUD) — Salesforce FY, rolling</div>
       ${qs.map(k=>{ const [st,en]=quarterDates(k); return `<div class="tgt-row"><div class="tgt-q">${periodLabel(k)} ${k===currentPeriod?'<span class="now">This quarter</span>':''} <span class="muted" style="color:var(--text-3);font-weight:500;font-size:11.5px">${fmtD(st)}–${fmtD(en)}</span></div><div class="tgt-in"><span class="cur">A$</span><input data-q="${k}" inputmode="numeric" value="${(meta.targets[k]||0).toLocaleString('en-US')}"></div></div>`; }).join('')}
@@ -2179,9 +2196,20 @@ function renderSettings(){
         <button data-m="AUD" class="${meta.displayMode==='AUD'?'active':''}">A$</button>
         <button data-m="USD" class="${meta.displayMode==='USD'?'active':''}">US$</button>
         <button data-m="both" class="${meta.displayMode==='both'?'active':''}">Both</button>
-      </div></div>`;
+      </div></div>
+    <div class="modal-sec"><div class="modal-sec-t">Recovery sprint defaults</div>
+      <div class="st-hint" style="margin-bottom:10px;color:var(--text-3);font-size:12px">What gets pre-filled when you start a 2-week sprint on a stalled deal.</div>
+      <label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Default goal</label>
+      <textarea id="spDefGoal" rows="2" style="${spStyle};margin-bottom:12px" placeholder="The 2-week goal…">${esc(sdGoal)}</textarea>
+      <label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Default steps · one per line</label>
+      <textarea id="spDefSteps" rows="6" style="${spStyle};margin-bottom:12px" placeholder="One action per line…">${esc(sdSteps.join('\n'))}</textarea>
+      <div style="display:flex;align-items:center;gap:10px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2)">Sprint length</label><input id="spDefDays" inputmode="numeric" value="${sdDays}" style="width:62px;font-family:inherit;font-size:13px;padding:8px 10px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text)"><span style="font-size:12px;color:var(--text-3)">days</span><button id="spDefReset" style="margin-left:auto;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:8px">Reset to built-in</button></div>
+    </div>`;
   $('#settingsBody').querySelectorAll('.tgt-in input').forEach(inp=>inp.addEventListener('input',()=>{ meta.targets[inp.dataset.q]=parseInt(inp.value.replace(/[^0-9]/g,''))||0; save(); if($('#seg button.active').dataset.view==='deals')renderSummary(); }));
   $('#segCur').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ meta.displayMode=b.dataset.m; save(); applyChrome(); $('#segCur').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); renderActive(); }));
+  const saveSprintDefaults=()=>{ meta.sprintDefaults={ goal:$('#spDefGoal').value, steps:$('#spDefSteps').value.split('\n').map(s=>s.trim()).filter(Boolean), days:parseInt(($('#spDefDays').value||'').replace(/[^0-9]/g,''))||14 }; save(); };
+  ['spDefGoal','spDefSteps','spDefDays'].forEach(id=>{ const e=$('#'+id); if(e) e.addEventListener('input',saveSprintDefaults); });
+  const spReset=$('#spDefReset'); if(spReset) spReset.addEventListener('click',()=>{ delete meta.sprintDefaults; save(); renderSettings(); toast('Sprint defaults reset'); });
 }
 
 /* ════════ EVENTS ════════ */
