@@ -564,7 +564,7 @@
   /* settings modal */
   .modal-scrim{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:.25s var(--ease);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
   .modal-scrim.open{opacity:1;pointer-events:auto}
-  .modal{background:rgba(252,251,254,.92);backdrop-filter:blur(34px) saturate(1.3);-webkit-backdrop-filter:blur(34px) saturate(1.3);border-radius:var(--r-xl);box-shadow:var(--shadow-l);width:min(480px,100%);max-height:90vh;overflow-y:auto;transform:scale(.96);transition:.25s var(--ease)}
+  .modal{background:rgba(252,251,254,.92);backdrop-filter:blur(34px) saturate(1.3);-webkit-backdrop-filter:blur(34px) saturate(1.3);border-radius:var(--r-xl);box-shadow:var(--shadow-l);width:min(540px,100%);max-height:90vh;overflow-y:auto;transform:scale(.96);transition:.25s var(--ease)}
   .email-box{background:var(--surface-2);border:1px solid var(--hair);border-radius:var(--r-m);margin-bottom:12px;overflow:hidden}
   .email-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;font-size:12px;font-weight:650;color:var(--text-2);border-bottom:1px solid var(--hair)}
   .email-copy{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:4px 11px;border-radius:8px}
@@ -674,9 +674,10 @@
   .modal-scrim.open .modal{transform:none}
   .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 0}
   .modal-title{font-size:19px;font-weight:750;letter-spacing:-.3px}
-  .modal-body{padding:18px 24px 24px}
-  .modal-sec{margin-bottom:22px}
-  .modal-sec-t{font-size:12px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:12px}
+  .modal-body{padding:6px 24px 22px}
+  .modal-sec{padding:18px 0;border-top:1px solid var(--hair)}
+  .modal-sec:first-child{border-top:none;padding-top:4px}
+  .modal-sec-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-2);margin-bottom:12px}
   .tgt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair)}
   .tgt-row:last-child{border-bottom:none}
   .tgt-q{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px}
@@ -930,9 +931,13 @@ const LIKE_RANK={'Highest':6,'High':5,'Medium':4,'Medium-low':3,'Low':2,'Lowest'
 const LOSS_REASONS=['Product gap','Built in-house','Lost to competitor','Budget / cost','No decision / timing','Other'];
 const LOSS_COLOR={'Product gap':'var(--red)','Built in-house':'var(--orange)','Lost to competitor':'var(--indigo)','Budget / cost':'var(--gray)','No decision / timing':'var(--gray)','Other':'var(--gray)'};
 const AUD_PER_USD=1.53;
+function fxUSD(){ return (typeof meta!=='undefined'&&meta&&+meta.fx>0)?+meta.fx:AUD_PER_USD; }
 const today=new Date().toISOString().slice(0,10);
 const proofFrom=n=>PROOF_SIGNALS.map((_,i)=>i<n);
 const journeyTo=(n,date)=>STAGES.map((nm,i)=>({name:nm,done:i<n,date:i<n?(date||''):''}));
+/* New deals use the user's custom stage flow (Settings) if set, else the built-in STAGES. */
+function activeStages(){ return (typeof meta!=='undefined'&&meta&&Array.isArray(meta.journeyTemplate)&&meta.journeyTemplate.length)?meta.journeyTemplate:STAGES; }
+function newJourney(){ return activeStages().map(nm=>({name:nm,done:false,date:''})); }
 
 const SEED=[
   {id:'howards',name:'Howards',arr:21000,cur:'AUD',status:'closing',belief:9,deserve:8,proof:proofFrom(7),focus:true,
@@ -1136,7 +1141,7 @@ function proofScore(d){ return Math.round((d.proof||[]).filter(Boolean).length/P
 function health(d){ return Math.round((d.belief||0)*3+proofScore(d)*5+(d.deserve||0)*2); }
 function category(d){ if((d.deserve||0)>=7&&(d.status==='closing'||d.status==='advancing'))return 'commit'; if((d.deserve||0)>=5)return 'best'; return 'pipe'; }
 const CAT_LABEL={commit:'Commit',best:'Best case',pipe:'Pipeline'};
-function aud(d){ return (+d.arr||0)*(CURRENCIES[d.cur]?.rate||1); }
+function aud(d){ if(d.cur==='USD') return (+d.arr||0)*fxUSD(); return (+d.arr||0)*(CURRENCIES[d.cur]?.rate||1); }
 function stageDone(d){ return (d.journey||[]).filter(s=>s.done).length; }
 function nextStage(d){ const s=(d.journey||[]).find(x=>!x.done); return s?s.name:null; }
 function currentStageName(d){ const done=(d.journey||[]).filter(s=>s.done); return done.length?done[done.length-1].name:null; }
@@ -1178,7 +1183,7 @@ function daysLeftInQuarter(key){ const end=quarterDates(key)[1]; return Math.rou
 
 /* ════════ MONEY ════════ */
 const fmtA=a=>'A$'+Math.round(a).toLocaleString('en-US');
-const fmtU=a=>'US$'+Math.round(a/AUD_PER_USD).toLocaleString('en-US');
+const fmtU=a=>'US$'+Math.round(a/fxUSD()).toLocaleString('en-US');
 function money(a){ return meta.displayMode==='USD'?fmtU(a):fmtA(a); }
 const showBoth=()=>meta.displayMode==='both';
 function secondary(a){ return fmtU(a); }
@@ -1297,7 +1302,7 @@ function aiArtifactsHTML(d){
 }
 /* ════════ ASSISTANT CHAT — talk to your pipeline ════════ */
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
-function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]}; }
+function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]}; }
 async function chatAgent(text){
   const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; const q=quarterOf(d); const sched=(d.status==='recovery'||d.status==='dormant')?' | NOT in a quarter yet (recovery/dormant — needs an active status + a close date to get scheduled)':(d.closeDate?(' | closes '+d.closeDate+(q?' ('+periodShort(q)+')':'')):' | no close date'); return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+sched+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
@@ -1361,10 +1366,11 @@ function renderChat(){
 }
 /* ════════ NOTIFICATIONS — what needs you ════════ */
 function notifItems(){
-  const items=[];
+  const items=[]; const lead=(meta&&+meta.notifLead>0)?+meta.notifLead:0;
   OPEN().forEach(d=>{ (d.steps||[]).forEach(s=>{ if(s.done||!s.due)return; const du=daysUntil(s.due);
     if(du<0) items.push({color:'var(--red)',title:s.text,sub:d.name,when:(-du)+'d overdue',whenC:'var(--red)',dealId:d.id,sort:du});
-    else if(du===0) items.push({color:'var(--orange)',title:s.text,sub:d.name,when:'today',whenC:'var(--orange)',dealId:d.id,sort:0.5}); }); });
+    else if(du===0) items.push({color:'var(--orange)',title:s.text,sub:d.name,when:'today',whenC:'var(--orange)',dealId:d.id,sort:0.5});
+    else if(du<=lead) items.push({color:'var(--accent)',title:s.text,sub:d.name,when:'in '+du+'d',whenC:'var(--accent)',dealId:d.id,sort:du}); }); });
   deals.forEach(d=>{ if(d.sprint&&d.sprint.end){ const du=daysUntil(d.sprint.end);
     if(du<0) items.push({color:'var(--red)',title:d.name+' — recovery sprint ended',sub:d.sprint.goal||'Recovery sprint',when:'ended',whenC:'var(--red)',dealId:d.id,sort:du-0.1});
     else if(du<=2) items.push({color:'var(--orange)',title:d.name+' — sprint ending',sub:d.sprint.goal||'Recovery sprint',when:du+'d left',whenC:'var(--orange)',dealId:d.id,sort:du}); } });
@@ -1613,7 +1619,7 @@ function renderFocus(){
   if(!(activeFilter==='all'||activeFilter===currentPeriod)){ el.innerHTML=''; return; }
   const seen=new Set(), items=[];
   OPEN().forEach(d=>{ if(d.focus){ const ts=topStep(d); items.push({d,kind:'flag',label:d.name,sub:ts?ts.text:(STATUSES[d.status].label),sort:-10}); seen.add(d.id); } });
-  OPEN().forEach(d=>{ (d.steps||[]).forEach(s=>{ if(!s.done&&s.due&&daysUntil(s.due)<=7&&!seen.has(d.id)){ items.push({d,kind:'task',when:daysUntil(s.due),label:s.text,sub:d.name,sort:daysUntil(s.due)}); seen.add(d.id);} }); });
+  OPEN().forEach(d=>{ if(seen.has(d.id))return; const soon=(d.steps||[]).filter(s=>!s.done&&s.due&&daysUntil(s.due)<=7).sort((a,b)=>daysUntil(a.due)-daysUntil(b.due))[0]; if(soon){ items.push({d,kind:'task',when:daysUntil(soon.due),label:soon.text,sub:d.name,sort:daysUntil(soon.due)}); seen.add(d.id);} });
   OPEN().forEach(d=>{ const nd=nextDate(d); if(nd&&daysUntil(nd.date)<=7&&!seen.has(d.id)){ items.push({d,kind:'date',when:daysUntil(nd.date),label:nd.label,sub:d.name+' · '+STATUSES[d.status].label,sort:daysUntil(nd.date)}); seen.add(d.id);} });
   deals.forEach(d=>{ if(d.sprint&&!seen.has(d.id)){ const left=daysUntil(d.sprint.end); if(left<=3){ items.push({d,kind:'sprint',when:left,label:d.name+' — recovery sprint ends',sub:d.sprint.goal||'2-week recovery push',sort:left-0.5}); seen.add(d.id);} } });
   deals.forEach(d=>{ if(d.status==='dormant'&&d.retryDate&&daysUntil(d.retryDate)<=14&&!seen.has(d.id)){ items.push({d,kind:'retry',label:'Retry '+d.name,sub:'Dormant since the last sprint — worth another go?',sort:daysUntil(d.retryDate)}); seen.add(d.id);} });
@@ -2186,7 +2192,10 @@ function renderSettings(){
   const sdGoal=(sd.goal!=null&&sd.goal!=='')?sd.goal:DEFAULT_SPRINT_GOAL;
   const sdSteps=(Array.isArray(sd.steps)&&sd.steps.length)?sd.steps:DEFAULT_SPRINT_STEPS;
   const sdDays=sd.days||14;
+  const jt=(Array.isArray(meta.journeyTemplate)&&meta.journeyTemplate.length)?meta.journeyTemplate:STAGES;
+  const nlead=meta.notifLead||0;
   const spStyle='width:100%;font-family:inherit;font-size:13px;line-height:1.5;padding:9px 11px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);resize:vertical;color:var(--text)';
+  const numStyle='font-family:inherit;font-size:13px;padding:8px 10px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text)';
   $('#settingsBody').innerHTML=`
     <div class="modal-sec"><div class="modal-sec-t">Quarterly targets (AUD) — Salesforce FY, rolling</div>
       ${qs.map(k=>{ const [st,en]=quarterDates(k); return `<div class="tgt-row"><div class="tgt-q">${periodLabel(k)} ${k===currentPeriod?'<span class="now">This quarter</span>':''} <span class="muted" style="color:var(--text-3);font-weight:500;font-size:11.5px">${fmtD(st)}–${fmtD(en)}</span></div><div class="tgt-in"><span class="cur">A$</span><input data-q="${k}" inputmode="numeric" value="${(meta.targets[k]||0).toLocaleString('en-US')}"></div></div>`; }).join('')}
@@ -2197,6 +2206,14 @@ function renderSettings(){
         <button data-m="USD" class="${meta.displayMode==='USD'?'active':''}">US$</button>
         <button data-m="both" class="${meta.displayMode==='both'?'active':''}">Both</button>
       </div></div>
+    <div class="modal-sec"><div class="modal-sec-t">Deal flow — your stage sequence</div>
+      <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-bottom:10px">The journey new deals start with — one stage per line, in order (e.g. Discovery, Reverse demo, Admin demo…). Existing deals keep their own journey; each stage is still editable per deal.</div>
+      <textarea id="setStages" rows="7" style="${spStyle}" placeholder="One stage per line…">${esc(jt.join('\n'))}</textarea>
+      <button id="setStagesReset" style="margin-top:8px;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:8px">Reset to built-in</button>
+    </div>
+    <div class="modal-sec"><div class="modal-sec-t">Notifications</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><label style="font-size:11.5px;font-weight:650;color:var(--text-2)">Remind me</label><input id="setNotifLead" inputmode="numeric" value="${nlead}" style="${numStyle};width:56px"><span style="font-size:12px;color:var(--text-3)">days before a task is due <span style="opacity:.7">(0 = only overdue &amp; today)</span></span></div>
+    </div>
     <div class="modal-sec"><div class="modal-sec-t">Recovery sprint defaults</div>
       <div class="st-hint" style="margin-bottom:10px;color:var(--text-3);font-size:12px">What gets pre-filled when you start a 2-week sprint on a stalled deal.</div>
       <label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Default goal</label>
@@ -2204,12 +2221,35 @@ function renderSettings(){
       <label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Default steps · one per line</label>
       <textarea id="spDefSteps" rows="6" style="${spStyle};margin-bottom:12px" placeholder="One action per line…">${esc(sdSteps.join('\n'))}</textarea>
       <div style="display:flex;align-items:center;gap:10px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2)">Sprint length</label><input id="spDefDays" inputmode="numeric" value="${sdDays}" style="width:62px;font-family:inherit;font-size:13px;padding:8px 10px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text)"><span style="font-size:12px;color:var(--text-3)">days</span><button id="spDefReset" style="margin-left:auto;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:6px 12px;border-radius:8px">Reset to built-in</button></div>
-    </div>`;
+    </div>
+    <div class="modal-sec"><div class="modal-sec-t">Preferences</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+        <div style="flex:1;min-width:150px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Your name</label><input id="setName" value="${esc(userName)}" placeholder="Used on updates &amp; briefs" style="${spStyle}"></div>
+        <div style="width:130px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">A$ per US$1</label><input id="setFx" inputmode="decimal" value="${fxUSD()}" style="${spStyle}"></div>
+      </div>
+      <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-top:8px">The rate that converts USD deals to AUD and shows US$ figures. Update it when the exchange rate moves.</div>
+    </div>
+    <div class="modal-sec"><div class="modal-sec-t">Your data</div>
+      <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-bottom:10px">Download a backup of everything (deals + settings) as a file you can keep. This is <b>${activeEnv()==='prod'?'production':'staging'}</b> data.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="setExport" style="font-size:12.5px;font-weight:650;color:var(--accent);background:var(--accent-soft);padding:9px 15px;border-radius:10px">⬇ Download backup (.json)</button>
+        <button id="setImport" style="font-size:12.5px;font-weight:650;color:var(--text-2);background:var(--fill);padding:9px 15px;border-radius:10px">⬆ Restore from backup</button>
+        <input type="file" id="setImportFile" accept="application/json,.json" style="display:none">
+      </div></div>`;
   $('#settingsBody').querySelectorAll('.tgt-in input').forEach(inp=>inp.addEventListener('input',()=>{ meta.targets[inp.dataset.q]=parseInt(inp.value.replace(/[^0-9]/g,''))||0; save(); if($('#seg button.active').dataset.view==='deals')renderSummary(); }));
   $('#segCur').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ meta.displayMode=b.dataset.m; save(); applyChrome(); $('#segCur').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); renderActive(); }));
   const saveSprintDefaults=()=>{ meta.sprintDefaults={ goal:$('#spDefGoal').value, steps:$('#spDefSteps').value.split('\n').map(s=>s.trim()).filter(Boolean), days:parseInt(($('#spDefDays').value||'').replace(/[^0-9]/g,''))||14 }; save(); };
   ['spDefGoal','spDefSteps','spDefDays'].forEach(id=>{ const e=$('#'+id); if(e) e.addEventListener('input',saveSprintDefaults); });
   const spReset=$('#spDefReset'); if(spReset) spReset.addEventListener('click',()=>{ delete meta.sprintDefaults; save(); renderSettings(); toast('Sprint defaults reset'); });
+  const setName=$('#setName'); if(setName) setName.addEventListener('input',()=>{ userName=setName.value.trim(); try{localStorage.setItem('pcc_user',userName);}catch(e){} });
+  const setFx=$('#setFx'); if(setFx) setFx.addEventListener('input',()=>{ meta.fx=parseFloat((setFx.value||'').replace(/[^0-9.]/g,''))||AUD_PER_USD; save(); applyChrome(); renderActive(); });
+  const setExport=$('#setExport'); if(setExport) setExport.addEventListener('click',()=>{ try{ const blob=new Blob([JSON.stringify(currentState(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='helm-backup-'+activeEnv()+'-'+today+'.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1500); toast('Backup downloaded'); }catch(e){ toast('Export failed'); } });
+  const setStages=$('#setStages'); if(setStages) setStages.addEventListener('input',()=>{ meta.journeyTemplate=setStages.value.split('\n').map(s=>s.trim()).filter(Boolean); save(); });
+  const setStagesReset=$('#setStagesReset'); if(setStagesReset) setStagesReset.addEventListener('click',()=>{ delete meta.journeyTemplate; save(); renderSettings(); toast('Deal flow reset to built-in'); });
+  const setNotifLead=$('#setNotifLead'); if(setNotifLead) setNotifLead.addEventListener('input',()=>{ meta.notifLead=parseInt((setNotifLead.value||'').replace(/[^0-9]/g,''))||0; save(); });
+  const setImport=$('#setImport'), impFile=$('#setImportFile');
+  if(setImport&&impFile){ setImport.addEventListener('click',()=>impFile.click());
+    impFile.addEventListener('change',ev=>{ const f=ev.target.files&&ev.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{ const obj=JSON.parse(rd.result); if(!obj||!Array.isArray(obj.deals)) throw 0; if(!confirm('Replace ALL current '+activeEnv()+' data with this backup ('+obj.deals.length+' deals)? This overwrites what is here now.')){ impFile.value=''; return; } deals=obj.deals; meta=Object.assign({},meta,obj.meta||{}); periodizeMeta(); migrate(); save(); closeSettings(); applyChrome(); renderActive(); toast('Restored '+deals.length+' deals'); }catch(err){ toast('That file is not a valid Helm backup'); } finally { impFile.value=''; } }; rd.readAsText(f); }); }
 }
 
 /* ════════ EVENTS ════════ */
@@ -2236,7 +2276,7 @@ $('#ndCreate').addEventListener('click',()=>{ if(ndModeVal==='revive') return cr
   const name=$('#ndName').value.trim()||'Untitled';
   const arr=parseFloat(($('#ndArr').value||'').replace(/[^0-9.]/g,''))||0;
   const cur=$('#ndCur').value||'AUD'; const notes=$('#ndNotes').value.trim();
-  const d={id:uid(),name,arr,cur,status:'engaged',belief:5,deserve:5,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now()};
+  const d={id:uid(),name,arr,cur,status:'engaged',belief:5,deserve:5,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now()};
   if(notes){ d.comments.push({id:uid(),author:userName||'Me',text:notes,ts:Date.now()}); applyUpdate(d,notes); d.notes=notes; }
   deals.push(d); save(); closeNew(); renderDeals(); openDeal(d.id);
 });
@@ -2245,7 +2285,7 @@ async function createPrep(){
   const arr=parseFloat(($('#pgArr').value||'').replace(/[^0-9.]/g,''))||0;
   const person=$('#pgPerson').value.trim(), role=$('#pgRole').value.trim(), notes=$('#pgNotes').value.trim();
   const btn=$('#ndCreate'); btn.textContent='✨ Building your prep…'; btn.disabled=true;
-  const d={id:uid(),name,arr,cur:'AUD',status:'engaged',belief:5,deserve:3,proof:proofFrom(0),focus:false,journey:journeyTo(0),closeDate:'',
+  const d={id:uid(),name,arr,cur:'AUD',status:'engaged',belief:5,deserve:3,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',
     people:person?[{name:person,role:(role||'Contact'),sent:'neutral'}]:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:person,role:'',closeLabel:'Discovery booked',blocker:'',risk:'',lastActivity:'Meeting booked — prepping',steps:[],dates:[],notes:notes,snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]};
   if(AI_ON()){
     const sys='You are an elite discovery coach for an AE who sells DealHub CPQ (Configure-Price-Quote) into B2B companies in AU/NZ. The rep has a meeting booked. Using the account, the person and their role, and the rep\'s notes, build a tight discovery plan. Reply with ONLY valid JSON (no prose, no markdown) in this shape: {"oneLiner":"a one-line hypothesis of the value for this account","whyNow":"the likely compelling event / why they would look now","hypotheses":["likely CPQ pain hypotheses to test — manual quoting, pricing errors, approval bottlenecks, slow rep ramp, CRM/quote hygiene"],"agenda":["meeting agenda items in order"],"questions":["sharp open discovery questions tailored to this person\'s role"],"outcomes":["the key outcomes to land — the next step to secure, who else to multithread to"],"story":"1-2 sentences: a relevant proof-story angle or analogous customer pattern the rep can reference"}. Ground everything in DealHub CPQ value (faster accurate quotes, governed pricing and approvals, one source of truth). If you do not know the company, reason from its name and the notes. Invent no specific facts, names, or metrics about the company.';
