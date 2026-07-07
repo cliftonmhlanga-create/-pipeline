@@ -57,6 +57,8 @@
   .icon-top svg{width:15px;height:15px}
   .ro-banner{display:none;background:#1d1d1f;color:#fff;text-align:center;font-size:12.5px;font-weight:550;padding:7px;letter-spacing:.2px}
   .ro-banner b{font-weight:700}
+  .staging-banner{display:none;background:repeating-linear-gradient(45deg,#e8872b,#e8872b 14px,#d97b1f 14px,#d97b1f 28px);color:#fff;text-align:center;font-size:12.5px;font-weight:700;padding:7px;letter-spacing:.3px}
+  .staging-banner b{text-decoration:underline}
 
   .page{max-width:1080px;margin:0 auto;padding:40px 28px 120px}
   .view{display:none}
@@ -734,6 +736,7 @@
       <button class="btn btn-primary" id="addBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span class="lbl">Add account</span></button>
     </div>
   </div>
+  <div class="staging-banner" id="stagingBanner">🧪 <b>STAGING</b> — sandbox environment. Changes here do NOT affect production.</div>
   <div class="ro-banner" id="roBanner"><b>Manager view</b> — read only. A clean, live snapshot of the pipeline.</div>
 </div>
 
@@ -1464,7 +1467,8 @@ function applyChrome(){
   $('#settingsBtn').style.display=RO?'none':'';
   { const cf=$('#chatFab'); if(cf){ cf.style.display=RO?'none':''; if(RO)closeChatPop(); } updateNotifBadge(); }
   $('#mgrBtn').querySelector('.lbl').textContent=RO?'Exit manager view':'Manager view';
-  $('#roBanner').style.display=RO?'':'none';
+  $('#roBanner').style.display=RO?'block':'none';
+  { const sb=$('#stagingBanner'); if(sb) sb.style.display=(activeEnv()==='staging')?'block':'none'; }
   $('#curBtn').textContent=meta.displayMode==='both'?'A$ + US$':(meta.displayMode==='USD'?'US$':'A$');
 }
 function renderActive(){ const a=$('#seg button.active').dataset.view; if(a==='deals')renderDeals(); else if(a==='plan')renderPlan(); else if(a==='calendar')renderCalendar(); else renderForecast(); }
