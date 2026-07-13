@@ -614,6 +614,13 @@
   .case-apply:hover{filter:brightness(1.06)}
   .case-discard{font-size:11.5px;font-weight:600;color:var(--text-2);background:var(--fill);padding:5px 13px;border-radius:8px}
   .case-current-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-3);margin-top:14px}
+  .wtabs{display:flex;gap:4px;position:sticky;top:0;z-index:6;background:var(--bg);padding:10px 0;margin:6px 0 4px;border-bottom:1px solid var(--hair);overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+  .wtabs::-webkit-scrollbar{display:none}
+  .wtabs button{font-size:13.5px;font-weight:600;color:var(--text-3);padding:7px 15px;border-radius:10px;white-space:nowrap;flex-shrink:0;transition:.12s var(--ease)}
+  .wtabs button.active{background:var(--accent-soft);color:var(--accent)}
+  .wtabs button:not(.active):hover{color:var(--text-2);background:var(--fill)}
+  .wtab{display:none}
+  .wtab.active{display:block}
   /* transcript intake */
   .tx-open{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 15px;margin-bottom:12px;border-radius:var(--r-m);border:1px dashed var(--accent);background:var(--accent-soft);color:var(--text);cursor:pointer;transition:.15s var(--ease)}
   .tx-open:hover{filter:brightness(.99);transform:translateY(-1px)}
@@ -936,10 +943,12 @@ const STATUSES={
   engaged:{label:'Engaged',color:'var(--indigo)',soft:'var(--indigo-soft)',order:2,open:true},
   recovery:{label:'Recovery',color:'var(--orange)',soft:'var(--orange-soft)',order:3,open:true},
   future:{label:'Future',color:'var(--gray)',soft:'var(--gray-soft)',order:4,open:true},
+  lead:{label:'Future pipeline',color:'#8b5cf6',soft:'rgba(139,92,246,.14)',order:8,open:false},
   won:{label:'Won',color:'var(--green)',soft:'var(--green-soft)',order:5,open:false},
   lost:{label:'Lost',color:'var(--red)',soft:'var(--red-soft)',order:6,open:false},
   dormant:{label:'Dormant',color:'var(--gray)',soft:'var(--gray-soft)',order:7,open:false},
 };
+function perSeat(){ return (typeof meta!=='undefined'&&meta&&+meta.perUser>0)?+meta.perUser:250; }
 const PROOF_SIGNALS=['Champion identified & committed','Multi-threaded (3+ stakeholders)','Economic buyer engaged','Compelling event / deadline','Next step always scheduled','Business case / ROI validated','Budget confirmed','Paper process mapped (legal/procurement)','Competition known & countered'];
 const STAGES=['Connect','Discovery','Demo','Reverse demo','Commercials sent','Negotiation','Won'];
 const ROLES={'Champion':'var(--green)','Economic buyer':'var(--accent)','Decision maker':'var(--indigo)','Influencer':'var(--gray)','User':'var(--gray)','Skeptic':'var(--orange)','Blocker':'var(--red)'};
@@ -1030,7 +1039,7 @@ const SEED=[
 /* ════════ STATE ════════ */
 const KEY='pcc_state_v4';
 let deals=[], meta={targets:{Q1:0,Q2:0,Q3:0,Q4:0},displayMode:'both'};
-let openId=null, RO=false, activeFilter=null, planHorizon=7;
+let openId=null, RO=false, activeFilter=null, planHorizon=7, panelTab='overview';
 let userName=''; try{ userName=localStorage.getItem('pcc_user')||''; }catch(e){}
 
 function loadState(){
@@ -1075,6 +1084,8 @@ function migrate(){
     if(d.lossDetail==null) d.lossDetail='';
     if(d.slips==null) d.slips=0;
     if(!Array.isArray(d.slipLog)) d.slipLog=[];
+    if(d.callbackDate==null) d.callbackDate='';
+    if(d.convProb==null) d.convProb=0;
     if(!d.dvd||typeof d.dvd!=='object') d.dvd={eb:false,problem:false,event:false,champion:false};
     ['eb','problem','event','champion'].forEach(k=>{ if(d.dvd[k]==null) d.dvd[k]=false; });
     if(!d.artifacts||typeof d.artifacts!=='object') d.artifacts={};
@@ -1335,11 +1346,11 @@ function aiArtifactsHTML(d){
 }
 /* ════════ ASSISTANT CHAT — talk to your pipeline ════════ */
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
-function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[]}; }
+function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[],callbackDate:'',convProb:0}; }
 async function chatAgent(text){
   const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; const q=quarterOf(d); const sched=(d.status==='recovery'||d.status==='dormant')?' | NOT in a quarter yet (recovery/dormant — needs an active status + a close date to get scheduled)':(d.closeDate?(' | closes '+d.closeDate+(q?' ('+periodShort(q)+')':'')):' | no close date'); return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+sched+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
-  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), set "likelihood" if it reads as a revival, add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are 0-10. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
+  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|lead|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","domain":"company.com","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"signals":{"eb":false,"problem":false,"event":false,"champion":false},"lossReason":"Product gap|Built in-house|Lost to competitor|Budget / cost|No decision / timing|Other","lossDetail":"","sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"create_lead","name":"<company name ONLY>","fields":{"contact":"","role":"","crm":"","domain":"company.com","location":"","users":0},"callbackDate":"YYYY-MM-DD","convProb":40,"arr":0,"note":""}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. CALLBACK / FUTURE LEAD: when the user describes a COLD outreach or a "reach out later" contact — someone who said "not right now, reach out in September", "call me in Q3", "circle back next quarter", "follow up in 2 months", or a fresh prospect they just want to park with a date — this is NOT a live deal or a prior conversation, so use create_lead (NOT create_deal, NOT recovery). Extract company->name (company ONLY), the person->fields.contact, their role->fields.role, seat/user/seller count->fields.users (ARR then auto-computes at the per-seat rate — don\'t guess ARR unless they give a dollar figure), website->fields.domain, CRM->fields.crm. Resolve the callback timing to a real future date in callbackDate (YYYY-MM-DD): "September"->1st of next September, "Q3"->start of that fiscal quarter, "in 2 months"->today+~60d, always a date AFTER today. If they say how likely it is to convert, set convProb (0-100). These are reminder-only future pipeline and stay out of the forecast until promoted. If instead the account is a real deal in motion (there\'s a live conversation, pain uncovered, a demo done, a champion), use create_deal as below. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the decision-maker role->role, the website/domain->domain, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), LIGHT UP the deservedness "signals" that the text supports (eb = an economic/budget buyer is named or engaged; problem = the pain is quantified with metrics or $; event = there is a deadline/compelling event/decision date; champion = someone internal owns/backs the case) — set each true only if the paste genuinely shows it, set "likelihood" if it reads as a revival, and if it went cold/was lost set "lossReason" to the closest match and "lossDetail" to a one-line why (the revival read), add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are WHOLE NUMBERS on a 0-to-10 scale (e.g. 7 or 8) — never a fraction like 0.7 or a percentage. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
   const quarters=activePeriods().map(k=>{ const dr=quarterDates(k); return periodShort(k)+' = '+dr[0].toISOString().slice(0,10)+'…'+dr[1].toISOString().slice(0,10); }).join('; ');
   const ctx='Today is '+today+'. Fiscal quarters (for setting close dates): '+quarters+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
   return await aiJSON(sys,ctx,1300);
@@ -1354,18 +1365,33 @@ function applyChatActions(actions){
     if(a.type==='create_deal'){ const nm=(a.name||'').trim(); if(!nm)return; const d=blankDeal(nm);
       if(a.status&&STATUSES[a.status])d.status=a.status;
       if(a.arr)d.arr=parseAmt(a.arr);
-      const F=a.fields||{}; ['type','crm','location','contact','role','oneLiner','whyNow','costInaction','threats','blocker','risk','closeLabel','closeDate'].forEach(k=>{ if(F[k]!=null&&(''+F[k]).trim()) d[k]=(''+F[k]).trim(); });
+      const F=a.fields||{}; ['type','crm','location','contact','role','oneLiner','whyNow','costInaction','threats','blocker','risk','closeLabel','closeDate','domain'].forEach(k=>{ if(F[k]!=null&&(''+F[k]).trim()) d[k]=(''+F[k]).trim(); });
+      if(F.website&&!d.domain) d.domain=(''+F.website).replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'').trim();
       if(F.users!=null&&(''+F.users).toString().trim()) d.users=parseInt((''+F.users).replace(/[^0-9]/g,''))||0;
       if(F.likelihood&&LIKELIHOODS.includes(F.likelihood)) d.likelihood=F.likelihood;
-      const clampN=v=>Math.max(0,Math.min(10,Math.round(parseFloat(v))));
+      const clampN=v=>{ let n=parseFloat(v); if(isNaN(n))return 5; if(n>0&&n<=1&&!Number.isInteger(n)) n=n*10; return Math.max(0,Math.min(10,Math.round(n))); };
       if(a.belief!=null&&(''+a.belief).trim()!=='') d.belief=clampN(a.belief);
       if(a.deservedness!=null&&(''+a.deservedness).trim()!=='') d.deserve=clampN(a.deservedness);
+      if(a.signals&&typeof a.signals==='object'){ d.dvd=d.dvd||{eb:false,problem:false,event:false,champion:false}; ['eb','problem','event','champion'].forEach(k=>{ if(a.signals[k]===true) d.dvd[k]=true; }); }
+      if(a.lossReason&&LOSS_REASONS.includes(a.lossReason)) d.lossReason=a.lossReason;
+      if(a.lossDetail!=null&&(''+a.lossDetail).trim()) d.lossDetail=(''+a.lossDetail).trim();
       if(Array.isArray(a.stakeholders)) a.stakeholders.forEach(p=>{ const pn=((p&&p.name)||'').trim(); if(pn){ const sent=['positive','neutral','negative'].includes(p.sentiment)?p.sentiment:'neutral'; d.people.push({name:pn,role:(p.role||'Influencer'),sent}); } });
       if(Array.isArray(a.nextSteps)) a.nextSteps.forEach(s=>{ s=(''+(s||'')).trim(); if(s.length>3) d.steps.push({text:s,done:false,due:addDays(today,5)}); });
       if(a.note){ d.notes=a.note; d.comments.push({id:uid(),author:userName||'Me',text:a.note,ts:Date.now()}); }
       if(Array.isArray(a.sprintSteps)&&a.sprintSteps.length){ d.sprint={goal:(a.sprintGoal||sprintDefaults().goal),start:today,end:addDays(today,sprintDefaults().days)}; a.sprintSteps.forEach((t,i)=>{ t=(''+(t||'')).trim(); if(t&&!d.steps.some(s=>(s.text||'').toLowerCase()===t.toLowerCase())) d.steps.push({text:t,done:false,due:addDays(today,Math.min(14,[1,2,6,7,10][i]||(i+1)*2))}); }); if(d.status!=='recovery'&&d.status!=='dormant') d.status='recovery'; }
       else if(a.sprintGoal && (d.status==='recovery'||d.status==='dormant')){ startSprint(d,a.sprintGoal); }
+      if(!d.sprint && (d.status==='recovery'||d.status==='dormant')){ startSprint(d,a.sprintGoal||''); if(d.status==='dormant') d.status='recovery'; }
       deals.push(d); const bits=[]; if(d.people.length)bits.push(d.people.length+' contact'+(d.people.length>1?'s':'')); if(d.steps.length)bits.push(d.steps.length+' step'+(d.steps.length>1?'s':'')); if(d.sprint)bits.push('sprint'); chips.push({label:'＋ Created '+nm+(bits.length?' · '+bits.join(', '):''),dealId:d.id}); return; }
+    if(a.type==='create_lead'){ const nm=(a.name||'').trim(); if(!nm)return; const d=blankDeal(nm); d.status='lead';
+      const F=a.fields||{}; ['contact','role','crm','domain','location','oneLiner'].forEach(k=>{ if(F[k]!=null&&(''+F[k]).trim()) d[k]=(''+F[k]).trim(); });
+      if(F.website&&!d.domain) d.domain=(''+F.website).replace(/^https?:\/\//,'').replace(/^www\./,'').replace(/\/.*$/,'').trim();
+      if(F.users!=null&&(''+F.users).toString().trim()) d.users=parseInt((''+F.users).replace(/[^0-9]/g,''))||0;
+      if(a.callbackDate&&/^\d{4}-\d{2}-\d{2}$/.test(a.callbackDate)) d.callbackDate=a.callbackDate;
+      if(a.convProb!=null&&(''+a.convProb).trim()!=='') d.convProb=Math.max(0,Math.min(100,parseInt((''+a.convProb).replace(/[^0-9]/g,''))||0));
+      if(a.arr!=null&&(''+a.arr).trim()!=='') d.arr=parseAmt(a.arr); else if(d.users>0) d.arr=d.users*perSeat();
+      d.cur='AUD';
+      if(a.note){ d.notes=a.note; d.comments.push({id:uid(),author:userName||'Me',text:a.note,ts:Date.now()}); }
+      deals.push(d); const sz=d.arr?(' · '+money(aud(d))):''; const cb=d.callbackDate?(' · callback '+fmtShort(d.callbackDate)):''; chips.push({label:'☎ Future lead '+nm+sz+cb,dealId:d.id}); return; }
     if(a.type==='clear_notifications'){ const days=(+a.days>0)?+a.days:7; let n=0;
       OPEN().forEach(x=>{ let ch=false; (x.steps||[]).forEach(s=>{ if(!s.done&&s.due&&daysUntil(s.due)<0){ s.due=addDays(today,days); n++; ch=true; } }); if(ch) saveD(x); });
       deals.forEach(x=>{ if(x.sprint&&x.sprint.end&&daysUntil(x.sprint.end)<0){ if(x.status==='recovery'){ x.status='dormant'; x.retryDate=addDays(today,90); x.comments=x.comments||[]; x.comments.push({id:uid(),author:'Helm',text:'Recovery sprint ran its course with no response — parked as Dormant.',ts:Date.now()}); } x.sprint=null; n++; saveD(x); } });
@@ -1380,7 +1406,7 @@ function applyChatActions(actions){
     else if(a.type==='add_stakeholder'){ const nm=(a.name||'').trim(); if(nm){ d.people=d.people||[]; const sent=['positive','neutral','negative'].includes(a.sentiment)?a.sentiment:'neutral'; const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ ex.sent=sent; if((a.role||'').trim()&&!(ex.role||'').trim())ex.role=a.role; } else d.people.push({name:nm,role:a.role||'Influencer',sent}); saveD(d); chips.push({label:'✓ '+nm+' → '+d.name,dealId:d.id}); } }
     else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open, fromRec=(d.status==='recovery'||d.status==='dormant'); if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; if(fromRec && STATUSES[ns].open && ns!=='recovery' && ns!=='dormant'){ d.sprint=null; d.retryDate=''; } if(ns==='won'||ns==='lost'){ d.sprint=null; } saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
     else if(a.type==='sprint_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'Sprint update: '+note,ts:Date.now()}); d.lastActivity=note.slice(0,80); } const na=(a.nextAction||'').trim(); if(na){ d.steps=d.steps||[]; d.steps.push({text:na,done:false,due:addDays(today,5)}); } saveD(d); chips.push({label:'✓ Sprint · '+d.name,dealId:d.id}); }
-    else if(a.type==='set_scores'){ const ch=[]; const clamp=v=>Math.max(0,Math.min(10,Math.round(parseFloat(v)))); if(a.belief!=null&&(''+a.belief).trim()!==''){ d.belief=clamp(a.belief); ch.push('belief '+d.belief); } if(a.deservedness!=null&&(''+a.deservedness).trim()!==''){ d.deserve=clamp(a.deservedness); ch.push('deservedness '+d.deserve); } if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
+    else if(a.type==='set_scores'){ const ch=[]; const clamp=v=>{ let n=parseFloat(v); if(isNaN(n))return null; if(n>0&&n<=1&&!Number.isInteger(n)) n=n*10; return Math.max(0,Math.min(10,Math.round(n))); }; if(a.belief!=null&&(''+a.belief).trim()!==''){ const b=clamp(a.belief); if(b!=null){ d.belief=b; ch.push('belief '+d.belief); } } if(a.deservedness!=null&&(''+a.deservedness).trim()!==''){ const dv=clamp(a.deservedness); if(dv!=null){ d.deserve=dv; ch.push('deservedness '+d.deserve); } } if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
     else if(a.type==='snooze_step'){ const m=((a.match||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase().includes(m)||m.includes((s.text||'').toLowerCase())); if(!step){ const w=m.split(/\s+/).filter(x=>x.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return w.some(x=>t.includes(x));}); } } const days=(+a.days>0)?+a.days:3; if(step){ step.due=addDays(today,days); saveD(d); chips.push({label:'✓ Snoozed '+days+'d · '+d.name,dealId:d.id}); } else chips.push({label:'？ No matching task on '+d.name,warn:true,dealId:d.id}); }
     else if(a.type==='set_focus'){ d.focus=(a.on!==false); saveD(d); chips.push({label:(d.focus?'★ Focused · ':'☆ Unfocused · ')+d.name,dealId:d.id}); }
     else if(a.type==='start_sprint'){ if(Array.isArray(a.steps)&&a.steps.length){ d.sprint={goal:(a.goal||sprintDefaults().goal),start:today,end:addDays(today,sprintDefaults().days)}; d.steps=d.steps||[]; a.steps.forEach((t,i)=>{ t=(''+(t||'')).trim(); if(t&&!d.steps.some(s=>(s.text||'').toLowerCase()===t.toLowerCase())) d.steps.push({text:t,done:false,due:addDays(today,Math.min(14,[1,2,6,7,10][i]||(i+1)*2))}); }); } else startSprint(d,a.goal); saveD(d); chips.push({label:'⚡ Sprint started · '+d.name,dealId:d.id}); }
@@ -1432,6 +1458,10 @@ function notifItems(){
     if(du<0) items.push({color:'var(--red)',title:d.name+' — recovery sprint ended',sub:d.sprint.goal||'Recovery sprint',when:'ended',whenC:'var(--red)',dealId:d.id,sort:du-0.1});
     else if(du<=2) items.push({color:'var(--orange)',title:d.name+' — sprint ending',sub:d.sprint.goal||'Recovery sprint',when:du+'d left',whenC:'var(--orange)',dealId:d.id,sort:du}); } });
   deals.forEach(d=>{ if(d.status==='dormant'&&d.retryDate&&daysUntil(d.retryDate)<=0) items.push({color:'var(--indigo,#6366f1)',title:'Retry '+d.name,sub:'Dormant — worth another go',when:'due',whenC:'var(--indigo,#6366f1)',dealId:d.id,sort:0.3}); });
+  deals.forEach(d=>{ if(d.status==='lead'&&d.callbackDate){ const du=daysUntil(d.callbackDate);
+    if(du<0) items.push({color:'#8b5cf6',title:'Reach out to '+d.name,sub:(d.contact?d.contact+' — ':'')+'callback was due',when:(-du)+'d overdue',whenC:'var(--red)',dealId:d.id,sort:du-0.05});
+    else if(du===0) items.push({color:'#8b5cf6',title:'Reach out to '+d.name,sub:(d.contact?d.contact+' — ':'')+'callback today',when:'today',whenC:'var(--orange)',dealId:d.id,sort:0.4});
+    else if(du<=lead) items.push({color:'#8b5cf6',title:'Reach out to '+d.name,sub:(d.contact?d.contact+' — ':'')+'callback coming up',when:'in '+du+'d',whenC:'#8b5cf6',dealId:d.id,sort:du}); } });
   return items.sort((a,b)=>a.sort-b.sort);
 }
 function updateNotifBadge(){ const b=$('#notifBadge'); if(!b)return; const n=RO?0:notifItems().length; b.textContent=n>9?'9+':n; b.style.display=n?'':'none'; }
@@ -1607,6 +1637,8 @@ function renderFilters(){
   activePeriods().forEach(k=>chips.push({k,label:periodShort(k),count:qc[k]||0,now:k===currentPeriod}));
   if(rec>0) chips.push({k:'Recovery',label:'Recovery',count:rec});
   if(uns>0) chips.push({k:'Unscheduled',label:'Unscheduled',count:uns});
+  const leadCt=deals.filter(d=>d.status==='lead').length;
+  chips.push({k:'Leads',label:'Future pipeline',count:leadCt});
   const dormCt=deals.filter(d=>d.status==='dormant').length;
   if(dormCt) chips.push({k:'Dormant',label:'Dormant',count:dormCt});
   chips.push({k:'Closed',label:'Closed',count:closedCt});
@@ -1618,6 +1650,7 @@ function renderFilters(){
 /* ════════ SUMMARY ════════ */
 function renderSummary(){
   if(activeFilter==='Closed'){ $('#summary').innerHTML=''; $('#dealsSub').textContent='Closed deals · win/loss reporting'; return; }
+  if(activeFilter==='Leads'){ const lds=deals.filter(d=>d.status==='lead'); const est=lds.reduce((s,d)=>s+aud(d),0); $('#summary').innerHTML=''; $('#dealsSub').textContent=`${lds.length} future ${lds.length===1?'lead':'leads'} · ${money(est)} potential (not in the forecast)`; return; }
   const scope=scopeDeals();
   const total=scope.reduce((s,d)=>s+aud(d),0);
   const commit=scope.filter(d=>category(d)==='commit').reduce((s,d)=>s+aud(d),0);
@@ -1725,6 +1758,7 @@ function renderDeals(){
   const wrap=$('#dealGroups'); wrap.innerHTML='';
   if(activeFilter==='Closed'){ $('#focus').innerHTML=''; $('#activity').innerHTML=''; renderClosed(wrap); return; }
   if(activeFilter==='Dormant'){ $('#focus').innerHTML=''; $('#activity').innerHTML=''; renderDormant(wrap); return; }
+  if(activeFilter==='Leads'){ $('#focus').innerHTML=''; $('#activity').innerHTML=''; renderLeads(wrap); return; }
   if(activeFilter==='History'){ $('#focus').innerHTML=''; $('#activity').innerHTML=''; renderHistory(wrap); return; }
   const pool=scopeDeals();
   if(!pool.length){ wrap.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg><p>No deals in ${activeFilter==='all'?'the pipeline':(isPeriod(activeFilter)?periodLabel(activeFilter):activeFilter)} yet.</p></div>`; return; }
@@ -1759,6 +1793,34 @@ function renderDormant(wrap){
   if(!dorm.length){ wrap.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><p>No dormant deals. Recovery plays that don't land in their sprint will park here with a retry reminder.</p></div>`; return; }
   wrap.innerHTML=`<div class="plan-sub" style="margin:0 4px 14px">Parked out of the pipeline. Helm reminds you to retry each one ~90 days after it went dormant.</div><div class="card-stack">${dorm.map(cardHTML).join('')}</div>`;
   wrap.querySelectorAll('.deal-card').forEach(r=>r.addEventListener('click',()=>openDeal(r.dataset.id)));
+}
+function addLead(){ const d=blankDeal('New lead'); d.status='lead'; deals.push(d); saveD(d); activeFilter='Leads'; renderDeals(); openDeal(d.id); toast('Lead added — fill in the details'); }
+function leadCardHTML(d){
+  const cd=d.callbackDate, du=cd?daysUntil(cd):null;
+  let badge;
+  if(!cd) badge='<span style="font-size:12px;font-weight:600;color:var(--text-3)">no callback date set</span>';
+  else if(du<0) badge='<span style="font-size:12px;font-weight:700;color:var(--red)">⏰ callback '+(-du)+'d overdue · '+fmtShort(cd)+'</span>';
+  else if(du===0) badge='<span style="font-size:12px;font-weight:700;color:var(--orange)">⏰ callback today</span>';
+  else badge='<span style="font-size:12px;font-weight:650;color:#8b5cf6">↻ callback in '+du+'d · '+fmtShort(cd)+'</span>';
+  const conv=d.convProb>0?`<span style="font-size:11.5px;font-weight:650;color:#8b5cf6;background:rgba(139,92,246,.12);padding:2px 8px;border-radius:20px">${d.convProb}% likely</span>`:'';
+  const bits=[d.contact||'',d.users?d.users+' seats':'',d.crm].filter(Boolean).join(' · ');
+  return `<div class="deal-card" data-id="${d.id}" style="border-left:3px solid #8b5cf6">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+      <span style="font-size:15px;font-weight:700;letter-spacing:-.2px">${esc(d.name)}</span>
+      <span style="font-size:14px;font-weight:700;color:var(--text-2)">${money(aud(d))}${d.arr?'':' <span style="font-weight:500;color:var(--text-3);font-size:11px">— add seats</span>'}</span>
+    </div>
+    <div style="font-size:12.5px;color:var(--text-3);margin:5px 0 8px">${bits||'<span style="opacity:.6">no contact yet</span>'}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">${badge}${conv}</div>
+  </div>`;
+}
+function renderLeads(wrap){
+  const lds=deals.filter(d=>d.status==='lead').sort((a,b)=>(a.callbackDate||'9999').localeCompare(b.callbackDate||'9999'));
+  const addBtn=`<button class="add-task" id="addLeadBtn" style="margin-bottom:14px"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span>Add a callback lead</span></button>`;
+  const intro=`<div class="plan-sub" style="margin:0 4px 12px">Cold outreach and “reach out later” leads — captured with a callback date, a rough size, and how likely they are to become real pipeline. They’re <b>not</b> in your active pipeline or forecast; Helm just reminds you when each callback comes due. Promote one to your pipeline the moment it turns into a live deal.</div>`;
+  if(!lds.length){ wrap.innerHTML=intro+addBtn+`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h18M3 12h18M3 19h12"/></svg><p>No future leads yet. Add one above — or just tell the assistant “reach out to Acme in September, ~30 seats, spoke to Jane Doe.”</p></div>`; const ab=$('#addLeadBtn'); if(ab) ab.addEventListener('click',addLead); return; }
+  wrap.innerHTML=intro+addBtn+`<div class="card-stack">${lds.map(leadCardHTML).join('')}</div>`;
+  wrap.querySelectorAll('.deal-card').forEach(r=>r.addEventListener('click',()=>openDeal(r.dataset.id)));
+  const ab=$('#addLeadBtn'); if(ab) ab.addEventListener('click',addLead);
 }
 function renderHistory(wrap){
   const closed=deals.filter(d=>(d.status==='won'||d.status==='lost')&&quarterOf(d)&&quarterOf(d)<currentPeriod);
@@ -1947,7 +2009,7 @@ function renderAccuracy(){
 }
 
 /* ════════ PANEL ════════ */
-function openDeal(id){ openId=id; renderPanel(); $('#scrim').classList.add('open'); $('#panel').classList.add('open'); }
+function openDeal(id){ openId=id; panelTab='overview'; renderPanel(); $('#scrim').classList.add('open'); $('#panel').classList.add('open'); }
 function closePanel(){ $('#scrim').classList.remove('open'); $('#panel').classList.remove('open'); $('#statusMenu').classList.remove('open'); openId=null; }
 function deal(){ return deals.find(d=>d.id===openId); }
 function paintStatusPill(d){ const m=STATUSES[d.status],p=$('#statusPill'); p.style.background=m.soft; p.style.color=m.color; p.innerHTML=`<span class="dot" style="background:${m.color}"></span>${m.label}${RO?'':`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>`}`; p.style.cursor=RO?'default':'pointer'; }
@@ -2026,6 +2088,20 @@ function renderPanel(){
       <div class="field full" style="margin-top:10px"><label>My read / detail</label><textarea id="fLossDetail" placeholder="Your read on the deal, the gap, and the angle to bring it back…">${esc(d.lossDetail)}</textarea></div>
     </div>`;
   }
+  let leadHTML='';
+  if(d.status==='lead'){
+    const du=d.callbackDate?daysUntil(d.callbackDate):null;
+    const when=d.callbackDate==''?'':(du<0?`<span style="color:var(--red);font-weight:700">· ${-du}d overdue</span>`:(du===0?`<span style="color:var(--orange);font-weight:700">· today</span>`:`<span style="color:#8b5cf6;font-weight:650">· in ${du}d</span>`));
+    const est=d.users?`${d.users} seats × ${money(perSeat())} = <b>${money(d.users*perSeat())}</b>`:'add a seat count in Details to auto-size';
+    leadHTML=`<div class="sec"><div class="sec-title">Callback <span class="st-hint">a “reach out later” lead — reminder only, not in the forecast</span></div>
+      <div class="rev-grid">
+        <div class="rev-cell"><label>Reach out on ${when}</label><input type="date" id="fCallback" class="rev-sel" value="${d.callbackDate||''}"></div>
+        <div class="rev-cell"><label>% likely to become pipeline</label><input id="fConv" class="rev-sel" inputmode="numeric" value="${d.convProb||''}" placeholder="e.g. 40"></div>
+      </div>
+      <div class="st-hint" style="margin-top:9px;color:var(--text-3)">Est. size: ${est}. <button id="leadRecalc" style="color:#8b5cf6;font-weight:650;background:rgba(139,92,246,.1);padding:3px 9px;border-radius:7px;margin-left:4px">↻ set ARR from seats</button></div>
+      <button id="leadPromote" style="margin-top:13px;width:100%;font-size:13px;font-weight:700;color:#fff;background:#8b5cf6;padding:11px;border-radius:11px">Promote to active pipeline →</button>
+    </div>`;
+  }
   const commentItems=(d.comments||[]).slice().sort((a,b)=>(a.ts||0)-(b.ts||0)).map(c=>`<div class="cmt ${c.author===userName?'mine':''}"><div class="cmt-head"><span class="cmt-author">${esc(c.author||'Anon')}</span><span class="cmt-time">${relTime(c.ts)}</span></div><div class="cmt-text">${esc(c.text)}</div></div>`).join('')||`<div class="cmt-empty">No comments yet — ask a question or leave a note.</div>`;
 
   $('#panelBody').innerHTML=`<div class="panel-inner">
@@ -2045,12 +2121,26 @@ function renderPanel(){
       ${d.updated?`<div class="vital"><div class="vk">Last touch</div><div class="vv" style="font-size:13px">${relTime(d.updated)}</div></div>`:''}
     </div>
 
+    <div class="wtabs" id="wtabs">
+      <button data-t="overview" class="${panelTab==='overview'?'active':''}">Overview</button>
+      <button data-t="journey" class="${panelTab==='journey'?'active':''}">Journey</button>
+      <button data-t="grade" class="${panelTab==='grade'?'active':''}">Grade</button>
+      <button data-t="people" class="${panelTab==='people'?'active':''}">People</button>
+      <button data-t="copilot" class="${panelTab==='copilot'?'active':''}">Copilot</button>
+      <button data-t="details" class="${panelTab==='details'?'active':''}">Details</button>
+    </div>
+
+    <div class="wtab ${panelTab==='overview'?'active':''}" data-t="overview">
+    ${leadHTML}
+
     ${glanceHTML(d)}
 
     ${sprintHTML}
 
     ${lossHTML}
+    </div>
 
+    <div class="wtab ${panelTab==='journey'?'active':''}" data-t="journey">
     <div class="sec"><div class="sec-title">Journey <span class="st-hint">where we've been · where we are · tap a stage to set it</span></div><div class="journey" id="journey">${journey}</div></div>
 
     <div class="sec"><div class="sec-title">Updates ${(d.comments&&d.comments.length)?`<span class="cmt-count">${d.comments.length}</span>`:''} <span class="st-hint">write in plain English — it logs the note &amp; fills the fields</span></div>
@@ -2066,6 +2156,9 @@ function renderPanel(){
       <div class="email-box"><div class="email-head">Coverage → people you didn't speak with <button class="email-copy" data-copy="cov">Copy</button></div><pre class="email-body">${esc(d.revival.coverage)}</pre></div>
     </div>`:''}
 
+    </div>
+
+    <div class="wtab ${panelTab==='grade'?'active':''}" data-t="grade">
     <div class="sec"><div class="sec-title">Next steps <span class="st-hint">type & press Enter · add a due date to surface it in Focus</span></div><div id="taskList">${steps}</div>
       <div class="add-row" id="addStepRow"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><input id="newStep" placeholder="Add a next step…"></div></div>
 
@@ -2079,9 +2172,15 @@ function renderPanel(){
         ${coach}
       </div></div>
 
+    </div>
+
+    <div class="wtab ${panelTab==='people'?'active':''}" data-t="people">
     <div class="sec"><div class="sec-title">Stakeholders</div><div id="peopleList">${people}</div>${singleWarn}
       <button class="add-task" id="addPerson"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span>Add a stakeholder</span></button></div>
 
+    </div>
+
+    <div class="wtab ${panelTab==='copilot'?'active':''}" data-t="copilot">
     <div class="sec"><div class="sec-title">Business case</div>
       <div class="field-grid">
         <div class="field full"><label>One-line business case (the headline)</label><input id="fOneLiner" value="${esc(d.oneLiner)}" placeholder="e.g. Govern their new weighted pricing model with DealHub"></div>
@@ -2092,6 +2191,9 @@ function renderPanel(){
 
     ${AI_ON()?aiArtifactsHTML(d):''}
 
+    </div>
+
+    <div class="wtab ${panelTab==='details'?'active':''}" data-t="details">
     <div class="sec"><div class="sec-title">Details</div>
       <div class="field-grid">
         <div class="field"><label>Key contact</label><input id="fContact" value="${esc(d.contact)}" placeholder="Name"></div>
@@ -2110,6 +2212,7 @@ function renderPanel(){
       <button class="add-task" id="addDate"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span>Add a date</span></button></div>
 
     <div class="sec"><div class="sec-title">Notes</div><div class="field full"><textarea id="fNotes" placeholder="Context, history, anything worth remembering…">${esc(d.notes)}</textarea></div></div>
+    </div>
   </div>`;
   if(RO) applyReadOnly(); else wirePanel(d);
   wireComments(d);
@@ -2120,6 +2223,7 @@ function renderPanel(){
   $('#panelBody').querySelectorAll('.ai-art .ai-copy').forEach(b=>b.addEventListener('click',async()=>{ const t=(d.artifacts||{})[b.dataset.k]||''; try{ await navigator.clipboard.writeText(t); toast('Copied'); }catch(e){ toast('Copy failed'); } }));
   { const ap=$('#panelBody').querySelector('.case-apply'); if(ap) ap.addEventListener('click',()=>{ d.artifacts=d.artifacts||{}; d.artifacts.case=d.artifacts.casePending; delete d.artifacts.casePending; saveD(d); renderPanel(); toast('✓ Business case updated'); });
     const dc=$('#panelBody').querySelector('.case-discard'); if(dc) dc.addEventListener('click',()=>{ if(d.artifacts) delete d.artifacts.casePending; saveD(d); renderPanel(); toast('Draft discarded'); }); }
+  const wt=$('#wtabs'); if(wt) wt.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ panelTab=b.dataset.t; wt.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); $('#panelBody').querySelectorAll('.wtab').forEach(w=>w.classList.toggle('active',w.dataset.t===panelTab)); const p=$('#panel'); if(p)p.scrollTop=0; }));
 }
 function applyReadOnly(){
   const b=$('#panelBody');
@@ -2165,6 +2269,10 @@ function wirePanel(d){
   const likeSel=$('#likeSel'); if(likeSel) likeSel.addEventListener('change',e=>{ d.likelihood=e.target.value; e.target.style.borderColor=d.likelihood?LIKE_COLOR[d.likelihood]:'transparent'; saveD(d); renderDeals(); });
   const lossSel=$('#lossSel'); if(lossSel) lossSel.addEventListener('change',e=>{ d.lossReason=e.target.value; saveD(d); renderDeals(); });
   const fld=$('#fLossDetail'); if(fld){ autosize(fld); fld.addEventListener('input',()=>{ d.lossDetail=fld.value; autosize(fld); saveD(d); }); }
+  const fCb=$('#fCallback'); if(fCb) fCb.addEventListener('change',e=>{ d.callbackDate=e.target.value; saveD(d); renderPanel(); renderDeals(); });
+  const fCv=$('#fConv'); if(fCv) fCv.addEventListener('input',e=>{ d.convProb=Math.max(0,Math.min(100,parseInt((e.target.value||'').replace(/[^0-9]/g,''))||0)); saveD(d); renderDeals(); });
+  const lRc=$('#leadRecalc'); if(lRc) lRc.addEventListener('click',()=>{ d.arr=(d.users||0)*perSeat(); d.cur='AUD'; saveD(d); renderPanel(); renderDeals(); toast(d.users?('Sized at '+money(d.users*perSeat())+' ('+d.users+' × '+money(perSeat())+')'):'Add a seat count in Details first'); });
+  const lPr=$('#leadPromote'); if(lPr) lPr.addEventListener('click',()=>{ d.status='engaged'; if(!d.closeDate&&d.callbackDate) d.closeDate=d.callbackDate; d.updated=Date.now(); d.comments=d.comments||[]; d.comments.push({id:uid(),author:'Helm',text:'Promoted from Future pipeline to active pipeline.',ts:Date.now()}); saveD(d); paintStatusPill(d); activeFilter='all'; renderPanel(); renderDeals(); toast('🎉 Promoted to active pipeline'); });
   const spStart=$('#sprintStart'); if(spStart) spStart.addEventListener('click',()=>{ startSprint(d,$('#sprintGoal')?.value); saveD(d); renderPanel(); renderDeals(); toast('2-week sprint started — plan filled in'); });
   const spRetry=$('#sprintRetry'); if(spRetry) spRetry.addEventListener('click',()=>{ d.status='recovery'; d.retryDate=''; startSprint(d); saveD(d); paintStatusPill(d); renderPanel(); renderDeals(); toast('Fresh recovery sprint started — plan filled in'); });
   const spWin=$('#sprintWin'); if(spWin) spWin.addEventListener('click',()=>{ d.sprint=null; d.retryDate=''; if(d.status==='recovery'||d.status==='dormant')d.status='engaged'; saveD(d); paintStatusPill(d); renderGrade(d); renderPanel(); renderDeals(); toast('Back in the pipeline 🎉'); });
@@ -2296,8 +2404,9 @@ function renderSettings(){
       <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
         <div style="flex:1;min-width:150px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Your name</label><input id="setName" value="${esc(userName)}" placeholder="Used on updates &amp; briefs" style="${spStyle}"></div>
         <div style="width:130px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">A$ per US$1</label><input id="setFx" inputmode="decimal" value="${fxUSD()}" style="${spStyle}"></div>
+        <div style="width:150px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">A$ per seat / user</label><input id="setPerUser" inputmode="numeric" value="${perSeat()}" style="${spStyle}"></div>
       </div>
-      <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-top:8px">The rate that converts USD deals to AUD and shows US$ figures. Update it when the exchange rate moves.</div>
+      <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-top:8px">The FX rate converts USD deals to AUD. The <b>per-seat</b> rate auto-sizes a future lead's ARR from its seat count (seats × rate) — used in the Future pipeline section.</div>
     </div>
     <div class="modal-sec"><div class="modal-sec-t">Your data</div>
       <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-bottom:10px">Download a backup of everything (deals + settings) as a file you can keep. This is <b>${activeEnv()==='prod'?'production':'staging'}</b> data.</div>
@@ -2313,6 +2422,7 @@ function renderSettings(){
   const spReset=$('#spDefReset'); if(spReset) spReset.addEventListener('click',()=>{ delete meta.sprintDefaults; save(); renderSettings(); toast('Sprint defaults reset'); });
   const setName=$('#setName'); if(setName) setName.addEventListener('input',()=>{ userName=setName.value.trim(); try{localStorage.setItem('pcc_user',userName);}catch(e){} });
   const setFx=$('#setFx'); if(setFx) setFx.addEventListener('input',()=>{ meta.fx=parseFloat((setFx.value||'').replace(/[^0-9.]/g,''))||AUD_PER_USD; save(); applyChrome(); renderActive(); });
+  const setPU=$('#setPerUser'); if(setPU) setPU.addEventListener('input',()=>{ meta.perUser=parseInt((setPU.value||'').replace(/[^0-9]/g,''))||250; save(); });
   const setExport=$('#setExport'); if(setExport) setExport.addEventListener('click',()=>{ try{ const blob=new Blob([JSON.stringify(currentState(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='helm-backup-'+activeEnv()+'-'+today+'.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1500); toast('Backup downloaded'); }catch(e){ toast('Export failed'); } });
   const setStages=$('#setStages'); if(setStages) setStages.addEventListener('input',()=>{ meta.journeyTemplate=setStages.value.split('\n').map(s=>s.trim()).filter(Boolean); save(); });
   const setStagesReset=$('#setStagesReset'); if(setStagesReset) setStagesReset.addEventListener('click',()=>{ delete meta.journeyTemplate; save(); renderSettings(); toast('Deal flow reset to built-in'); });
