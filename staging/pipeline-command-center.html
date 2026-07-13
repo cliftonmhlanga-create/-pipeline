@@ -42,7 +42,7 @@
   .brand-name span{color:var(--text-3);font-weight:500}
   .sync-badge{font-size:11px;font-weight:650;letter-spacing:.2px;white-space:nowrap}
   .seg{display:flex;background:var(--fill-2);border-radius:9px;padding:2px;gap:2px}
-  .seg button{font-size:13px;font-weight:550;color:var(--text-2);padding:5px 15px;border-radius:7px;transition:.2s var(--ease);white-space:nowrap}
+  .seg button{font-size:13px;font-weight:550;color:var(--text-2);padding:5px 13px;border-radius:7px;transition:.2s var(--ease);white-space:nowrap}
   .seg button.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-s);font-weight:600}
   .seg button:not(.active):hover{color:var(--text)}
   .topbar-actions{display:flex;align-items:center;gap:7px}
@@ -200,6 +200,44 @@
   .pat-move-ic{color:#6ee7a0;font-weight:800}
   .pat-foot{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1)}
   .pat-foot .sub{margin:0;color:rgba(255,255,255,.5)}
+  .oo-banner{background:var(--surface-2);border:1px solid var(--hair);border-radius:12px;padding:11px 15px;font-size:13px;color:var(--text-2);margin-bottom:14px}
+  .oo-note-card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:15px 16px;margin-bottom:16px}
+  .oo-note{width:100%;font-family:inherit;font-size:13.5px;line-height:1.55;padding:10px 12px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text);resize:vertical}
+  .oo-sec{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:6px 8px 8px;margin-bottom:12px}
+  .oo-sec-h{display:flex;align-items:center;justify-content:space-between;padding:8px 8px 6px}
+  .oo-sec-t{font-size:13px;font-weight:750;color:var(--text)}
+  .oo-sec-n{font-size:11.5px;font-weight:700;color:var(--text-3);background:var(--fill);border-radius:20px;padding:1px 9px}
+  .oo-empty{font-size:12.5px;color:var(--text-3);padding:4px 9px 8px}
+  .oo-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:9px;cursor:pointer;transition:background .12s}
+  .oo-row:hover{background:var(--fill)}
+  .oo-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .oo-name{font-size:13px;font-weight:650;color:var(--text);flex-shrink:0}
+  .oo-extra{font-size:12px;color:var(--text-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .oo-arr{font-size:12.5px;font-weight:700;color:var(--text-2);flex-shrink:0}
+  .oo-modal{position:fixed;inset:0;background:rgba(10,12,24,.55);display:flex;align-items:center;justify-content:center;z-index:9000;padding:24px}
+  .oo-modal-card{background:var(--surface);border:1px solid var(--hair);border-radius:16px;max-width:640px;width:100%;max-height:82vh;display:flex;flex-direction:column;padding:18px 20px;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+  .oo-modal-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .oo-modal-h .oo-modal-x{margin-left:auto;background:var(--fill);border-radius:8px;width:28px;height:28px;font-size:14px;color:var(--text-2)}
+  .oo-modal-pre{font-family:inherit;font-size:12.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;overflow:auto;background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:14px;margin:0 0 12px}
+  .oo-modal-copy{align-self:flex-start}
+  .oo-cw{position:relative}
+  .oo-x{width:22px;height:22px;border-radius:6px;background:var(--fill);color:var(--text-3);font-size:12px;line-height:1;flex-shrink:0;opacity:0;transition:opacity .12s}
+  .oo-cw .oo-x{position:absolute;top:10px;right:10px;z-index:3}
+  .oo-cw:hover .oo-x,.oo-row:hover .oo-x-row,.oo-comm:hover .oo-x{opacity:1}
+  .oo-x:hover{background:var(--red-soft,rgba(255,90,90,.14));color:var(--red)}
+  .oo-x-row{opacity:0}
+  .oo-showhidden{font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:8px}
+  .oo-comm{display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:9px}
+  .oo-comm:hover{background:var(--fill)}
+  .oo-check{width:19px;height:19px;border-radius:6px;border:2px solid var(--hair);background:var(--surface-2);flex-shrink:0;font-size:12px;line-height:1;color:#fff;display:flex;align-items:center;justify-content:center}
+  .oo-check.on{background:var(--green);border-color:var(--green)}
+  .oo-comm.done .oo-comm-t{text-decoration:line-through;color:var(--text-3)}
+  .oo-comm-t{flex:1;font-size:13px;font-weight:600;color:var(--text)}
+  .oo-carry{font-size:10.5px;font-weight:700;color:var(--orange);background:var(--orange-soft,rgba(240,150,50,.14));padding:1px 7px;border-radius:20px;margin-left:4px}
+  .oo-godeal{font-size:11px;font-weight:600;color:var(--accent);cursor:pointer;margin-left:4px}
+  .oo-addrow{padding:6px 4px 2px}
+  .oo-addin{width:100%;font-family:inherit;font-size:12.5px;padding:8px 11px;border-radius:9px;border:1px dashed var(--hair);background:transparent;color:var(--text)}
+  .oo-addin:focus{border-style:solid;border-color:var(--accent);background:var(--surface-2)}
   .gap-big{font-size:32px;font-weight:800;letter-spacing:-1px;color:#ff8a8a;margin-bottom:2px}
   .gap-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
   .gap-name{font-size:12.5px;font-weight:600;width:140px;color:rgba(255,255,255,.85)}
@@ -754,12 +792,13 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="brand"><div class="brand-mark"><svg viewBox="0 0 24 24" width="17" height="17" fill="none"><path d="M4 15.5 9.5 9 13.5 12.5 20 6" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="6" r="1.7" fill="#fff"/></svg></div><div class="brand-name">Helm <span>· Clifton Mhlanga</span></div><span id="syncBadge" class="sync-badge" style="display:none"></span></div>
+    <div class="brand"><div class="brand-mark"><svg viewBox="0 0 24 24" width="17" height="17" fill="none"><path d="M4 15.5 9.5 9 13.5 12.5 20 6" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="6" r="1.7" fill="#fff"/></svg></div><div class="brand-name">Helm</div><span id="syncBadge" class="sync-badge" style="display:none"></span></div>
     <div class="seg" id="seg">
       <button data-view="deals" class="active">Deals</button>
       <button data-view="plan">Plan</button>
       <button data-view="calendar">Calendar</button>
       <button data-view="forecast">Forecast</button>
+      <button data-view="oneone">1:1</button>
     </div>
     <div class="topbar-actions">
       <button class="cur-btn" id="cmdBtn" title="Command bar (⌘K / Ctrl+K)">⌘K</button>
@@ -809,6 +848,12 @@
     <div id="prodgap"></div>
     <div id="patterns"></div>
     <div class="belowbar" id="belowbar"></div>
+  </section>
+
+  <section class="view" id="view-oneone">
+    <div class="page-head" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap"><div><div class="page-title">Weekly 1:1</div><div class="page-sub" id="oneoneSub">Auto-built from your deals. Add your talking points, then copy it for your manager.</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="brief-btn" id="oneoneCopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy for Slack &amp; save week</button></div></div>
+    <div id="oneoneBody"></div>
   </section>
 
 </div>
@@ -1104,6 +1149,7 @@ function migrate(){
     if(!Array.isArray(d.slipLog)) d.slipLog=[];
     if(d.callbackDate==null) d.callbackDate='';
     if(d.convProb==null) d.convProb=0;
+    if(d.managerAsk==null) d.managerAsk='';
     if(!d.dvd||typeof d.dvd!=='object') d.dvd={eb:false,problem:false,event:false,champion:false};
     ['eb','problem','event','champion'].forEach(k=>{ if(d.dvd[k]==null) d.dvd[k]=false; });
     if(!d.artifacts||typeof d.artifacts!=='object') d.artifacts={};
@@ -1364,18 +1410,18 @@ function aiArtifactsHTML(d){
 }
 /* ════════ ASSISTANT CHAT — talk to your pipeline ════════ */
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
-function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[],callbackDate:'',convProb:0}; }
+function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[],callbackDate:'',convProb:0,managerAsk:''}; }
 async function chatAgent(text){
   const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; const q=quarterOf(d); const sched=(d.status==='recovery'||d.status==='dormant')?' | NOT in a quarter yet (recovery/dormant — needs an active status + a close date to get scheduled)':(d.closeDate?(' | closes '+d.closeDate+(q?' ('+periodShort(q)+')':'')):' | no close date'); return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+sched+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
-  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|lead|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","domain":"company.com","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"signals":{"eb":false,"problem":false,"event":false,"champion":false},"lossReason":"Product gap|Built in-house|Lost to competitor|Budget / cost|No decision / timing|Other","lossDetail":"","sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"create_lead","name":"<company name ONLY>","fields":{"contact":"","role":"","crm":"","domain":"company.com","location":"","users":0},"callbackDate":"YYYY-MM-DD","convProb":40,"arr":0,"spoke":true,"topic":"DealHub","lastActivity":"","nextSteps":[{"text":"","due":"YYYY-MM-DD"}],"note":""}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. PARK-FOR-LATER: if an EXISTING deal (especially one in a recovery sprint) gets a positive-but-later reply — "sounds good but reach out in August", "circle back next quarter", "ping me after our FY", "not until Q3" — do NOT keep chasing it with sprint reminders. Move it to Future pipeline: set_status to "lead" (this ENDS the recovery sprint and stops its reminders) AND set its callbackDate via update_deal to that future date (resolve "August"/"Q3"/etc. to a real YYYY-MM-DD after today); also log_update the reply. It then reminds you when the callback is due instead of nagging now, and its ARR leaves the active forecast until you promote it back. CALLBACK / FUTURE LEAD: when the user describes a COLD outreach or a "reach out later" contact — someone who said "not right now, reach out in September", "call me in Q3", "circle back next quarter", "follow up in 2 months", or a fresh prospect they just want to park with a date — this is NOT a live deal or a prior conversation, so use create_lead (NOT create_deal, NOT recovery). Extract company->name (company ONLY), the person->fields.contact, their role->fields.role, seat/user/seller count->fields.users (ARR then auto-computes at the per-seat rate — don\'t guess ARR unless they give a dollar figure), website->fields.domain, CRM->fields.crm. Resolve the callback timing to a real future date in callbackDate (YYYY-MM-DD): "September"->1st of next September, "Q3"->start of that fiscal quarter, "in 2 months"->today+~60d, always a date AFTER today. If they say how likely it is to convert, set convProb (0-100). Fill in what a good AE would already know without asking: set fields.domain to the company\'s real website from your own knowledge (e.g. Protecht -> protecht.com.au, Xero -> xero.com) — only leave it blank if you genuinely don\'t know it, never invent a domain. If the paste shows a conversation ALREADY happened (spoke to / rang / called / met / emailed them today or recently), set "spoke":true (this logs the first journey step as done today) and write a one-line "lastActivity" summarising it (e.g. "Spoke to Rohit today — reconnect 7 Sep re DealHub"), and set "topic" to what it\'s about (default DealHub/CPQ). Put any concrete follow-ups in "nextSteps" with due dates; the callback itself is auto-added as a dated step, so you don\'t need to repeat it. These are reminder-only future pipeline and stay out of the forecast until promoted. If instead the account is a real deal in motion (there\'s a live conversation, pain uncovered, a demo done, a champion), use create_deal as below. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the decision-maker role->role, the website/domain->domain, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), LIGHT UP the deservedness "signals" that the text supports (eb = an economic/budget buyer is named or engaged; problem = the pain is quantified with metrics or $; event = there is a deadline/compelling event/decision date; champion = someone internal owns/backs the case) — set each true only if the paste genuinely shows it, set "likelihood" if it reads as a revival, and if it went cold/was lost set "lossReason" to the closest match and "lossDetail" to a one-line why (the revival read), add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are WHOLE NUMBERS on a 0-to-10 scale (e.g. 7 or 8) — never a fraction like 0.7 or a percentage. If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
+  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|lead|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","domain":"company.com","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"signals":{"eb":false,"problem":false,"event":false,"champion":false},"lossReason":"Product gap|Built in-house|Lost to competitor|Budget / cost|No decision / timing|Other","lossDetail":"","sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"create_lead","name":"<company name ONLY>","fields":{"contact":"","role":"","crm":"","domain":"company.com","location":"","users":0},"callbackDate":"YYYY-MM-DD","convProb":40,"arr":0,"spoke":true,"topic":"DealHub","lastActivity":"","nextSteps":[{"text":"","due":"YYYY-MM-DD"}],"note":""}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\n- {"type":"brief_note","note":"a short talking point for the weekly 1:1 / manager update"}\n- {"type":"add_commitment","text":"an action I commit to getting done this week","deal":"<optional deal name to link it to>"}\n- {"type":"set_ask","deal":"<name>","ask":"what I need from my manager on this deal — exec-sponsor intro, pricing approval, product ETA, escalation"}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. PARK-FOR-LATER: if an EXISTING deal (especially one in a recovery sprint) gets a positive-but-later reply — "sounds good but reach out in August", "circle back next quarter", "ping me after our FY", "not until Q3" — do NOT keep chasing it with sprint reminders. Move it to Future pipeline: set_status to "lead" (this ENDS the recovery sprint and stops its reminders) AND set its callbackDate via update_deal to that future date (resolve "August"/"Q3"/etc. to a real YYYY-MM-DD after today); also log_update the reply. It then reminds you when the callback is due instead of nagging now, and its ARR leaves the active forecast until you promote it back. CALLBACK / FUTURE LEAD: when the user describes a COLD outreach or a "reach out later" contact — someone who said "not right now, reach out in September", "call me in Q3", "circle back next quarter", "follow up in 2 months", or a fresh prospect they just want to park with a date — this is NOT a live deal or a prior conversation, so use create_lead (NOT create_deal, NOT recovery). Extract company->name (company ONLY), the person->fields.contact, their role->fields.role, seat/user/seller count->fields.users (ARR then auto-computes at the per-seat rate — don\'t guess ARR unless they give a dollar figure), website->fields.domain, CRM->fields.crm. Resolve the callback timing to a real future date in callbackDate (YYYY-MM-DD): "September"->1st of next September, "Q3"->start of that fiscal quarter, "in 2 months"->today+~60d, always a date AFTER today. If they say how likely it is to convert, set convProb (0-100). Fill in what a good AE would already know without asking: set fields.domain to the company\'s real website from your own knowledge (e.g. Protecht -> protecht.com.au, Xero -> xero.com) — only leave it blank if you genuinely don\'t know it, never invent a domain. If the paste shows a conversation ALREADY happened (spoke to / rang / called / met / emailed them today or recently), set "spoke":true (this logs the first journey step as done today) and write a one-line "lastActivity" summarising it (e.g. "Spoke to Rohit today — reconnect 7 Sep re DealHub"), and set "topic" to what it\'s about (default DealHub/CPQ). Put any concrete follow-ups in "nextSteps" with due dates; the callback itself is auto-added as a dated step, so you don\'t need to repeat it. These are reminder-only future pipeline and stay out of the forecast until promoted. If instead the account is a real deal in motion (there\'s a live conversation, pain uncovered, a demo done, a champion), use create_deal as below. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the decision-maker role->role, the website/domain->domain, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), LIGHT UP the deservedness "signals" that the text supports (eb = an economic/budget buyer is named or engaged; problem = the pain is quantified with metrics or $; event = there is a deadline/compelling event/decision date; champion = someone internal owns/backs the case) — set each true only if the paste genuinely shows it, set "likelihood" if it reads as a revival, and if it went cold/was lost set "lossReason" to the closest match and "lossDetail" to a one-line why (the revival read), add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are WHOLE NUMBERS on a 0-to-10 scale (e.g. 7 or 8) — never a fraction like 0.7 or a percentage. WEEKLY 1:1 / MANAGER UPDATE: when the user says "note for my 1:1", "talking point", "for my manager", or is narrating what they want to raise in their one-on-one, capture the framing with brief_note — AND still update the underlying deals so everything stays connected: use log_update / add_step / set_status / update_deal (closeDate, callbackDate) / create_deal / create_lead for each account mentioned. The 1:1 view already auto-pulls in-play-for-the-quarter, recovery, future pipeline, blockers and next-week steps FROM the deals, so do NOT repeat those as brief_notes — brief_note is only for the framing/narrative the app cannot derive (e.g. "pushing to bring two more back over the fortnight"). When the user says they will DO something this week / commit to an action ("this week I\'ll multi-thread the top 5", "I\'m going to book the CFO session"), use add_commitment (link it to a deal by name when it is about one) — these are the accountability items the 1:1 tracks and carries over if unfinished. When the user needs something FROM their manager on a deal (an exec-sponsor intro, pricing/discount approval, a product ETA or escalation, e.g. AC3 data residency), use set_ask on that deal so it surfaces under "Asks for my manager" in the 1:1. If the user mentions a NEW account they will go after, create it (create_deal in recovery, or create_lead if it is a future callback). If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
   const quarters=activePeriods().map(k=>{ const dr=quarterDates(k); return periodShort(k)+' = '+dr[0].toISOString().slice(0,10)+'…'+dr[1].toISOString().slice(0,10); }).join('; ');
   const ctx='Today is '+today+'. Fiscal quarters (for setting close dates): '+quarters+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
   return await aiJSON(sys,ctx,1300);
 }
 function parseAmt(v){ const raw=(''+(v==null?'':v)).toLowerCase().trim(); let n=parseFloat(raw.replace(/[^0-9.]/g,''))||0; if(/m/.test(raw)) n*=1e6; else if(/k/.test(raw)) n*=1e3; return n; }
 function applyChatActions(actions){
-  const chips=[], FLD=['oneLiner','whyNow','costInaction','threats','blocker','risk','lastActivity','contact','role','crm','type','location','closeLabel','closeDate','likelihood','callbackDate'], NUM=['arr','users','convProb'];
+  const chips=[], FLD=['oneLiner','whyNow','costInaction','threats','blocker','risk','lastActivity','contact','role','crm','type','location','closeLabel','closeDate','likelihood','callbackDate','managerAsk'], NUM=['arr','users','convProb'];
   (actions||[]).forEach(a=>{
     if(!a) return;
     if(!a.type && a.action) a.type=a.action;   // tolerate the model labelling it "action"
@@ -1423,6 +1469,8 @@ function applyChatActions(actions){
       deals.forEach(x=>{ if(x.status==='dormant'&&x.retryDate&&daysUntil(x.retryDate)<=0){ x.retryDate=addDays(today,days); n++; saveD(x); } });
       chips.push({label:'✓ Cleared '+n+' reminder'+(n===1?'':'s')}); return; }
     if(a.type==='set_target'){ const amt=parseAmt(a.amount); let key=currentPeriod; const p=(''+(a.period||'')).toLowerCase().trim(); if(p&&p!=='current'){ const m=activePeriods().find(k=>periodShort(k).toLowerCase()===p||k.toLowerCase().includes(p)); if(m)key=m; } meta.targets=meta.targets||{}; meta.targets[key]=amt; save(); chips.push({label:'✓ '+periodShort(key)+' target → '+money(amt)}); return; }
+    if(a.type==='brief_note'){ const n=(a.note||'').trim(); if(n){ const oo=ooMeta(); oo.note=(oo.note&&oo.note.trim()?oo.note.trim()+'\n':'')+n; save(); if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone')renderOneOnOne(); chips.push({label:'✓ Added to your 1:1 talking points'}); } return; }
+    if(a.type==='add_commitment'){ const n=(a.text||a.note||'').trim(); if(n){ let did=null; if(a.deal){ const dd=findDealByName(a.deal); if(dd)did=dd.id; } addCommitment(n,did); if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone')renderOneOnOne(); chips.push({label:'✓ Commitment added to your 1:1'}); } return; }
     const d=findDealByName(a.deal); if(!d){ chips.push({label:'？ Couldn’t find “'+(a.deal||'?')+'”',warn:true}); return; }
     if(a.type==='update_deal'&&a.updates&&typeof a.updates==='object'){ const ch=[]; FLD.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).trim()){ d[k]=(''+a.updates[k]).trim(); ch.push(k); } }); NUM.forEach(k=>{ if(a.updates[k]!=null&&(''+a.updates[k]).toString().trim()){ d[k]=(k==='arr')?parseAmt(a.updates[k]):(parseFloat((''+a.updates[k]).replace(/[^0-9.]/g,''))||0); ch.push(k); } }); if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
     else if(a.type==='log_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:note,ts:Date.now()}); d.lastActivity=note.slice(0,80); saveD(d); chips.push({label:'✓ Logged on '+d.name,dealId:d.id}); } }
@@ -1430,6 +1478,7 @@ function applyChatActions(actions){
     else if(a.type==='complete_step'){ const m=((a.match||a.text||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase()===m)||open.find(s=>{const t=(s.text||'').toLowerCase();return t.includes(m)||m.includes(t);}); if(!step){ const words=m.split(/\s+/).filter(w=>w.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return words.some(w=>t.includes(w));}); } } if(step){ step.done=true; saveD(d); chips.push({label:'✓ Done · '+d.name+' — '+(step.text||'').slice(0,28),dealId:d.id}); } else chips.push({label:'？ No matching open task on '+d.name,warn:true,dealId:d.id}); }
     else if(a.type==='add_stakeholder'){ const nm=(a.name||'').trim(); if(nm){ d.people=d.people||[]; const sent=['positive','neutral','negative'].includes(a.sentiment)?a.sentiment:'neutral'; const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ ex.sent=sent; if((a.role||'').trim()&&!(ex.role||'').trim())ex.role=a.role; } else d.people.push({name:nm,role:a.role||'Influencer',sent}); saveD(d); chips.push({label:'✓ '+nm+' → '+d.name,dealId:d.id}); } }
     else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open, fromRec=(d.status==='recovery'||d.status==='dormant'); if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; if(fromRec && STATUSES[ns].open && ns!=='recovery' && ns!=='dormant'){ d.sprint=null; d.retryDate=''; } if(ns==='won'||ns==='lost'||ns==='lead'){ d.sprint=null; } if(ns==='lead') d.retryDate=''; saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
+    else if(a.type==='set_ask'){ d.managerAsk=(a.ask||'').trim(); saveD(d); chips.push({label:(d.managerAsk?'✓ Flagged for 1:1 · ':'✓ Cleared ask · ')+d.name,dealId:d.id}); }
     else if(a.type==='sprint_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'Sprint update: '+note,ts:Date.now()}); d.lastActivity=note.slice(0,80); } const na=(a.nextAction||'').trim(); if(na){ d.steps=d.steps||[]; d.steps.push({text:na,done:false,due:addDays(today,5)}); } saveD(d); chips.push({label:'✓ Sprint · '+d.name,dealId:d.id}); }
     else if(a.type==='set_scores'){ const ch=[]; const clamp=v=>{ let n=parseFloat(v); if(isNaN(n))return null; if(n>0&&n<=1&&!Number.isInteger(n)) n=n*10; return Math.max(0,Math.min(10,Math.round(n))); }; if(a.belief!=null&&(''+a.belief).trim()!==''){ const b=clamp(a.belief); if(b!=null){ d.belief=b; ch.push('belief '+d.belief); } } if(a.deservedness!=null&&(''+a.deservedness).trim()!==''){ const dv=clamp(a.deservedness); if(dv!=null){ d.deserve=dv; ch.push('deservedness '+d.deserve); } } if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
     else if(a.type==='snooze_step'){ const m=((a.match||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase().includes(m)||m.includes((s.text||'').toLowerCase())); if(!step){ const w=m.split(/\s+/).filter(x=>x.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return w.some(x=>t.includes(x));}); } } const days=(+a.days>0)?+a.days:3; if(step){ step.due=addDays(today,days); saveD(d); chips.push({label:'✓ Snoozed '+days+'d · '+d.name,dealId:d.id}); } else chips.push({label:'？ No matching task on '+d.name,warn:true,dealId:d.id}); }
@@ -1569,6 +1618,121 @@ function buildBrief(){
   return t;
 }
 
+/* ════════ WEEKLY 1:1 ════════ */
+function ooMeta(){ meta.oneOnOne=meta.oneOnOne||{}; const o=meta.oneOnOne; if(o.note==null)o.note=''; if(!Array.isArray(o.history))o.history=[]; if(!Array.isArray(o.commitments))o.commitments=[]; if(!o.hidden||typeof o.hidden!=='object')o.hidden={week:'',ids:[]}; return o; }
+function weekStartDate(ts){ const d=new Date(ts||Date.now()); d.setHours(0,0,0,0); const day=(d.getDay()+6)%7; d.setDate(d.getDate()-day); return d; }
+function weekKey(ts){ return weekStartDate(ts).toISOString().slice(0,10); }
+function daysAgo(ts){ return ts?((Date.now()-ts)/864e5):999; }
+function ooHidden(){ const o=ooMeta(), wk=weekKey(); if(o.hidden.week!==wk) o.hidden={week:wk,ids:[]}; return o.hidden.ids; }
+function ooLastMetrics(){ const o=ooMeta(), wk=weekKey(); const h=o.history.find(x=>x.week!==wk&&x.metrics); return h?h.metrics:null; }
+function addCommitment(text,dealId){ const t=(''+(text||'')).trim(); if(!t)return; ooMeta().commitments.push({id:uid(),text:t,done:false,dealId:dealId||null,week:weekKey()}); save(); }
+function oneOnOneData(){
+  const open=OPEN(), cq=currentPeriod, wk=weekKey(), hid=ooHidden();
+  const vis=arr=>arr.filter(d=>hid.indexOf(d.id)<0);
+  const inQ=vis(open.filter(d=>quarterOf(d)===cq)).sort((a,b)=>aud(b)-aud(a));
+  const recovery=vis(open.filter(d=>d.status==='recovery')).sort((a,b)=>aud(b)-aud(a));
+  const leads=vis(deals.filter(d=>d.status==='lead')).sort((a,b)=>(a.callbackDate||'9999').localeCompare(b.callbackDate||'9999'));
+  const blockers=vis(open.filter(d=>d.blocker&&(''+d.blocker).trim())).sort((a,b)=>aud(b)-aud(a));
+  const asks=vis(deals.filter(d=>d.managerAsk&&(''+d.managerAsk).trim()));
+  const wonWk=deals.filter(d=>d.status==='won'&&d.closedDate&&daysAgo(new Date(d.closedDate).getTime())<=7);
+  const advanced=open.filter(d=>(d.journey||[]).some(s=>s.done&&s.date&&daysAgo(new Date(s.date).getTime())<=7));
+  const wins=vis(wonWk.concat(advanced.filter(d=>wonWk.indexOf(d)<0)));
+  const changed=vis(deals.filter(d=>d.updated&&daysAgo(d.updated)<=7)).sort((a,b)=>b.updated-a.updated);
+  const nextWeek=[]; open.forEach(d=>{ if(hid.indexOf(d.id)>=0)return; (d.steps||[]).forEach(s=>{ if(!s.done&&s.due){ const du=daysUntil(s.due); if(du>=0&&du<=7) nextWeek.push({d,s,du}); } }); }); nextWeek.sort((a,b)=>a.du-b.du);
+  const upcoming=[]; open.forEach(d=>{ if(hid.indexOf(d.id)>=0)return; (d.dates||[]).forEach(x=>{ if(x.date){ const du=daysUntil(x.date); if(du>=0&&du<=14) upcoming.push({d,label:x.label||'Key date',date:x.date,du}); } }); }); upcoming.sort((a,b)=>a.du-b.du);
+  const sumOf=a=>a.reduce((s,d)=>s+aud(d),0);
+  const metrics={commit:sumOf(inQ.filter(d=>category(d)==='commit')),best:sumOf(inQ.filter(d=>category(d)!=='pipe')),inQ:sumOf(inQ),tgt:+meta.targets[cq]||0};
+  return {cq,wk,inQ,recovery,leads,blockers,asks,wins,changed,nextWeek,upcoming,metrics,hid};
+}
+function buildOneOnOneMD(){
+  const D=oneOnOneData(); const {cq,inQ,recovery,leads,blockers,asks,wins,changed,nextWeek,upcoming,metrics}=D;
+  const oo=ooMeta(), sumOf=a=>a.reduce((s,d)=>s+aud(d),0), dl=daysLeftInQuarter(cq);
+  const last=ooLastMetrics(), wow=(c,p)=>p==null?'':` (${c-p>=0?'+':''}${fmtA(c-p)} WoW)`;
+  const openC=oo.commitments.filter(c=>!c.done), doneC=oo.commitments.filter(c=>c.done&&daysAgo(c.doneTs)<=7);
+  const note=(oo.note||'').trim();
+  let t=`*Weekly 1:1 — ${userName||'Me'} — week of ${fmtD(weekStartDate())}*\n`;
+  t+=`${periodLabel(cq)} · ${dl} days left\n`;
+  t+=`Commit ${fmtA(metrics.commit)}${wow(metrics.commit,last&&last.commit)}  |  Best ${fmtA(metrics.best)}  |  In play ${fmtA(metrics.inQ)}${metrics.tgt?`  |  Target ${fmtA(metrics.tgt)} (${(metrics.inQ/metrics.tgt).toFixed(1)}x cover)`:''}\n\n`;
+  if(note) t+=`*Talking points*\n${note}\n\n`;
+  if(openC.length||doneC.length){ t+=`*Commitments*\n`; doneC.forEach(c=>t+=`• [x] ${c.text}\n`); openC.forEach(c=>t+=`• [ ] ${c.text}${c.week&&c.week<D.wk?' (carried over)':''}\n`); t+='\n'; }
+  if(asks.length) t+=`*Asks for you (${asks.length})*\n`+asks.map(d=>`• ${d.name} (${fmtA(aud(d))}) — ${d.managerAsk}`).join('\n')+'\n\n';
+  if(wins.length) t+=`*Wins this week (${wins.length})*\n`+wins.map(d=>`• ${d.name}${d.status==='won'?` — WON ${fmtA(aud(d))}`:` — advanced to ${currentStageName(d)||'next stage'}`}`).join('\n')+'\n\n';
+  if(blockers.length) t+=`*Blockers (${blockers.length})*\n`+blockers.map(d=>`• ${d.name} (${fmtA(aud(d))}) — ${d.blocker}`).join('\n')+'\n\n';
+  t+=`*In play for ${periodShort(cq)} (${inQ.length} · ${fmtA(sumOf(inQ))})*\n`+(inQ.map(d=>`• ${d.name} — ${fmtA(aud(d))} · ${currentStageName(d)||'new'}${topStep(d)?` · next: ${topStep(d).text}`:''}`).join('\n')||'• none yet')+'\n\n';
+  if(recovery.length) t+=`*Recovery — bringing back (${recovery.length} · ${fmtA(sumOf(recovery))})*\n`+recovery.map(d=>`• ${d.name} — ${fmtA(aud(d))}${d.sprint?' · sprint live':''}${topStep(d)?` · next: ${topStep(d).text}`:''}`).join('\n')+'\n\n';
+  if(leads.length) t+=`*Future pipeline — callbacks (${leads.length} · ${fmtA(sumOf(leads))})*\n`+leads.map(d=>`• ${d.name} — ${fmtA(aud(d))} · reach out ${d.callbackDate?fmtShort(d.callbackDate):'tbd'}${d.convProb?` · ${d.convProb}%`:''}`).join('\n')+'\n\n';
+  if(upcoming.length) t+=`*Upcoming — next 2 weeks (${upcoming.length})*\n`+upcoming.map(x=>`• ${fmtShort(x.date)} (in ${x.du}d) — ${x.d.name}: ${x.label}`).join('\n')+'\n\n';
+  t+=`*Moved this week (${changed.length})*\n`+(changed.map(d=>`• ${d.name} — ${relTime(d.updated)}${d.lastActivity?`: ${d.lastActivity}`:''}`).join('\n')||'• none')+'\n\n';
+  t+=`*Planned next week (${nextWeek.length})*\n`+(nextWeek.map(x=>`• ${x.d.name} — ${x.s.text} (${fmtShort(x.s.due)})`).join('\n')||'• nothing scheduled')+'\n';
+  return t;
+}
+async function copyOneOnOne(){
+  const D=oneOnOneData(); const md=buildOneOnOneMD(); const oo=ooMeta(); const wk=weekKey();
+  const snap={week:wk,label:fmtD(weekStartDate()),ts:Date.now(),text:md,note:(oo.note||''),metrics:D.metrics};
+  oo.history=oo.history.filter(h=>h.week!==wk); oo.history.unshift(snap); oo.history=oo.history.slice(0,26);
+  save();
+  try{ await navigator.clipboard.writeText(md); toast('1:1 copied for Slack · week saved'); }catch(e){ toast('Saved — but copy failed, select the text manually'); }
+  renderOneOnOne();
+}
+function renderOneOnOne(){
+  const el=$('#oneoneBody'); if(!el)return;
+  const D=oneOnOneData(); const {cq,inQ,recovery,leads,blockers,asks,wins,changed,nextWeek,upcoming,metrics,hid}=D;
+  const oo=ooMeta(), sumOf=a=>a.reduce((s,d)=>s+aud(d),0), dl=daysLeftInQuarter(cq), tgt=metrics.tgt;
+  const last=ooLastMetrics();
+  const dnote=(c,p)=>{ if(p==null)return'<div class="sum-meta">—</div>'; const d=c-p; if(!d)return'<div class="sum-meta">flat vs last wk</div>'; const col=d>0?'var(--green)':'var(--red)'; return `<div class="sum-meta" style="color:${col};font-weight:650">${d>0?'▲':'▼'} ${money(Math.abs(d))} vs last wk</div>`; };
+  const gap=Math.max(0,tgt-metrics.inQ), cov=tgt?(metrics.inQ/tgt):0;
+  const cardWrap=d=>`<div class="oo-cw">${cardHTML(d)}<button class="oo-x" data-hide="${d.id}" title="Hide from this brief">✕</button></div>`;
+  const grp=(title,tint,items)=> items.length?`<div class="group"><div class="group-head"><span class="group-dot" style="background:${tint}"></span><span class="group-name">${title}</span><span class="group-count">${items.length}</span><span class="group-sum">${money(sumOf(items))}</span></div><div class="card-stack">${items.map(cardWrap).join('')}</div></div>`:'';
+  const listSec=(title,n,rows,tint)=>`<div class="oo-sec"${tint?` style="border-left:3px solid ${tint}"`:''}><div class="oo-sec-h"><span class="oo-sec-t">${title}</span><span class="oo-sec-n">${n}</span></div>${rows||'<div class="oo-empty">— none</div>'}</div>`;
+  const drow=(d,extra,dotCol)=>`<div class="oo-row" data-id="${d.id}"><span class="oo-dot" style="background:${dotCol||STATUSES[d.status].color}"></span><span class="oo-name">${esc(d.name)}</span><span class="oo-extra">${extra||''}</span><span class="oo-arr">${money(aud(d))}</span><button class="oo-x oo-x-row" data-hide="${d.id}" title="Hide">✕</button></div>`;
+  const openC=oo.commitments.filter(c=>!c.done).sort((a,b)=>(a.week||'').localeCompare(b.week||'')), doneC=oo.commitments.filter(c=>c.done&&daysAgo(c.doneTs)<=7);
+  const commRows=openC.map(c=>`<div class="oo-comm"><button class="oo-check" data-cid="${c.id}"></button><span class="oo-comm-t">${esc(c.text)}${c.week&&c.week<D.wk?' <span class="oo-carry">carried</span>':''}${c.dealId?` <span class="oo-godeal" data-id="${c.dealId}">↗ deal</span>`:''}</span><button class="oo-x" data-cdel="${c.id}" title="Remove">✕</button></div>`).join('')
+    +doneC.map(c=>`<div class="oo-comm done"><button class="oo-check on" data-cid="${c.id}">✓</button><span class="oo-comm-t">${esc(c.text)}</span></div>`).join('')
+    +`<div class="oo-addrow"><input id="ooCommIn" class="oo-addin" placeholder="+ Add a commitment for this week (Enter to add)"></div>`;
+
+  let html=`<div class="summary" style="margin-bottom:16px"><div class="sum-head"><div class="sum-title">${periodLabel(cq)} · ${dl} days left</div>${hid.length?`<button class="oo-showhidden" id="ooShowHidden">Show ${hid.length} hidden</button>`:''}</div>
+    <div class="sum-stats">
+      <div class="sum-cell"><div class="sum-label">Commit</div><div class="sum-value green">${money(metrics.commit)}</div>${dnote(metrics.commit,last&&last.commit)}</div>
+      <div class="sum-cell"><div class="sum-label">Best case</div><div class="sum-value accent">${money(metrics.best)}</div>${dnote(metrics.best,last&&last.best)}</div>
+      <div class="sum-cell"><div class="sum-label">In play</div><div class="sum-value">${money(metrics.inQ)}</div>${dnote(metrics.inQ,last&&last.inQ)}</div>
+      <div class="sum-cell"><div class="sum-label">${tgt?'Gap to target':'Target'}</div><div class="sum-value">${tgt?money(gap):'—'}</div><div class="sum-meta">${tgt?cov.toFixed(1)+'× coverage':'set in Targets'}</div></div>
+    </div></div>
+    <div class="oo-note-card"><div class="oo-sec-t" style="margin-bottom:7px">Your talking points <span class="st-hint" style="font-weight:500;color:var(--text-3)">— your framing. Type here, or say to the assistant "note for my 1:1: …"</span></div>
+      <textarea id="ooNote" class="oo-note" rows="3" placeholder="e.g. Recovered Scott Systems for Q3 — CFO ROI session booked. Pushing 2 more back this fortnight. Need product ETA on AC3 data-residency.">${esc(oo.note||'')}</textarea></div>
+    ${listSec('Commitments this week',openC.length+(doneC.length?' · '+doneC.length+' done':''),commRows,'var(--accent)')}
+    ${asks.length?listSec('Asks for my manager',asks.length,asks.map(d=>drow(d,esc((''+d.managerAsk).slice(0,90)),'var(--red)')).join(''),'var(--red)'):''}
+    ${grp('Wins this week','var(--green)',wins)}
+    ${blockers.length?listSec('Blockers',blockers.length,blockers.map(d=>drow(d,esc((''+d.blocker).slice(0,90)))).join(''),'var(--red)'):''}
+    ${grp('In play for '+periodShort(cq),'var(--accent)',inQ)}
+    ${grp('Recovery — bringing back','var(--orange)',recovery)}
+    ${grp('Future pipeline — callbacks','#8b5cf6',leads)}
+    ${upcoming.length?listSec('Upcoming — next 2 weeks',upcoming.length,upcoming.map(x=>`<div class="oo-row" data-id="${x.d.id}"><span class="oo-dot" style="background:${x.du<=7?'var(--orange)':'var(--gray)'}"></span><span class="oo-name">${esc(x.d.name)}</span><span class="oo-extra">${esc(x.label)}</span><span class="oo-arr" style="color:var(--text-3);font-weight:600">in ${x.du}d · ${fmtShort(x.date)}</span></div>`).join('')):''}
+    ${listSec('Moved this week',changed.length,changed.map(d=>drow(d,relTime(d.updated)+(d.lastActivity?' · '+esc((''+d.lastActivity).slice(0,55)):''))).join(''))}
+    ${listSec('Planned next week',nextWeek.length,nextWeek.map(x=>`<div class="oo-row" data-id="${x.d.id}"><span class="oo-dot" style="background:${x.du<=2?'var(--orange)':'var(--gray)'}"></span><span class="oo-name">${esc(x.d.name)}</span><span class="oo-extra">${esc(x.s.text)}</span><span class="oo-arr" style="color:var(--text-3);font-weight:600">${fmtShort(x.s.due)}</span></div>`).join(''))}
+    ${oo.history.length?listSec('Past weeks',oo.history.length,oo.history.map((h,i)=>`<div class="oo-row oo-hist" data-h="${i}"><span class="oo-dot" style="background:var(--gray)"></span><span class="oo-name">Week of ${h.label}</span><span class="oo-extra">${h.metrics?'Commit '+fmtA(h.metrics.commit):''}</span><span class="oo-arr" style="color:var(--accent);font-weight:600">view</span></div>`).join('')):''}
+  `;
+  el.innerHTML=html;
+  const nt=$('#ooNote'); if(nt) nt.addEventListener('input',()=>{ ooMeta().note=nt.value; save(); });
+  const ci=$('#ooCommIn'); if(ci) ci.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addCommitment(ci.value); renderOneOnOne(); const f=$('#ooCommIn'); if(f)f.focus(); } });
+  el.querySelectorAll('.oo-check[data-cid]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const c=oo.commitments.find(x=>x.id===b.dataset.cid); if(c){ c.done=!c.done; c.doneTs=c.done?Date.now():0; save(); renderOneOnOne(); } }));
+  el.querySelectorAll('.oo-x[data-cdel]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); oo.commitments=oo.commitments.filter(x=>x.id!==b.dataset.cdel); save(); renderOneOnOne(); }));
+  el.querySelectorAll('.oo-x[data-hide]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const ids=ooHidden(); if(ids.indexOf(b.dataset.hide)<0)ids.push(b.dataset.hide); save(); renderOneOnOne(); }));
+  const sh=$('#ooShowHidden'); if(sh) sh.addEventListener('click',()=>{ const o=ooMeta(); o.hidden={week:weekKey(),ids:[]}; save(); renderOneOnOne(); });
+  el.querySelectorAll('.oo-godeal[data-id]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); openDeal(b.dataset.id); }));
+  el.querySelectorAll('.oo-row[data-id]').forEach(r=>r.addEventListener('click',()=>openDeal(r.dataset.id)));
+  el.querySelectorAll('.oo-cw .deal-card').forEach(r=>r.addEventListener('click',()=>openDeal(r.dataset.id)));
+  el.querySelectorAll('.oo-hist[data-h]').forEach(r=>r.addEventListener('click',()=>{ const h=oo.history[+r.dataset.h]; if(h) showBriefSnapshot(h); }));
+}
+function showBriefSnapshot(h){
+  const box=$('#txScrim'); // reuse a modal? simpler: use a prompt-less overlay via toast is not enough. Use window alert-free: build inline.
+  const wrap=document.createElement('div'); wrap.className='oo-modal'; wrap.innerHTML=`<div class="oo-modal-card"><div class="oo-modal-h"><b>Week of ${h.label}</b> <span class="st-hint">${relTime(h.ts)}</span><button class="oo-modal-x">✕</button></div><pre class="oo-modal-pre">${esc(h.text)}</pre><button class="brief-btn oo-modal-copy">Copy this week</button></div>`;
+  document.body.appendChild(wrap);
+  const close=()=>wrap.remove();
+  wrap.addEventListener('click',e=>{ if(e.target===wrap)close(); });
+  wrap.querySelector('.oo-modal-x').addEventListener('click',close);
+  wrap.querySelector('.oo-modal-copy').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(h.text); toast('Copied'); }catch(e){} });
+}
+
 /* ════════ CHROME ════════ */
 function applyChrome(){
   $('#addBtn').style.display=RO?'none':'';
@@ -1579,7 +1743,7 @@ function applyChrome(){
   { const sb=$('#stagingBanner'); if(sb) sb.style.display=(activeEnv()==='staging')?'block':'none'; }
   $('#curBtn').textContent=meta.displayMode==='both'?'A$ + US$':(meta.displayMode==='USD'?'US$':'A$');
 }
-function renderActive(){ const a=$('#seg button.active').dataset.view; if(a==='deals')renderDeals(); else if(a==='plan')renderPlan(); else if(a==='calendar')renderCalendar(); else renderForecast(); }
+function renderActive(){ const a=$('#seg button.active').dataset.view; if(a==='deals')renderDeals(); else if(a==='plan')renderPlan(); else if(a==='calendar')renderCalendar(); else if(a==='oneone')renderOneOnOne(); else renderForecast(); }
 
 /* ════════ PLAN (week / sprint) ════════ */
 function renderPlan(){
@@ -2145,6 +2309,8 @@ function renderPanel(){
       <button id="leadPromote" style="margin-top:13px;width:100%;font-size:13px;font-weight:700;color:#fff;background:#8b5cf6;padding:11px;border-radius:11px">Promote to active pipeline →</button>
     </div>`;
   }
+  const askHTML=`<div class="sec"><div class="sec-title">Raise with manager <span class="st-hint">flag an ask for your 1:1 — exec intro, pricing, product ETA</span></div>
+    <div class="field full"><input id="fAsk" value="${esc(d.managerAsk||'')}" placeholder="e.g. Need a CFO intro · pricing approval · AC3 data-residency ETA — leave blank if none"></div></div>`;
   const commentItems=(d.comments||[]).slice().sort((a,b)=>(a.ts||0)-(b.ts||0)).map(c=>`<div class="cmt ${c.author===userName?'mine':''}"><div class="cmt-head"><span class="cmt-author">${esc(c.author||'Anon')}</span><span class="cmt-time">${relTime(c.ts)}</span></div><div class="cmt-text">${esc(c.text)}</div></div>`).join('')||`<div class="cmt-empty">No comments yet — ask a question or leave a note.</div>`;
 
   $('#panelBody').innerHTML=`<div class="panel-inner">
@@ -2181,6 +2347,8 @@ function renderPanel(){
     ${sprintHTML}
 
     ${lossHTML}
+
+    ${askHTML}
     </div>
 
     <div class="wtab ${panelTab==='journey'?'active':''}" data-t="journey">
@@ -2283,7 +2451,7 @@ function wirePanel(d){
   const bind=(id,key,num)=>{ const el=$('#'+id); if(!el)return; el.addEventListener('input',()=>{ d[key]=num?(parseFloat(el.value.replace(/[^0-9.]/g,''))||0):el.value; saveD(d); renderDeals(); }); };
   bind('fName','name'); bind('fContact','contact'); bind('fRole','role'); bind('fCrm','crm'); bind('fUsers','users',true);
   bind('fType','type'); bind('fLoc','location'); bind('fDomain','domain'); bind('fClose','closeLabel'); bind('fRisk','risk'); bind('fLast','lastActivity'); bind('fNotes','notes');
-  bind('fWhy','whyNow'); bind('fCost','costInaction'); bind('fThreats','threats'); bind('fOneLiner','oneLiner');
+  bind('fWhy','whyNow'); bind('fCost','costInaction'); bind('fThreats','threats'); bind('fOneLiner','oneLiner'); bind('fAsk','managerAsk');
   ['fWhy','fCost','fThreats','fNotes'].forEach(id=>{ const el=$('#'+id); if(el){autosize(el);el.addEventListener('input',()=>autosize(el));} });
   $('#fCloseDate').addEventListener('change',e=>{ const old=d.closeDate; d.closeDate=e.target.value; recordSlip(d,old,e.target.value); saveD(d); renderDeals(); renderPanel(); });
 
@@ -2479,7 +2647,7 @@ function renderSettings(){
 $('#seg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
   $('#seg').querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); $('#view-'+b.dataset.view).classList.add('active');
-  if(b.dataset.view==='plan')renderPlan(); if(b.dataset.view==='calendar')renderCalendar(); if(b.dataset.view==='forecast')renderForecast(); });
+  if(b.dataset.view==='plan')renderPlan(); if(b.dataset.view==='calendar')renderCalendar(); if(b.dataset.view==='forecast')renderForecast(); if(b.dataset.view==='oneone')renderOneOnOne(); });
 $('#statusPill').addEventListener('click',()=>{ if(!RO)$('#statusMenu').classList.toggle('open'); });
 document.addEventListener('click',e=>{ if(!e.target.closest('.status-select'))$('#statusMenu').classList.remove('open'); });
 $('#panelClose').addEventListener('click',closePanel); $('#scrim').addEventListener('click',closePanel);
@@ -2589,6 +2757,7 @@ async function aiSharpenEmail(d){
 $('#curBtn').addEventListener('click',()=>{ const o={both:'AUD',AUD:'USD',USD:'both'}; meta.displayMode=o[meta.displayMode]||'both'; save(); applyChrome(); renderActive(); if(openId)renderPanel(); });
 $('#mgrBtn').addEventListener('click',()=>{ RO=!RO; applyChrome(); closePanel(); renderActive(); toast(RO?'Manager view — read only':'Back to editing'); });
 $('#briefBtn').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(buildBrief()); toast('1:1 brief copied — paste into your notes'); }catch(e){ toast('Copy failed'); } });
+{ const oc=$('#oneoneCopy'); if(oc) oc.addEventListener('click',copyOneOnOne); }
 
 /* ════════ COMMAND BAR (⌘K) ════════ */
 let cmdItems=[], cmdSel=0;
