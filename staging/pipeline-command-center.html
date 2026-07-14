@@ -724,6 +724,19 @@
   .chat-act{font-size:11px;font-weight:600;color:var(--green);background:var(--green-soft,rgba(52,168,83,.1));border:1px solid transparent;border-radius:8px;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:6px}
   .chat-act:hover{filter:brightness(.97)}
   .chat-act.warn{color:var(--orange);background:rgba(240,132,0,.1)}
+  .chat-preview{align-self:flex-start;max-width:94%;background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:12px 13px;margin-top:-2px;box-shadow:var(--shadow-s)}
+  .pv-head{font-size:11px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:6px}
+  .pv-hi{color:var(--red);text-transform:none;letter-spacing:0;font-weight:700;margin-left:6px}
+  .pv-summary{font-size:12.5px;font-weight:650;color:var(--text);margin-bottom:9px}
+  .pv-rows{display:flex;flex-direction:column;gap:3px;margin-bottom:11px;max-height:220px;overflow:auto}
+  .pv-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2)}
+  .pv-risk{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--gray)}
+  .pv-risk.medium{background:var(--accent)} .pv-risk.high{background:var(--red)}
+  .pv-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pv-flag{font-size:10.5px;font-weight:600;color:var(--orange);flex-shrink:0}
+  .pv-actions{display:flex;gap:8px}
+  .pv-apply{font-size:12.5px;font-weight:700;color:#fff;background:var(--grad,var(--accent));padding:8px 15px;border-radius:10px}
+  .pv-cancel{font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--fill);padding:8px 14px;border-radius:10px}
   .chat-compose{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid var(--hair);flex-shrink:0}
   .chat-compose textarea{flex:1;font-family:inherit;font-size:13.5px;line-height:1.5;padding:10px 13px;border-radius:12px;border:1px solid var(--hair);background:var(--surface-2);resize:none;max-height:120px}
   .chat-compose textarea:focus{border-color:var(--accent)}
@@ -1411,13 +1424,77 @@ function aiArtifactsHTML(d){
 /* ════════ ASSISTANT CHAT — talk to your pipeline ════════ */
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
 function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[],callbackDate:'',convProb:0,managerAsk:''}; }
+/* ════════ BATCH SAFETY — the Large NL Mutation Standard (T12) ════════ */
+const CHAT_MAX_TOKENS=8000;   /* configurable output ceiling for the chat agent */
+/* Turn a raw model response into a safe result. Truncated/unparseable => apply NOTHING. */
+function parseChatResponse(raw,stopReason){
+  if(!raw) return {ok:false,truncated:false,reason:'empty',actions:[],reply:''};
+  let s=(''+raw).replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'').trim();
+  let parsed=null; try{ parsed=JSON.parse(s); }catch(e){ const m=s.match(/\{[\s\S]*\}/); if(m){ try{ parsed=JSON.parse(m[0]); }catch(_){} } }
+  const hitCeiling=(stopReason==='max_tokens'||stopReason==='length');
+  if(!parsed) return {ok:false,truncated:true,reason:'unparseable',actions:[],reply:''};
+  const actions=Array.isArray(parsed.actions)?parsed.actions:[];
+  if(hitCeiling) return {ok:false,truncated:true,reason:'max_tokens',actions:[],reply:(parsed.reply||'')};
+  return {ok:true,truncated:false,actions,reply:(parsed.reply||'')};
+}
+function actionRisk(a){ const t=a&&a.type;
+  if(t==='set_status') return (a.status==='won'||a.status==='lost'||a.status==='dormant')?'high':'medium';
+  if(['update_deal','create_deal','create_lead','set_scores','set_target','start_sprint','set_ask','sprint_update'].indexOf(t)>=0) return 'medium';
+  return 'low'; }
+const RISK_RANK={low:0,medium:1,high:2};
+function actionLabel(a){ const nm=a.deal||a.name||''; switch(a.type){
+  case 'create_lead': return 'Add future lead: '+(a.name||'?');
+  case 'create_deal': return 'Create deal: '+(a.name||'?');
+  case 'update_deal': return 'Update '+nm;
+  case 'set_status': return 'Set '+nm+' → '+(a.status||'?');
+  case 'add_step': return 'Next step · '+nm;
+  case 'log_update': return 'Log update · '+nm;
+  case 'set_ask': return 'Manager ask · '+nm;
+  case 'set_scores': return 'Grade · '+nm;
+  case 'add_stakeholder': return 'Add contact · '+nm;
+  case 'complete_step': return 'Mark done · '+nm;
+  case 'add_commitment': return 'Commitment: '+(''+(a.text||'')).slice(0,44);
+  case 'brief_note': return '1:1 talking point';
+  case 'set_target': return 'Set target';
+  case 'start_sprint': return 'Start sprint · '+nm;
+  default: return (a.type||'action')+(nm?' · '+nm:''); } }
+function planActions(actions){
+  const items=(actions||[]).filter(a=>a&&a.type).map(a=>{ const risk=actionRisk(a); let flag='';
+    if(a.type==='create_deal'||a.type==='create_lead'){ const ex=findDealByName(a.name); if(ex) flag='existing “'+ex.name+'” may match'; }
+    return {a,risk,label:actionLabel(a),flag}; });
+  let maxRisk='low'; items.forEach(x=>{ if(RISK_RANK[x.risk]>RISK_RANK[maxRisk]) maxRisk=x.risk; });
+  const g={}; items.forEach(x=>{ g[x.a.type]=(g[x.a.type]||0)+1; });
+  const nice={create_lead:'lead',create_deal:'deal',update_deal:'update',set_status:'status change',add_step:'next step',log_update:'log',set_ask:'manager ask',add_commitment:'commitment',brief_note:'1:1 note',add_stakeholder:'contact',complete_step:'task done',set_scores:'grade',set_target:'target',start_sprint:'sprint',snooze_step:'snooze',clear_notifications:'notification clear',set_focus:'focus',sprint_update:'sprint update',open_deal:'open'};
+  const summary=Object.keys(g).map(k=>{ const n=g[k],w=nice[k]||k; return n+' '+w+(n>1?'s':''); }).join(', ');
+  return {items,maxRisk,summary,count:items.length,flags:items.filter(x=>x.flag)};
+}
+function batchApplied(id){ return !!(id&&meta&&Array.isArray(meta.appliedBatches)&&meta.appliedBatches.indexOf(id)>=0); }
+/* Atomic commit: roll the deals back if applying throws; register the batch id so it can't apply twice; verify the save landed. */
+function commitBatch(actions,batchId){
+  meta.appliedBatches=meta.appliedBatches||[];
+  if(batchApplied(batchId)) return {already:true,chips:[]};
+  const snap=JSON.stringify(deals);
+  let chips;
+  try{ chips=applyChatActions(actions); }
+  catch(e){ try{ const arr=JSON.parse(snap); deals.length=0; arr.forEach(d=>deals.push(d)); }catch(_){}
+    return {error:(e&&e.message)||'apply failed',chips:[]}; }
+  if(batchId){ meta.appliedBatches.push(batchId); if(meta.appliedBatches.length>60) meta.appliedBatches=meta.appliedBatches.slice(-60); }
+  save();
+  let verified=true; try{ const st=Local.load&&Local.load(); if(batchId&&st&&st.meta&&Array.isArray(st.meta.appliedBatches)) verified=st.meta.appliedBatches.indexOf(batchId)>=0; }catch(_){ verified=false; }
+  return {chips:chips||[],verified};
+}
 async function chatAgent(text){
   const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; const q=quarterOf(d); const sched=(d.status==='recovery'||d.status==='dormant')?' | NOT in a quarter yet (recovery/dormant — needs an active status + a close date to get scheduled)':(d.closeDate?(' | closes '+d.closeDate+(q?' ('+periodShort(q)+')':'')):' | no close date'); return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+sched+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
   const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|lead|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","domain":"company.com","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"signals":{"eb":false,"problem":false,"event":false,"champion":false},"lossReason":"Product gap|Built in-house|Lost to competitor|Budget / cost|No decision / timing|Other","lossDetail":"","sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"create_lead","name":"<company name ONLY>","fields":{"contact":"","role":"","crm":"","domain":"company.com","location":"","users":0},"callbackDate":"YYYY-MM-DD","convProb":40,"arr":0,"spoke":true,"topic":"DealHub","lastActivity":"","nextSteps":[{"text":"","due":"YYYY-MM-DD"}],"note":""}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\n- {"type":"brief_note","note":"a short talking point for the weekly 1:1 / manager update"}\n- {"type":"add_commitment","text":"an action I commit to getting done this week","deal":"<optional deal name to link it to>"}\n- {"type":"set_ask","deal":"<name>","ask":"what I need from my manager on this deal — exec-sponsor intro, pricing approval, product ETA, escalation"}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. PARK-FOR-LATER: if an EXISTING deal (especially one in a recovery sprint) gets a positive-but-later reply — "sounds good but reach out in August", "circle back next quarter", "ping me after our FY", "not until Q3" — do NOT keep chasing it with sprint reminders. Move it to Future pipeline: set_status to "lead" (this ENDS the recovery sprint and stops its reminders) AND set its callbackDate via update_deal to that future date (resolve "August"/"Q3"/etc. to a real YYYY-MM-DD after today); also log_update the reply. It then reminds you when the callback is due instead of nagging now, and its ARR leaves the active forecast until you promote it back. CALLBACK / FUTURE LEAD: when the user describes a COLD outreach or a "reach out later" contact — someone who said "not right now, reach out in September", "call me in Q3", "circle back next quarter", "follow up in 2 months", or a fresh prospect they just want to park with a date — this is NOT a live deal or a prior conversation, so use create_lead (NOT create_deal, NOT recovery). Extract company->name (company ONLY), the person->fields.contact, their role->fields.role, seat/user/seller count->fields.users (ARR then auto-computes at the per-seat rate — don\'t guess ARR unless they give a dollar figure), website->fields.domain, CRM->fields.crm. Resolve the callback timing to a real future date in callbackDate (YYYY-MM-DD): "September"->1st of next September, "Q3"->start of that fiscal quarter, "in 2 months"->today+~60d, always a date AFTER today. If they say how likely it is to convert, set convProb (0-100). Fill in what a good AE would already know without asking: set fields.domain to the company\'s real website from your own knowledge (e.g. Protecht -> protecht.com.au, Xero -> xero.com) — only leave it blank if you genuinely don\'t know it, never invent a domain. If the paste shows a conversation ALREADY happened (spoke to / rang / called / met / emailed them today or recently), set "spoke":true (this logs the first journey step as done today) and write a one-line "lastActivity" summarising it (e.g. "Spoke to Rohit today — reconnect 7 Sep re DealHub"), and set "topic" to what it\'s about (default DealHub/CPQ). Put any concrete follow-ups in "nextSteps" with due dates; the callback itself is auto-added as a dated step, so you don\'t need to repeat it. These are reminder-only future pipeline and stay out of the forecast until promoted. If instead the account is a real deal in motion (there\'s a live conversation, pain uncovered, a demo done, a champion), use create_deal as below. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the decision-maker role->role, the website/domain->domain, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), LIGHT UP the deservedness "signals" that the text supports (eb = an economic/budget buyer is named or engaged; problem = the pain is quantified with metrics or $; event = there is a deadline/compelling event/decision date; champion = someone internal owns/backs the case) — set each true only if the paste genuinely shows it, set "likelihood" if it reads as a revival, and if it went cold/was lost set "lossReason" to the closest match and "lossDetail" to a one-line why (the revival read), add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are WHOLE NUMBERS on a 0-to-10 scale (e.g. 7 or 8) — never a fraction like 0.7 or a percentage. WEEKLY 1:1 / MANAGER UPDATE: when the user says "note for my 1:1", "talking point", "for my manager", or is narrating what they want to raise in their one-on-one, capture the framing with brief_note — AND still update the underlying deals so everything stays connected: use log_update / add_step / set_status / update_deal (closeDate, callbackDate) / create_deal / create_lead for each account mentioned. The 1:1 view already auto-pulls in-play-for-the-quarter, recovery, future pipeline, blockers and next-week steps FROM the deals, so do NOT repeat those as brief_notes — brief_note is only for the framing/narrative the app cannot derive (e.g. "pushing to bring two more back over the fortnight"). When the user says they will DO something this week / commit to an action ("this week I\'ll multi-thread the top 5", "I\'m going to book the CFO session"), use add_commitment (link it to a deal by name when it is about one) — these are the accountability items the 1:1 tracks and carries over if unfinished. When the user needs something FROM their manager on a deal (an exec-sponsor intro, pricing/discount approval, a product ETA or escalation, e.g. AC3 data residency), use set_ask on that deal so it surfaces under "Asks for my manager" in the 1:1. If the user mentions a NEW account they will go after, create it (create_deal in recovery, or create_lead if it is a future callback). If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
   const quarters=activePeriods().map(k=>{ const dr=quarterDates(k); return periodShort(k)+' = '+dr[0].toISOString().slice(0,10)+'…'+dr[1].toISOString().slice(0,10); }).join('; ');
   const ctx='Today is '+today+'. Fiscal quarters (for setting close dates): '+quarters+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
-  return await aiJSON(sys,ctx,1300);
+  const r=await aiAssist({system:sys,prompt:ctx,model:AI_MODEL,max_tokens:CHAT_MAX_TOKENS});
+  if(!r||!r.ok||!r.text) return {ok:false,offline:true,truncated:false,actions:[],reply:''};
+  const stop=(r.raw&&r.raw.stop_reason)||r.stop_reason||r.stopReason||'';
+  const parsed=parseChatResponse(r.text,stop);
+  try{ console.log('[chat] in='+ctx.length+' out='+(''+r.text).length+' actions='+parsed.actions.length+' stop='+(stop||'?')+' ok='+parsed.ok+' truncated='+parsed.truncated); }catch(e){}
+  return parsed;
 }
 function parseAmt(v){ const raw=(''+(v==null?'':v)).toLowerCase().trim(); let n=parseFloat(raw.replace(/[^0-9.]/g,''))||0; if(/m/.test(raw)) n*=1e6; else if(/k/.test(raw)) n*=1e3; return n; }
 function applyChatActions(actions){
@@ -1498,12 +1575,38 @@ async function sendChat(){
   meta.chat.push({role:'ai',text:'Thinking…',thinking:true}); renderChat();
   const res=await chatAgent(text);
   if(meta.chat.length&&meta.chat[meta.chat.length-1].thinking) meta.chat.pop();
-  const acts=(res&&res.actions)?applyChatActions(res.actions):[];
-  const reply=(res&&res.reply)?(''+res.reply).trim():(acts.length?'Done — updated for you.':'Sorry, I had trouble with that one. Mind rephrasing?');
-  meta.chat.push({role:'ai',text:reply,acts});
-  if(meta.chat.length>24) meta.chat=meta.chat.slice(-24);
+  const finish=(msg)=>{ meta.chat.push(msg); if(meta.chat.length>24) meta.chat=meta.chat.slice(-24); save(); renderChat(); renderDeals(); if(openId){ try{ renderPanel(); }catch(e){} } chatBusy=false; if($('#chatSend'))$('#chatSend').disabled=false; if($('#chatInput'))$('#chatInput').focus(); };
+  if(!res||res.offline){ finish({role:'ai',text:'I couldn’t reach the assistant just now — nothing was changed. Try again in a moment.'}); return; }
+  if(res.truncated){ finish({role:'ai',text:'That was a big one and the reply got cut off, so I changed nothing (your message is safe above ↑). Send it in two halves — e.g. the new leads first, then the updates — and I’ll capture all of it.'}); return; }
+  const actions=res.actions||[];
+  if(!actions.length){ finish({role:'ai',text:(res.reply||'Got it.')}); return; }
+  const plan=planActions(actions);
+  const batchId=uid();
+  const needConfirm=(plan.maxRisk!=='low')||(plan.count>=4);
+  if(needConfirm){ finish({role:'ai',text:(res.reply||'Here’s what I understood — review and apply:'),preview:{summary:plan.summary,count:plan.count,maxRisk:plan.maxRisk,items:plan.items.map(x=>({label:x.label,risk:x.risk,flag:x.flag}))},batchId,pendingActions:actions}); return; }
+  const r=commitBatch(actions,batchId);
+  finish({role:'ai',text:(r.error?('Something went wrong applying that — nothing was changed ('+r.error+').'):(res.reply||('Done — '+plan.summary+'.'))),acts:(r.chips||[])});
+}
+function applyBatchById(bid){
+  const m=(meta.chat||[]).find(x=>x.batchId===bid&&x.pendingActions); if(!m)return;
+  const r=commitBatch(m.pendingActions,bid);
+  const acts=m.pendingActions.slice(); delete m.preview; delete m.pendingActions;
+  m.text = r.already?'Already applied — nothing changed.' : (r.error?('Couldn’t apply — nothing changed ('+r.error+').') : ('Applied ✓'+(r.verified===false?' (save unconfirmed — check your connection)':'')));
+  m.acts=r.chips||[];
   save(); renderChat(); renderDeals(); if(openId){ try{ renderPanel(); }catch(e){} }
-  chatBusy=false; if($('#chatSend'))$('#chatSend').disabled=false; if($('#chatInput'))$('#chatInput').focus();
+}
+function cancelBatchById(bid){
+  const m=(meta.chat||[]).find(x=>x.batchId===bid&&x.pendingActions); if(!m)return;
+  delete m.preview; delete m.pendingActions; m.text='Cancelled — nothing was changed.'; save(); renderChat();
+}
+function previewCardHTML(m){
+  const p=m.preview; const rows=p.items.map(it=>`<div class="pv-row"><span class="pv-risk ${it.risk}" title="${it.risk} impact"></span><span class="pv-label">${esc(it.label)}</span>${it.flag?`<span class="pv-flag">⚠ ${esc(it.flag)}</span>`:''}</div>`).join('');
+  return `<div class="chat-preview">
+    <div class="pv-head">Review before applying${p.maxRisk==='high'?' <span class="pv-hi">high-impact — please confirm</span>':''}</div>
+    <div class="pv-summary">${esc(p.summary)}</div>
+    <div class="pv-rows">${rows}</div>
+    <div class="pv-actions"><button class="pv-apply" data-bid="${m.batchId}">Apply ${p.count} change${p.count>1?'s':''}</button><button class="pv-cancel" data-bid="${m.batchId}">Cancel</button></div>
+  </div>`;
 }
 function renderChat(){
   const log=$('#chatLog'); if(!log)return;
@@ -1515,10 +1618,13 @@ function renderChat(){
   log.innerHTML=msgs.map(m=>{
     if(m.role==='me') return '<div class="chat-msg me">'+esc(m.text)+'</div>';
     let h='<div class="chat-msg ai'+(m.thinking?' thinking':'')+'">'+esc(m.text)+'</div>';
+    if(m.preview) h+=previewCardHTML(m);
     if(m.acts&&m.acts.length) h+='<div class="chat-acts">'+m.acts.map(a=>'<span class="chat-act '+(a.warn?'warn':'')+'" data-id="'+(a.dealId||'')+'">'+esc(a.label)+'</span>').join('')+'</div>';
     return h;
   }).join('');
   log.querySelectorAll('.chat-act').forEach(c=>c.addEventListener('click',()=>{ if(c.dataset.id) openDeal(c.dataset.id); }));
+  log.querySelectorAll('.pv-apply').forEach(b=>b.addEventListener('click',()=>applyBatchById(b.dataset.bid)));
+  log.querySelectorAll('.pv-cancel').forEach(b=>b.addEventListener('click',()=>cancelBatchById(b.dataset.bid)));
   log.scrollTop=log.scrollHeight;
 }
 /* ════════ NOTIFICATIONS — what needs you ════════ */
@@ -2831,8 +2937,37 @@ $('#shareBtn').addEventListener('click',async()=>{ try{ const data=btoa(unescape
 let toastT;
 function toast(msg){ const t=$('#toast'); t.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>${msg}`; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400); }
 
+/* ════════ BATCH-SAFETY SELF-TEST (deterministic, no side effects; run with ?selftest=1) ════════ */
+function runChatSelfTest(){
+  const res=[]; const ok=(n,c)=>res.push((c?'PASS':'FAIL')+' — '+n);
+  const full='{"reply":"done","actions":[{"type":"create_lead","name":"A"},{"type":"update_deal","deal":"B","updates":{}}]}';
+  const cut ='{"reply":"done","actions":[{"type":"create_lead","name":"A"},{"type":"update_deal","deal":"B","upda';
+  const pf=parseChatResponse(full,'end_turn');   ok('complete JSON parses, 2 actions', pf.ok&&!pf.truncated&&pf.actions.length===2);
+  const pc=parseChatResponse(cut,'max_tokens');  ok('truncated JSON → not ok, ZERO actions (no apply)', pc.truncated&&!pc.ok&&pc.actions.length===0);
+  const pm=parseChatResponse(full,'max_tokens'); ok('stop=max_tokens flags truncated even if it parsed', pm.truncated&&pm.actions.length===0);
+  const pe=parseChatResponse('not json at all','end_turn'); ok('garbage → truncated/unusable, zero actions', pe.actions.length===0&&!pe.ok);
+  ok('risk: log_update = low', actionRisk({type:'log_update'})==='low');
+  ok('risk: set_status lost = high', actionRisk({type:'set_status',status:'lost'})==='high');
+  ok('risk: set_status advancing = medium', actionRisk({type:'set_status',status:'advancing'})==='medium');
+  ok('risk: create_deal = medium', actionRisk({type:'create_deal'})==='medium');
+  const plan=planActions([{type:'create_lead',name:'Z1'},{type:'create_lead',name:'Z2'},{type:'log_update',deal:'x'}]);
+  ok('plan counts 3', plan.count===3);
+  ok('plan maxRisk = medium (has leads)', plan.maxRisk==='medium');
+  ok('plan summary mentions leads', /lead/.test(plan.summary));
+  const _save=meta.appliedBatches; meta.appliedBatches=['dup-1'];
+  ok('batchApplied blocks a known id', batchApplied('dup-1')===true);
+  ok('batchApplied allows a fresh id', batchApplied('fresh-'+Date.now())===false);
+  meta.appliedBatches=_save;
+  const pass=res.every(r=>r.indexOf('PASS')===0);
+  document.documentElement.setAttribute('data-selftest', pass?'PASS':'FAIL');
+  document.title=(pass?'SELFTEST PASS':'SELFTEST FAIL — '+res.filter(r=>r.indexOf('FAIL')===0).join(' | '));
+  try{ console.log('[batch-selftest]\n'+res.join('\n')); }catch(e){}
+  return pass;
+}
+
 /* ════════ INIT ════════ */
 loadState(); checkSprints(); recordSnapshots(); save(); applyChrome(); renderDeals(); initSync();
+if(location.search.indexOf('selftest=1')>=0){ setTimeout(()=>{ try{ runChatSelfTest(); }catch(e){ document.title='SELFTEST ERR '+(e&&e.message); } }, 300); }
 /* Boot canary — only set if the whole script parsed AND init ran without throwing.
    The smoke test (tools/smoke-test.ps1) asserts this exists. If it's missing, the build is broken. */
 window.addEventListener('error',e=>{ try{ document.documentElement.setAttribute('data-helm-error',(e.message||'error')+' @'+(e.lineno||'?')); }catch(_){} });
