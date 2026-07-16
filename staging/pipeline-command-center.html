@@ -1570,7 +1570,13 @@ function stepSfLine(d,s){ const who=(userName||'Me').split(/\s+/).map(x=>x[0]||'
   const verb=s.type?STEP_TYPE_LABEL[s.type]:'Next step'; const when=s.due?fmtD(new Date(s.due+'T00:00')):'(no date)';
   return `${when} · ${who} — ${verb}${d.contact?' with '+d.contact:''} — ${s.text||''}`; }
 /* ════════ BATCH SAFETY — the Large NL Mutation Standard (T12) ════════ */
-const CHAT_MAX_TOKENS=8000;   /* configurable output ceiling for the chat agent */
+/* Output ceiling for the chat agent. max_tokens is an UPPER BOUND, not a cost — you are billed for the
+   tokens actually generated — so a stingy ceiling buys nothing and just guillotines big jobs.
+   8000 was sized for "a batch of small actions"; one update_account_plan (thesis + every challenge with
+   detail/impact/evidence + gaps + risks + stakeholders + milestones + typed next steps) is far larger and
+   truncated at 8000. 32000 is well inside claude-haiku-4-5's output limit (verified end_turn at 32000).
+   Truncation detection (stop_reason=max_tokens) remains the backstop — see NORTH_STAR. */
+const CHAT_MAX_TOKENS=32000;
 /* Turn a raw model response into a safe result. Truncated/unparseable => apply NOTHING. */
 function parseChatResponse(raw,stopReason){
   if(!raw) return {ok:false,truncated:false,reason:'empty',actions:[],reply:''};
