@@ -233,12 +233,95 @@
   .oo-check.on{background:var(--green);border-color:var(--green)}
   .oo-comm.done .oo-comm-t{text-decoration:line-through;color:var(--text-3)}
   .oo-diddot{color:var(--green);font-size:12px;font-weight:800;flex-shrink:0;width:19px;text-align:center}
+  .cat-ovr{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--hair)}
+  .cat-ovr label{font-size:10px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)}
+  .cat-ovr select,.cat-ovr input{font-family:inherit;font-size:12px;padding:5px 8px;border-radius:8px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text)}
+  .cat-ovr input{flex:1;min-width:110px}
+  .cat-ovr button{font-size:11px;font-weight:650;color:var(--text-2);background:var(--fill);padding:5px 10px;border-radius:8px}
+  /* account plan */
+  .plan-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .plan-hl{font-size:19px;font-weight:750;letter-spacing:-.3px}
+  .plan-meter{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:650;color:var(--text-3)}
+  .plan-meter-bar{width:90px;height:6px;border-radius:20px;background:var(--fill-2);overflow:hidden}
+  .plan-meter-fill{height:100%;border-radius:20px;transition:width .3s var(--ease)}
+  .plan-glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:14px;overflow:hidden;margin-bottom:16px}
+  .plan-g{background:var(--surface);padding:9px 12px}
+  .plan-gk{font-size:9.5px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)}
+  .plan-gv{font-size:13px;font-weight:700;color:var(--text);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .plan-ta{width:100%;font-family:inherit;font-size:13.5px;line-height:1.55;padding:10px 12px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text);resize:vertical}
+  .plan-item{border:1px solid var(--hair);border-radius:12px;padding:9px 10px;margin-bottom:8px;background:var(--surface-2);display:flex;flex-direction:column;gap:6px}
+  .plan-item-h{display:flex;align-items:center;gap:7px}
+  .plan-two{display:flex;gap:7px;flex-wrap:wrap}
+  .plan-two .plan-in{flex:1;min-width:130px}
+  .plan-row{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .plan-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .plan-in{flex:1;font-family:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;border:1px solid var(--hair);background:var(--surface);color:var(--text)}
+  .plan-in:focus{border-color:var(--accent);outline:none}
+  .plan-title{font-weight:700}
+  .plan-narrow{flex:0 0 128px}
+  .plan-x{width:22px;height:22px;border-radius:6px;background:var(--fill);color:var(--text-3);font-size:11px;flex-shrink:0;opacity:.5}
+  .plan-x:hover{opacity:1;color:var(--red)}
+  .plan-add{font-size:12px;font-weight:650;color:var(--accent);background:var(--accent-soft);padding:7px 13px;border-radius:9px;margin-top:4px}
+  .plan-empty{font-size:12.5px;color:var(--text-3);padding:6px 2px 10px}
+  .plan-link{font-size:13px;color:var(--accent);text-decoration:none;flex-shrink:0;width:18px;text-align:center}
+  .plan-sf{font-family:inherit;font-size:12.5px;line-height:1.7;white-space:pre-wrap;background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:12px;margin:0 0 8px;color:var(--text)}
+  /* manager portfolio */
+  .pf-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:16px}
+  .pf-tile{background:var(--surface);border:1px solid var(--hair);border-radius:13px;padding:11px 13px;text-align:left;transition:.15s var(--ease);box-shadow:var(--shadow-s)}
+  .pf-tile:hover{transform:translateY(-1px)}
+  .pf-tile.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .pf-tn{font-size:20px;font-weight:750;letter-spacing:-.5px;color:var(--text)}
+  .pf-tl{font-size:11px;font-weight:650;color:var(--text-2);margin-top:1px}
+  .pf-ts{font-size:10.5px;color:var(--text-3);font-weight:600;margin-top:2px}
+  .pf-list{display:flex;flex-direction:column;gap:9px}
+  .pf-item{background:var(--surface);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow-s);overflow:hidden}
+  .pf-item.open{border-color:var(--accent)}
+  .pf-row{display:flex;align-items:center;gap:11px;padding:11px 13px;cursor:pointer}
+  .pf-row:hover{background:var(--fill)}
+  .pf-logo{flex-shrink:0;display:flex}
+  .pf-id{flex:1;min-width:0}
+  .pf-name{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;letter-spacing:-.1px}
+  .pf-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .pf-meta{font-size:11.5px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pf-next{flex:1.2;min-width:0;display:flex;align-items:center;gap:7px}
+  .pf-nx{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pf-nx.muted{color:var(--text-3);font-style:italic}
+  .pf-due{font-size:10.5px;font-weight:700;color:var(--text-3);background:var(--fill);padding:1px 7px;border-radius:20px;flex-shrink:0}
+  .pf-due.bad{color:var(--red);background:rgba(255,90,90,.12)}
+  .pf-money{text-align:right;flex-shrink:0}
+  .pf-money>:first-child{font-size:13.5px;font-weight:750}
+  .pf-tr{font-size:10.5px;font-weight:700}
+  .pf-exp{color:var(--text-3);font-size:11px;flex-shrink:0;width:12px}
+  .pf-chips{display:flex;flex-wrap:wrap;gap:5px;padding:0 13px 9px 54px}
+  .pf-chip{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:20px;background:var(--fill);color:var(--text-3)}
+  .pf-chip.bad{color:var(--red);background:rgba(255,90,90,.12)}
+  .pf-chip.warn{color:var(--orange);background:rgba(240,132,0,.12)}
+  .pf-chip.ask{color:#fff;background:var(--red)}
+  .pf-risk{font-size:11.5px;color:var(--orange);padding:0 13px 10px 54px}
+  .pf-exp-body{border-top:1px solid var(--hair);background:var(--surface-2);padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+  .pf-b{display:flex;gap:12px;align-items:flex-start}
+  .pf-bk{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);width:96px;flex-shrink:0;padding-top:2px}
+  .pf-bv{font-size:12.5px;line-height:1.6;color:var(--text-2);flex:1}
+  .pf-p{display:inline-block;font-size:11px;font-weight:600;border:1px solid var(--hair);border-left-width:3px;border-radius:7px;padding:2px 8px;margin:0 5px 5px 0;color:var(--text-2)}
+  .pf-openbtn{align-self:flex-start;font-size:12px;font-weight:650;color:var(--accent);background:var(--accent-soft);padding:7px 13px;border-radius:9px}
   .oo-comm-t{flex:1;font-size:13px;font-weight:600;color:var(--text)}
   .oo-carry{font-size:10.5px;font-weight:700;color:var(--orange);background:var(--orange-soft,rgba(240,150,50,.14));padding:1px 7px;border-radius:20px;margin-left:4px}
   .oo-godeal{font-size:11px;font-weight:600;color:var(--accent);cursor:pointer;margin-left:4px}
   .oo-addrow{padding:6px 4px 2px}
   .oo-addin{width:100%;font-family:inherit;font-size:12.5px;padding:8px 11px;border-radius:9px;border:1px dashed var(--hair);background:transparent;color:var(--text)}
   .oo-addin:focus{border-style:solid;border-color:var(--accent);background:var(--surface-2)}
+  .oo-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+  .oo-wk{flex-shrink:0;text-align:left;background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:9px 13px;font-size:12.5px;font-weight:700;color:var(--text-2);box-shadow:var(--shadow-s);transition:.15s var(--ease)}
+  .oo-wk span{display:block;font-size:10.5px;font-weight:600;color:var(--text-3);margin-top:2px}
+  .oo-wk:hover{transform:translateY(-1px)}
+  .oo-wk.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .oo-toggle{cursor:pointer;user-select:none}
+  .oo-toggle:hover .oo-sec-t{color:var(--text-2)}
+  .oo-caret{font-size:10px;color:var(--text-3);width:10px;flex-shrink:0}
+  .oo-prep{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--text-2);background:var(--accent-soft);border:1px solid var(--hair);border-radius:12px;padding:11px 14px;margin-bottom:14px}
+  .oo-next{font-size:10.5px;font-weight:650;color:var(--accent);background:var(--accent-soft);border-radius:7px;padding:3px 8px;flex-shrink:0;opacity:0}
+  .oo-comm:hover .oo-next{opacity:1}
+  .oo-snap{font-family:inherit;font-size:12.5px;line-height:1.65;white-space:pre-wrap;color:var(--text);background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:13px;margin:0 8px 8px}
   .gap-big{font-size:32px;font-weight:800;letter-spacing:-1px;color:#ff8a8a;margin-bottom:2px}
   .gap-row{display:flex;align-items:center;gap:12px;margin-bottom:11px}
   .gap-name{font-size:12.5px;font-weight:600;width:140px;color:rgba(255,255,255,.85)}
@@ -738,6 +821,18 @@
   .pv-actions{display:flex;gap:8px}
   .pv-apply{font-size:12.5px;font-weight:700;color:#fff;background:var(--grad,var(--accent));padding:8px 15px;border-radius:10px}
   .pv-cancel{font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--fill);padding:8px 14px;border-radius:10px}
+  .pv-items{display:flex;flex-direction:column;gap:8px;margin-bottom:11px;max-height:340px;overflow:auto}
+  .pv-item{border:1px solid var(--hair);border-radius:11px;padding:9px 10px;background:var(--surface-2)}
+  .pv-item-h{display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:2px}
+  .pv-chk{width:15px;height:15px;flex-shrink:0;accent-color:var(--accent)}
+  .pv-type{font-size:12px;font-weight:700;color:var(--text)}
+  .pv-fields{display:flex;flex-wrap:wrap;gap:6px 10px;padding-left:23px}
+  .pv-field{display:flex;flex-direction:column;gap:2px;flex:1;min-width:120px}
+  .pv-field label{font-size:9.5px;font-weight:650;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)}
+  .pv-in{font-family:inherit;font-size:12px;padding:5px 8px;border-radius:7px;border:1px solid var(--hair);background:var(--surface);color:var(--text);width:100%}
+  .pv-in:focus{border-color:var(--accent);outline:none}
+  .pv-hint{font-size:10.5px;color:var(--text-3);align-self:center}
+  .pv-ro{font-size:12px;color:var(--text-2);font-weight:600;padding:5px 0}
   .chat-compose{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid var(--hair);flex-shrink:0}
   .chat-compose textarea{flex:1;font-family:inherit;font-size:13.5px;line-height:1.5;padding:10px 13px;border-radius:12px;border:1px solid var(--hair);background:var(--surface-2);resize:none;max-height:120px}
   .chat-compose textarea:focus{border-color:var(--accent)}
@@ -812,6 +907,7 @@
       <button data-view="plan">Plan</button>
       <button data-view="calendar">Calendar</button>
       <button data-view="forecast">Forecast</button>
+      <button data-view="portfolio">Portfolio</button>
       <button data-view="oneone">1:1</button>
     </div>
     <div class="topbar-actions">
@@ -862,6 +958,11 @@
     <div id="prodgap"></div>
     <div id="patterns"></div>
     <div class="belowbar" id="belowbar"></div>
+  </section>
+
+  <section class="view" id="view-portfolio">
+    <div class="page-head"><div class="page-title">Portfolio</div><div class="page-sub" id="portfolioSub">Every account at a glance — expand any row for the story. No need to open a deal.</div></div>
+    <div id="portfolioBody"></div>
   </section>
 
   <section class="view" id="view-oneone">
@@ -1164,6 +1265,13 @@ function migrate(){
     if(d.callbackDate==null) d.callbackDate='';
     if(d.convProb==null) d.convProb=0;
     if(d.managerAsk==null) d.managerAsk='';
+    if(d.catOverride===undefined) d.catOverride=null;
+    /* structured account plan — facts live in fields, never one big note blob */
+    if(!d.plan||typeof d.plan!=='object') d.plan={};
+    if(d.plan.thesis==null) d.plan.thesis='';
+    if(d.plan.strategy==null) d.plan.strategy='';
+    if(d.plan.context==null) d.plan.context='';
+    ['challenges','gaps','risks','links'].forEach(k=>{ if(!Array.isArray(d.plan[k])) d.plan[k]=[]; });
     if(!d.dvd||typeof d.dvd!=='object') d.dvd={eb:false,problem:false,event:false,champion:false};
     ['eb','problem','event','champion'].forEach(k=>{ if(d.dvd[k]==null) d.dvd[k]=false; });
     if(!d.artifacts||typeof d.artifacts!=='object') d.artifacts={};
@@ -1249,7 +1357,10 @@ function updateSyncBadge(on){ const b=$('#syncBadge'); if(!b)return; b.style.dis
 const OPEN=()=>deals.filter(d=>STATUSES[d.status]&&STATUSES[d.status].open);
 function proofScore(d){ return Math.round((d.proof||[]).filter(Boolean).length/PROOF_SIGNALS.length*10); }
 function health(d){ return Math.round((d.belief||0)*3+proofScore(d)*5+(d.deserve||0)*2); }
-function category(d){ if((d.deserve||0)>=7&&(d.status==='closing'||d.status==='advancing'))return 'commit'; if((d.deserve||0)>=5)return 'best'; return 'pipe'; }
+/* What the engine calculates from Deservedness + stage. */
+function categoryAuto(d){ if((d.deserve||0)>=7&&(d.status==='closing'||d.status==='advancing'))return 'commit'; if((d.deserve||0)>=5)return 'best'; return 'pipe'; }
+/* What the forecast actually uses — your manual call wins over the engine, and we record who/when/why. */
+function category(d){ const o=d&&d.catOverride; return (o&&o.value&&CAT_LABEL[o.value])?o.value:categoryAuto(d); }
 const CAT_LABEL={commit:'Commit',best:'Best case',pipe:'Pipeline'};
 function aud(d){ if(d.cur==='USD') return (+d.arr||0)*fxUSD(); return (+d.arr||0)*(CURRENCIES[d.cur]?.rate||1); }
 function stageDone(d){ return (d.journey||[]).filter(s=>s.done).length; }
@@ -1274,8 +1385,21 @@ function fyStartYear(d){ return d.getMonth()===0 ? d.getFullYear()-1 : d.getFull
 /* fiscal period keys: "YYYY-QN" (YYYY = fiscal-year start year, Salesforce FY) */
 function periodKey(iso){ return fyStartYear(new Date(iso+'T00:00'))+'-'+fiscalQ(iso); }
 function periodShort(key){ return key?key.split('-')[1]:''; }
-function periodLabel(key){ if(!key)return''; const [fy,q]=key.split('-'); return q+' · FY'+String(+fy+1).slice(2); }
+/* How a fiscal period reads. The KEY stays fiscal (Salesforce FY starts Feb); only the label changes.
+   'calendar' → "Q3 · 2026" (default) · 'sf' → "Q3 · FY27" (Salesforce convention) · 'start' → "Q3 · FY26" */
+function fyLabelStyle(){ return (typeof meta!=='undefined'&&meta&&meta.fyLabel)||'calendar'; }
+function periodLabel(key){ if(!key)return''; const [fy,q]=key.split('-'); const st=fyLabelStyle();
+  if(st==='sf') return q+' · FY'+String(+fy+1).slice(2);
+  if(st==='start') return q+' · FY'+String(fy).slice(2);
+  return q+' · '+fy; }
 function nextPeriod(key){ const seq=['Q1','Q2','Q3','Q4']; let [fy,q]=key.split('-'); let i=seq.indexOf(q)+1, f=+fy; if(i>3){i=0;f++;} return f+'-'+seq[i]; }
+/* "Q4" (or "2026-Q4") -> the real period key, and its start/end as ISO dates */
+function periodFromLabel(lbl){ const p=(''+(lbl||'')).toUpperCase().trim(); if(!p)return null; if(isPeriod(p))return p;
+  const m=p.match(/Q[1-4]/); if(!m)return null; const q=m[0];
+  const ks=activePeriods().filter(k=>periodShort(k)===q); if(!ks.length)return null;
+  return ks.find(k=>k>=currentPeriod)||ks[0]; }
+function qStartISO(lbl){ const k=periodFromLabel(lbl); return k?quarterDates(k)[0].toISOString().slice(0,10):''; }
+function qEndISO(lbl){ const k=periodFromLabel(lbl); return k?quarterDates(k)[1].toISOString().slice(0,10):''; }
 const PERIOD_RX=/^\d{4}-Q[1-4]$/;
 const isPeriod=k=>PERIOD_RX.test(k||'');
 const currentPeriod=periodKey(today);
@@ -1424,7 +1548,15 @@ function aiArtifactsHTML(d){
 }
 /* ════════ ASSISTANT CHAT — talk to your pipeline ════════ */
 function findDealByName(n){ if(!n)return null; n=(''+n).trim().toLowerCase(); if(!n)return null; return deals.find(d=>(d.name||'').toLowerCase()===n)||deals.find(d=>{const dn=(d.name||'').toLowerCase();return dn&&(dn.includes(n)||n.includes(dn));}); }
-function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[],callbackDate:'',convProb:0,managerAsk:''}; }
+function blankDeal(name){ return {id:uid(),name:name||'New account',arr:0,cur:'AUD',status:'engaged',belief:5,deserve:4,proof:proofFrom(0),focus:false,journey:newJourney(),closeDate:'',people:[],oneLiner:'',whyNow:'',costInaction:'',threats:'',crm:'',users:0,type:'',location:'',contact:'',role:'',closeLabel:'',blocker:'',risk:'',lastActivity:'',steps:[],dates:[],notes:'',snapshots:[],comments:[],updated:Date.now(),dvd:{eb:false,problem:false,event:false,champion:false},artifacts:{},likelihood:'',lossReason:'',lossDetail:'',slips:0,slipLog:[],callbackDate:'',convProb:0,managerAsk:'',catOverride:null,plan:{thesis:'',strategy:'',context:'',challenges:[],gaps:[],risks:[],links:[]}}; }
+/* Next-step types. A "meeting" also lands in the Calendar (a key date) — that's the connectivity. */
+const STEP_TYPES=['call','meeting','email','research','internal','manager','commercial','technical','reactivation'];
+const STEP_TYPE_LABEL={call:'Call',meeting:'Meeting',email:'Email',research:'Research',internal:'Internal',manager:'Manager ask',commercial:'Commercial',technical:'Technical',reactivation:'Reactivation'};
+const STEP_TYPE_ICON={call:'☎',meeting:'📅',email:'✉',research:'🔎',internal:'⚙',manager:'🙋',commercial:'💰',technical:'🔧',reactivation:'↻'};
+/* "12 Jul 2026 · CM — Meeting with Pushkar to discuss X" — paste straight into Salesforce */
+function stepSfLine(d,s){ const who=(userName||'Me').split(/\s+/).map(x=>x[0]||'').join('').toUpperCase()||'ME';
+  const verb=s.type?STEP_TYPE_LABEL[s.type]:'Next step'; const when=s.due?fmtD(new Date(s.due+'T00:00')):'(no date)';
+  return `${when} · ${who} — ${verb}${d.contact?' with '+d.contact:''} — ${s.text||''}`; }
 /* ════════ BATCH SAFETY — the Large NL Mutation Standard (T12) ════════ */
 const CHAT_MAX_TOKENS=8000;   /* configurable output ceiling for the chat agent */
 /* Turn a raw model response into a safe result. Truncated/unparseable => apply NOTHING. */
@@ -1440,7 +1572,7 @@ function parseChatResponse(raw,stopReason){
 }
 function actionRisk(a){ const t=a&&a.type;
   if(t==='set_status') return (a.status==='won'||a.status==='lost'||a.status==='dormant')?'high':'medium';
-  if(['update_deal','create_deal','create_lead','set_scores','set_target','start_sprint','set_ask','sprint_update'].indexOf(t)>=0) return 'medium';
+  if(['update_deal','create_deal','create_lead','set_scores','set_target','start_sprint','set_ask','sprint_update','defer_account','move_to_quarter','update_account_plan'].indexOf(t)>=0) return 'medium';
   return 'low'; }
 const RISK_RANK={low:0,medium:1,high:2};
 function actionLabel(a){ const nm=a.deal||a.name||''; switch(a.type){
@@ -1471,6 +1603,15 @@ function planActions(actions){
   return {items,maxRisk,summary,count:items.length,flags:items.filter(x=>x.flag)};
 }
 function batchApplied(id){ return !!(id&&meta&&Array.isArray(meta.appliedBatches)&&meta.appliedBatches.indexOf(id)>=0); }
+/* Every material change writes a journey event, so the timeline tells the story without anyone remembering to log it. */
+function logJourney(d,label,date,summary){
+  if(!d||!label)return; d.journey=d.journey||[];
+  const dt=(date&&/^\d{4}-\d{2}-\d{2}$/.test(date))?date:today;
+  const ex=d.journey.find(s=>(s.name||'').toLowerCase()===(''+label).toLowerCase()&&s.date===dt);
+  if(ex){ if(summary){ ex.notes=ex.notes||[]; ex.notes.push({text:''+summary,ts:Date.now()}); } return; }
+  d.journey.push({name:''+label,done:true,date:dt,notes:summary?[{text:''+summary,ts:Date.now()}]:[],auto:true});
+  d.journey.sort((x,y)=>((x.date||'9999').localeCompare(y.date||'9999')));
+}
 /* Atomic commit: roll the deals back if applying throws; register the batch id so it can't apply twice; verify the save landed. */
 function commitBatch(actions,batchId){
   meta.appliedBatches=meta.appliedBatches||[];
@@ -1488,7 +1629,7 @@ function commitBatch(actions,batchId){
 async function chatAgent(text){
   const book=deals.map(d=>{ const open=(d.steps||[]).filter(s=>!s.done).slice(0,6); const st=open.length?(' | open tasks: '+open.map(s=>'“'+(s.text||'')+'”'+(s.due?' (due '+s.due+(daysUntil(s.due)<0?', OVERDUE':(daysUntil(s.due)===0?', today':''))+')':'')).join('; ')):''; const q=quarterOf(d); const sched=(d.status==='recovery'||d.status==='dormant')?' | NOT in a quarter yet (recovery/dormant — needs an active status + a close date to get scheduled)':(d.closeDate?(' | closes '+d.closeDate+(q?' ('+periodShort(q)+')':'')):' | no close date'); const ppl=[d.contact].concat((d.people||[]).map(p=>p.name)).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i); const who=ppl.length?(' | people: '+ppl.join(', ')):''; return '- '+(d.name||'?')+' ['+(STATUSES[d.status]?STATUSES[d.status].label:d.status)+(d.sprint?', in recovery sprint':'')+']'+sched+who+st; }).join('\n');
   const hist=(meta.chat||[]).filter(m=>!m.thinking).slice(-7,-1).map(m=>(m.role==='me'?'User: ':'Helm: ')+m.text).join('\n');
-  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|lead|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","domain":"company.com","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"signals":{"eb":false,"problem":false,"event":false,"champion":false},"lossReason":"Product gap|Built in-house|Lost to competitor|Budget / cost|No decision / timing|Other","lossDetail":"","sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"create_lead","name":"<company name ONLY>","fields":{"contact":"","role":"","crm":"","domain":"company.com","location":"","users":0},"callbackDate":"YYYY-MM-DD","convProb":40,"arr":0,"spoke":true,"topic":"DealHub","lastActivity":"","nextSteps":[{"text":"","due":"YYYY-MM-DD"}],"note":""}\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\n- {"type":"brief_note","note":"a short talking point for the weekly 1:1 / manager update"}\n- {"type":"add_commitment","text":"an action I commit to getting done this week","deal":"<optional deal name to link it to>"}\n- {"type":"add_activity","text":"a general thing I DID this week that is NOT tied to one deal (e.g. built the sales deck, set up a BAC cadence)"}\n- {"type":"set_ask","deal":"<name>","ask":"what I need from my manager on this deal — exec-sponsor intro, pricing approval, product ETA, escalation"}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. EXISTING-ACCOUNT vs NEW-LEAD (important): before creating anything, check THE BOOK — every deal lists its people (contact + stakeholders). If the person or company the user mentions is ALREADY in THE BOOK — even if the user MISSPELLS the company (e.g. "Blilligence" ≈ an existing "Brilliance") or only names the person ("Lenka") — this is an EXISTING account. Do NOT create_lead and do NOT create_deal for it; act on the existing deal by its exact BOOK name. create_lead / create_deal are ONLY for names that are genuinely NOT in THE BOOK. PARK-FOR-LATER (existing account pushed to a future date): if an EXISTING deal (in a sprint, active, or being chased) gets a positive-but-later reply — "reach out on the 21st of Sep", "touch base in August", "circle back next quarter", "not until Q3" — it is a WARM future opportunity (you already had a real conversation), NOT a cold lead. So: set_status to "future" (the warm Future tier — this also ENDS any recovery sprint and its nagging) AND set its callbackDate via update_deal to that date (resolve "the 21st of Sep"/"August"/"Q3" to a real YYYY-MM-DD after today); also log_update the reply. It then shows in that quarter (e.g. 21 Sep = Q3) as a warm opportunity — visible but not counted as committed forecast — and reminds you to reach out on the date. Reserve "lead" strictly for brand-new cold outreach that was never in THE BOOK. CALLBACK / FUTURE LEAD: when the user describes a COLD outreach or a "reach out later" contact — someone who said "not right now, reach out in September", "call me in Q3", "circle back next quarter", "follow up in 2 months", or a fresh prospect they just want to park with a date — this is NOT a live deal or a prior conversation, so use create_lead (NOT create_deal, NOT recovery). Extract company->name (company ONLY), the person->fields.contact, their role->fields.role, seat/user/seller count->fields.users (ARR then auto-computes at the per-seat rate — don\'t guess ARR unless they give a dollar figure), website->fields.domain, CRM->fields.crm. Resolve the callback timing to a real future date in callbackDate (YYYY-MM-DD): "September"->1st of next September, "Q3"->start of that fiscal quarter, "in 2 months"->today+~60d, always a date AFTER today. If they say how likely it is to convert, set convProb (0-100). Fill in what a good AE would already know without asking: set fields.domain to the company\'s real website from your own knowledge (e.g. Protecht -> protecht.com.au, Xero -> xero.com) — only leave it blank if you genuinely don\'t know it, never invent a domain. If the paste shows a conversation ALREADY happened (spoke to / rang / called / met / emailed them today or recently), set "spoke":true (this logs the first journey step as done today) and write a one-line "lastActivity" summarising it (e.g. "Spoke to Rohit today — reconnect 7 Sep re DealHub"), and set "topic" to what it\'s about (default DealHub/CPQ). Put any concrete follow-ups in "nextSteps" with due dates; the callback itself is auto-added as a dated step, so you don\'t need to repeat it. These are reminder-only future pipeline and stay out of the forecast until promoted. If instead the account is a real deal in motion (there\'s a live conversation, pain uncovered, a demo done, a champion), use create_deal as below. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the decision-maker role->role, the website/domain->domain, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), LIGHT UP the deservedness "signals" that the text supports (eb = an economic/budget buyer is named or engaged; problem = the pain is quantified with metrics or $; event = there is a deadline/compelling event/decision date; champion = someone internal owns/backs the case) — set each true only if the paste genuinely shows it, set "likelihood" if it reads as a revival, and if it went cold/was lost set "lossReason" to the closest match and "lossDetail" to a one-line why (the revival read), add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are WHOLE NUMBERS on a 0-to-10 scale (e.g. 7 or 8) — never a fraction like 0.7 or a percentage. WEEKLY 1:1 / MANAGER UPDATE: when the user says "note for my 1:1", "talking point", "for my manager", or is narrating what they want to raise in their one-on-one, capture the framing with brief_note — AND still update the underlying deals so everything stays connected: use log_update / add_step / set_status / update_deal (closeDate, callbackDate) / create_deal / create_lead for each account mentioned. The 1:1 view already auto-pulls in-play-for-the-quarter, recovery, future pipeline, blockers and next-week steps FROM the deals, so do NOT repeat those as brief_notes — brief_note is only for the framing/narrative the app cannot derive (e.g. "pushing to bring two more back over the fortnight"). When the user says they will DO something this week / commit to an action ("this week I\'ll multi-thread the top 5", "I\'m going to book the CFO session"), use add_commitment (link it to a deal by name when it is about one) — these are the accountability items the 1:1 tracks and carries over if unfinished. When the user needs something FROM their manager on a deal (an exec-sponsor intro, pricing/discount approval, a product ETA or escalation, e.g. AC3 data residency), use set_ask on that deal so it surfaces under "Asks for my manager" in the 1:1. When the user reports a GENERAL accomplishment from the week that is NOT tied to a specific deal ("this week I built my sales deck", "I set up a cadence with BAC", "I refreshed my pitch"), use add_activity — it lands under "What I did this week" in the 1:1. (Work on a specific deal still uses log_update etc. on that deal.) "note for my 1:1" / "I want to discuss X" is framing to RAISE -> brief_note; "this week I DID X" is a completed accomplishment -> add_activity. If the user mentions a NEW account they will go after, create it (create_deal in recovery, or create_lead if it is a future callback). If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
+  const sys='You are Helm, the assistant inside a deal-management app for '+(userName||'an')+' account executive who sells DealHub CPQ (Configure-Price-Quote) in AU/NZ. You can READ the user\'s deals and WRITE changes by returning actions. Reply with ONLY valid JSON (no prose, no markdown): {"reply":"a short friendly conversational reply (1-3 sentences) saying what you did or asking a clarifying question","actions":[ ... ]}. Action types (use deal NAMES exactly as in THE BOOK):\n- {"type":"log_update","deal":"<name>","note":"the update in clean prose"}\n- {"type":"update_deal","deal":"<name>","updates":{"whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","lastActivity":"","oneLiner":"","contact":"","role":"","crm":"","type":"","closeLabel":"","closeDate":"YYYY-MM-DD","arr":0}}\n- {"type":"add_step","deal":"<name>","text":"a concrete next action","due":"YYYY-MM-DD or empty"}\n- {"type":"complete_step","deal":"<name>","match":"a few distinctive words from the open task that is now done"}\n- {"type":"add_stakeholder","deal":"<name>","name":"","role":"","sentiment":"positive|neutral|negative"}\n- {"type":"set_status","deal":"<name>","status":"closing|advancing|engaged|recovery|future|lead|won|lost|dormant"}\n- {"type":"sprint_update","deal":"<name>","note":"what happened in the recovery sprint","nextAction":"the next step or empty"}\n- {"type":"create_deal","name":"","status":"engaged|recovery|advancing","arr":0,"fields":{"type":"","crm":"","users":0,"location":"","contact":"","role":"","domain":"company.com","oneLiner":"","whyNow":"","costInaction":"","threats":"","blocker":"","risk":"","likelihood":"Highest|High|Medium|Medium-low|Low|Lowest","closeDate":"YYYY-MM-DD"},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"nextSteps":["..."],"belief":0,"deservedness":0,"signals":{"eb":false,"problem":false,"event":false,"champion":false},"lossReason":"Product gap|Built in-house|Lost to competitor|Budget / cost|No decision / timing|Other","lossDetail":"","sprintGoal":"","sprintSteps":["..."],"note":""}\n- {"type":"create_lead","name":"<company name ONLY>","fields":{"contact":"","role":"","crm":"","domain":"company.com","location":"","users":0},"callbackDate":"YYYY-MM-DD","convProb":40,"arr":0,"spoke":true,"topic":"DealHub","lastActivity":"","nextSteps":[{"text":"","due":"YYYY-MM-DD"}],"note":""}\n- {"type":"update_account_plan","deal":"<name>","plan":{"thesis":"why this account matters / why they change / why now","context":"who they are, how they sell, what changed","strategy":"the objective, the play to progress, proof still required","challenges":[{"title":"","detail":"","impact":"the cost in time/$/risk","evidence":"who said it / when"}],"gaps":[{"current":"process today","limitation":"","consequence":"","future":"where we take them"}],"risks":[{"text":"","type":"commercial|technical|timing|political|data|migration"}],"links":[{"label":"Business case","url":"https://…"}]},"stakeholders":[{"name":"","role":"","sentiment":"positive|neutral|negative"}],"milestones":[{"date":"YYYY-MM-DD","label":"Discovery call","summary":"what happened"}],"nextSteps":[{"text":"","due":"YYYY-MM-DD","type":"call|meeting|email|research|internal|manager|commercial|technical|reactivation"}],"managerAsk":"","fields":{"users":0,"crm":"","location":"","whyNow":"","costInaction":"","blocker":"","closeLabel":"","domain":"","contact":"","role":""}}  ONE command for a whole account plan: files the thesis/challenges/gaps/risks/links, resolves stakeholders (never duplicates), turns dated milestones into the JOURNEY MAP, and creates typed next steps (type "meeting" also lands in the Calendar).\n- {"type":"defer_account","deal":"<name>","reconnectDate":"YYYY-MM-DD","quarter":"Q4 (only if no exact date given)","note":"what they said"}  ONE command that does ALL of it: closes any recovery sprint, moves the account to the warm Future tier, sets the callback date, creates the reconnect task, and logs it.\n- {"type":"move_to_quarter","deal":"<name>","quarter":"Q4"}  slips an ACTIVE deal\'s close date into that quarter (also un-sticks a recovery deal so it actually lands there).\n- {"type":"set_scores","deal":"<name>","belief":7,"deservedness":5}\n- {"type":"open_deal","deal":"<name>"}\n- {"type":"clear_notifications","days":7}\n- {"type":"snooze_step","deal":"<name>","match":"words from the task","days":3}\n- {"type":"set_focus","deal":"<name>","on":true}\n- {"type":"start_sprint","deal":"<name>","goal":"optional","steps":["optional custom sprint steps"]}\n- {"type":"set_target","period":"current","amount":50000}\n- {"type":"brief_note","note":"a short talking point for the weekly 1:1 / manager update"}\n- {"type":"add_commitment","text":"an action I commit to getting done this week","deal":"<optional deal name to link it to>"}\n- {"type":"add_activity","text":"a general thing I DID this week that is NOT tied to one deal (e.g. built the sales deck, set up a BAC cadence)"}\n- {"type":"set_ask","deal":"<name>","ask":"what I need from my manager on this deal — exec-sponsor intro, pricing approval, product ETA, escalation"}\nRules: You can act on ANYTHING in the platform through these actions — "clear/snooze my notifications" -> clear_notifications; "focus on / flag X" -> set_focus; "start a recovery sprint on X" -> start_sprint; "set my Q3 target to 200k" -> set_target (period = current/Q3/Q4); "push/snooze the X task" -> snooze_step. If the user asks for something none of these actions cover, say so plainly instead of pretending you did it. Map every deal action to a deal in THE BOOK by name. If the user names an account you cannot find, do NOT guess — ask which one in the reply, or offer to create it. Pull concrete changes from what the user says (a new blocker, risk, why-now, next step, a stakeholder + their sentiment, a stage change). Prefer a log_update PLUS specific field/step actions. When the user says they DID / finished / completed / sent / spoke-to something that matches an OPEN TASK shown in THE BOOK, use complete_step with a few distinctive words from that task — this ticks it off and clears its reminder — then add_step for the next action if there is a follow-on. For planning language (this week, Friday, next week, by the 30th), set a due date on add_step relative to today. When an update shows a RECOVERY or DORMANT deal is active again (re-engaged, meeting booked, moving forward, or a close timeframe/quarter is mentioned), move it off recovery with set_status (engaged/advancing/closing as fits) AND set a closeDate via update_deal in the right fiscal quarter (use the Fiscal quarters dates above) — a recovery/dormant deal only shows in a quarter once it has BOTH an active status and a close date. EXISTING-ACCOUNT vs NEW-LEAD (important): before creating anything, check THE BOOK — every deal lists its people (contact + stakeholders). If the person or company the user mentions is ALREADY in THE BOOK — even if the user MISSPELLS the company (e.g. "Blilligence" ≈ an existing "Brilliance") or only names the person ("Lenka") — this is an EXISTING account. Do NOT create_lead and do NOT create_deal for it; act on the existing deal by its exact BOOK name. create_lead / create_deal are ONLY for names that are genuinely NOT in THE BOOK. PARK-FOR-LATER (existing account pushed to a future date): if an EXISTING deal (in a sprint, active, or being chased) gets a positive-but-later reply — "reach out on the 21st of Sep", "touch base in August", "circle back next quarter", "not until Q3" — it is a WARM future opportunity (you already had a real conversation), NOT a cold lead. Use the SINGLE command **defer_account** (deal + reconnectDate, resolving "the 21st of Sep"/"August"/"Q3" to a real YYYY-MM-DD after today, + note). It closes any recovery sprint, moves it to the warm Future tier, sets the callback, creates the reconnect task and logs it — all in one. Do NOT hand-assemble set_status + update_deal + add_step for this; one defer_account is the whole thing. It then shows in that quarter (21 Sep = Q3) as a warm opportunity — visible but not counted as committed forecast. Reserve "lead" strictly for brand-new cold outreach that was never in THE BOOK. If instead they only mean the DEAL\'S CLOSE moves ("push it to Q4", "it will land in Q4") and they are NOT deferring contact, use move_to_quarter. CALLBACK / FUTURE LEAD: when the user describes a COLD outreach or a "reach out later" contact — someone who said "not right now, reach out in September", "call me in Q3", "circle back next quarter", "follow up in 2 months", or a fresh prospect they just want to park with a date — this is NOT a live deal or a prior conversation, so use create_lead (NOT create_deal, NOT recovery). Extract company->name (company ONLY), the person->fields.contact, their role->fields.role, seat/user/seller count->fields.users (ARR then auto-computes at the per-seat rate — don\'t guess ARR unless they give a dollar figure), website->fields.domain, CRM->fields.crm. Resolve the callback timing to a real future date in callbackDate (YYYY-MM-DD): "September"->1st of next September, "Q3"->start of that fiscal quarter, "in 2 months"->today+~60d, always a date AFTER today. If they say how likely it is to convert, set convProb (0-100). Fill in what a good AE would already know without asking: set fields.domain to the company\'s real website from your own knowledge (e.g. Protecht -> protecht.com.au, Xero -> xero.com) — only leave it blank if you genuinely don\'t know it, never invent a domain. If the paste shows a conversation ALREADY happened (spoke to / rang / called / met / emailed them today or recently), set "spoke":true (this logs the first journey step as done today) and write a one-line "lastActivity" summarising it (e.g. "Spoke to Rohit today — reconnect 7 Sep re DealHub"), and set "topic" to what it\'s about (default DealHub/CPQ). Put any concrete follow-ups in "nextSteps" with due dates; the callback itself is auto-added as a dated step, so you don\'t need to repeat it. These are reminder-only future pipeline and stay out of the forecast until promoted. If instead the account is a real deal in motion (there\'s a live conversation, pain uncovered, a demo done, a champion), use create_deal as below. When the user PASTES a description of an account (name, ARR, contacts, pain, action plan, etc.), create it and FULLY POPULATE it in ONE create_deal (name = the account/company name ONLY, e.g. "Rubicon Water", never a description) — extract every field into "fields" (product->type, ARR, CRM, users, region->location, primary contact->contact+role, the decision-maker role->role, the website/domain->domain, the pain->whyNow/costInaction/threats, the blocker->blocker), put EVERY named person in "stakeholders" with a sentiment, GRADE it (belief and deservedness 0-10 from how strong/qualified it reads: clear quantified pain + strong fit + an engaged champion = higher; one cold conversation = lower), LIGHT UP the deservedness "signals" that the text supports (eb = an economic/budget buyer is named or engaged; problem = the pain is quantified with metrics or $; event = there is a deadline/compelling event/decision date; champion = someone internal owns/backs the case) — set each true only if the paste genuinely shows it, set "likelihood" if it reads as a revival, and if it went cold/was lost set "lossReason" to the closest match and "lossDetail" to a one-line why (the revival read), add the action-plan items as "nextSteps", and if it has gone cold or is being revived set status "recovery" and put any 2-week action plan into "sprintSteps" (which starts the recovery sprint). Never leave fields blank for the user to fill by hand. When you CREATE a new deal from a thin call with little detail, still create it, but in your reply ask ONE brief follow-up — how strongly they believe in it on a scale of 1-10 — and when they answer, use set_scores to set belief (0-10). belief and deservedness are WHOLE NUMBERS on a 0-to-10 scale (e.g. 7 or 8) — never a fraction like 0.7 or a percentage. ACCOUNT PLAN: when the user pastes a long account write-up / account plan / current-state doc for an EXISTING account (challenges, gaps, stakeholders, dated history, risks, objections, next steps, links), use ONE update_account_plan for that deal. Break the prose into STRUCTURE — never dump it all into a note: each distinct problem becomes a challenge (title + detail + the quantified impact + who said it/when as evidence); each "today they do X, which breaks Y" becomes a gap; every named person becomes a stakeholder with their role (people already in THE BOOK are resolved, not duplicated); every DATED activity ("13 December 2024 initial discovery", "11 Feb 2025 tailored demo") becomes a milestone so the JOURNEY MAP fills in; objections/risks become risks with a type; any business-case/DealRoom/requirements URL becomes a link; concrete follow-ups become typed nextSteps (a scheduled meeting = type "meeting" so it lands in the Calendar); anything they need from their manager -> managerAsk. Put the account-level facts (users, CRM, region, why-now, cost of inaction, blocker) in fields. Prefer fewer, meatier challenges over many thin ones. Never invent facts the document does not state. If the account is NOT in THE BOOK, create_deal first, then update_account_plan. WEEKLY 1:1 / MANAGER UPDATE: when the user says "note for my 1:1", "talking point", "for my manager", or is narrating what they want to raise in their one-on-one, capture the framing with brief_note — AND still update the underlying deals so everything stays connected: use log_update / add_step / set_status / update_deal (closeDate, callbackDate) / create_deal / create_lead for each account mentioned. The 1:1 view already auto-pulls in-play-for-the-quarter, recovery, future pipeline, blockers and next-week steps FROM the deals, so do NOT repeat those as brief_notes — brief_note is only for the framing/narrative the app cannot derive (e.g. "pushing to bring two more back over the fortnight"). When the user says they will DO something this week / commit to an action ("this week I\'ll multi-thread the top 5", "I\'m going to book the CFO session"), use add_commitment (link it to a deal by name when it is about one) — these are the accountability items the 1:1 tracks and carries over if unfinished. When the user needs something FROM their manager on a deal (an exec-sponsor intro, pricing/discount approval, a product ETA or escalation, e.g. AC3 data residency), use set_ask on that deal so it surfaces under "Asks for my manager" in the 1:1. When the user reports a GENERAL accomplishment from the week that is NOT tied to a specific deal ("this week I built my sales deck", "I set up a cadence with BAC", "I refreshed my pitch"), use add_activity — it lands under "What I did this week" in the 1:1. (Work on a specific deal still uses log_update etc. on that deal.) "note for my 1:1" / "I want to discuss X" is framing to RAISE -> brief_note; "this week I DID X" is a completed accomplishment -> add_activity. If the user mentions a NEW account they will go after, create it (create_deal in recovery, or create_lead if it is a future callback). If the user is just chatting or asking a question, answer in reply with an empty actions array. Only include updates fields that genuinely changed. Never invent facts the user did not say.';
   const quarters=activePeriods().map(k=>{ const dr=quarterDates(k); return periodShort(k)+' = '+dr[0].toISOString().slice(0,10)+'…'+dr[1].toISOString().slice(0,10); }).join('; ');
   const ctx='Today is '+today+'. Fiscal quarters (for setting close dates): '+quarters+'.\n\nTHE BOOK ('+deals.length+' deals):\n'+(book||'(no deals yet)')+(hist?('\n\nRecent conversation:\n'+hist):'')+'\n\nUser just said:\n"""\n'+text+'\n"""';
   const r=await aiAssist({system:sys,prompt:ctx,model:AI_MODEL,max_tokens:CHAT_MAX_TOKENS});
@@ -1548,7 +1689,7 @@ function applyChatActions(actions){
       deals.forEach(x=>{ if(x.status==='dormant'&&x.retryDate&&daysUntil(x.retryDate)<=0){ x.retryDate=addDays(today,days); n++; saveD(x); } });
       chips.push({label:'✓ Cleared '+n+' reminder'+(n===1?'':'s')}); return; }
     if(a.type==='set_target'){ const amt=parseAmt(a.amount); let key=currentPeriod; const p=(''+(a.period||'')).toLowerCase().trim(); if(p&&p!=='current'){ const m=activePeriods().find(k=>periodShort(k).toLowerCase()===p||k.toLowerCase().includes(p)); if(m)key=m; } meta.targets=meta.targets||{}; meta.targets[key]=amt; save(); chips.push({label:'✓ '+periodShort(key)+' target → '+money(amt)}); return; }
-    if(a.type==='brief_note'){ const n=(a.note||'').trim(); if(n){ const oo=ooMeta(); oo.note=(oo.note&&oo.note.trim()?oo.note.trim()+'\n':'')+n; save(); if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone')renderOneOnOne(); chips.push({label:'✓ Added to your 1:1 talking points'}); } return; }
+    if(a.type==='brief_note'){ const n=(a.note||'').trim(); if(n){ ooMeta(); const wk=ooSelWeek(); const cur=ooNoteGet(wk); ooNoteSet(wk,(cur&&cur.trim()?cur.trim()+'\n':'')+n); save(); if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone')renderOneOnOne(); chips.push({label:'✓ Added to your 1:1 talking points'+(wk===nextWeekKey()?' (next week)':'')}); } return; }
     if(a.type==='add_commitment'){ const n=(a.text||a.note||'').trim(); if(n){ let did=null; if(a.deal){ const dd=findDealByName(a.deal); if(dd)did=dd.id; } addCommitment(n,did); if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone')renderOneOnOne(); chips.push({label:'✓ Commitment added to your 1:1'}); } return; }
     if(a.type==='add_activity'){ const n=(a.text||a.note||'').trim(); if(n){ addActivity(n); if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone')renderOneOnOne(); chips.push({label:'✓ Added to “What I did this week”'}); } return; }
     const d=findDealByName(a.deal); if(!d){ chips.push({label:'？ Couldn’t find “'+(a.deal||'?')+'”',warn:true}); return; }
@@ -1557,8 +1698,75 @@ function applyChatActions(actions){
     else if(a.type==='add_step'){ const t=(a.text||'').trim(); if(t){ d.steps=d.steps||[]; const due=(a.due&&/^\d{4}-\d{2}-\d{2}$/.test(a.due))?a.due:addDays(today,5); d.steps.push({text:t,done:false,due}); saveD(d); chips.push({label:'✓ Next step · '+d.name,dealId:d.id}); } }
     else if(a.type==='complete_step'){ const m=((a.match||a.text||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase()===m)||open.find(s=>{const t=(s.text||'').toLowerCase();return t.includes(m)||m.includes(t);}); if(!step){ const words=m.split(/\s+/).filter(w=>w.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return words.some(w=>t.includes(w));}); } } if(step){ step.done=true; saveD(d); chips.push({label:'✓ Done · '+d.name+' — '+(step.text||'').slice(0,28),dealId:d.id}); } else chips.push({label:'？ No matching open task on '+d.name,warn:true,dealId:d.id}); }
     else if(a.type==='add_stakeholder'){ const nm=(a.name||'').trim(); if(nm){ d.people=d.people||[]; const sent=['positive','neutral','negative'].includes(a.sentiment)?a.sentiment:'neutral'; const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase()); if(ex){ ex.sent=sent; if((a.role||'').trim()&&!(ex.role||'').trim())ex.role=a.role; } else d.people.push({name:nm,role:a.role||'Influencer',sent}); saveD(d); chips.push({label:'✓ '+nm+' → '+d.name,dealId:d.id}); } }
-    else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open, fromRec=(d.status==='recovery'||d.status==='dormant'); if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; if(fromRec && STATUSES[ns].open && ns!=='recovery' && ns!=='dormant'){ d.sprint=null; d.retryDate=''; } if(ns==='won'||ns==='lost'||ns==='lead'||ns==='future'){ d.sprint=null; } if(ns==='lead'||ns==='future') d.retryDate=''; saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
+    else if(a.type==='set_status'){ const ns=a.status; if(STATUSES[ns]){ const wasOpen=STATUSES[d.status].open, fromRec=(d.status==='recovery'||d.status==='dormant'); if(ns==='won'||ns==='lost'){ if(!d.closedDate)d.closedDate=today; if(wasOpen){ d.closedCategory=category(d); d.closedHealth=health(d); } } else d.closedDate=''; d.status=ns; if(fromRec && STATUSES[ns].open && ns!=='recovery' && ns!=='dormant'){ d.sprint=null; d.retryDate=''; } if(ns==='won'||ns==='lost'||ns==='lead'||ns==='future'){ d.sprint=null; } if(ns==='lead'||ns==='future') d.retryDate=''; logJourney(d,'Status → '+STATUSES[ns].label,today); saveD(d); chips.push({label:'✓ '+d.name+' → '+STATUSES[ns].label,dealId:d.id}); } }
     else if(a.type==='set_ask'){ d.managerAsk=(a.ask||'').trim(); saveD(d); chips.push({label:(d.managerAsk?'✓ Flagged for 1:1 · ':'✓ Cleared ask · ')+d.name,dealId:d.id}); }
+    /* ── Composite command: "not now — reconnect in October". ONE instruction, all consequences owned by the app. ── */
+    else if(a.type==='defer_account'){
+      const rd=(a.reconnectDate&&/^\d{4}-\d{2}-\d{2}$/.test(a.reconnectDate))?a.reconnectDate:(a.quarter?qStartISO(a.quarter):'');
+      const hadSprint=!!d.sprint; d.comments=d.comments||[]; d.steps=d.steps||[];
+      if(hadSprint){ d.comments.push({id:uid(),author:'Helm',text:'Recovery sprint closed — account deferred'+(rd?(' · reconnect '+fmtShort(rd)):'')+'.',ts:Date.now()}); d.sprint=null; }
+      d.retryDate=''; d.status='future'; if(rd) d.callbackDate=rd;
+      if(rd && !d.steps.some(s=>!s.done&&/reconnect|reach out|touch base/i.test(s.text||''))) d.steps.push({text:'Reconnect with '+(d.contact||d.name),done:false,due:rd});
+      if(a.note){ d.comments.push({id:uid(),author:userName||'Me',text:a.note,ts:Date.now()}); d.lastActivity=(''+a.note).slice(0,80); }
+      else d.lastActivity='Deferred'+(rd?(' — reconnect '+fmtShort(rd)):'');
+      d.comments.push({id:uid(),author:'Helm',text:'Moved to Future pipeline (warm)'+(rd?(' — reconnect '+fmtShort(rd)+(quarterOf(d)?' ('+periodShort(quarterOf(d))+')':'')):'')+'.',ts:Date.now()});
+      if(hadSprint) logJourney(d,'Recovery sprint closed',today);
+      logJourney(d,'Deferred — reconnect later',today,rd?('Reconnect '+fmtShort(rd)):'');
+      d.updated=Date.now(); saveD(d);
+      chips.push({label:'⏸ '+d.name+' → Future'+(rd?(' · reconnect '+fmtShort(rd)):'')+(hadSprint?' · sprint closed':''),dealId:d.id}); }
+    /* ── Composite command: a whole account plan, ingested once and filed everywhere it belongs. ── */
+    else if(a.type==='update_account_plan'){
+      d.plan=d.plan||{thesis:'',strategy:'',context:'',challenges:[],gaps:[],risks:[],links:[]};
+      ['challenges','gaps','risks','links'].forEach(k=>{ if(!Array.isArray(d.plan[k])) d.plan[k]=[]; });
+      const P=a.plan||{};
+      ['thesis','strategy','context'].forEach(k=>{ if(P[k]!=null&&(''+P[k]).trim()) d.plan[k]=(''+P[k]).trim(); });
+      const uniq=(arr,item,key)=>{ const k=((key(item)||'')+'').toLowerCase().trim(); if(!k)return false; if(arr.some(x=>((key(x)||'')+'').toLowerCase().trim()===k))return false; arr.push(item); return true; };
+      let nCh=0,nGap=0,nRisk=0,nLink=0,nPpl=0,nMile=0,nStep=0;
+      (P.challenges||[]).forEach(c=>{ const t=((c&&(c.title||c.text))||'').trim(); if(!t)return; if(uniq(d.plan.challenges,{id:uid(),title:t,detail:((c.detail||'')+'').trim(),impact:((c.impact||'')+'').trim(),evidence:((c.evidence||'')+'').trim()},x=>x.title)) nCh++; });
+      (P.gaps||[]).forEach(g=>{ const cur=((g&&(g.current||g.text))||'').trim(); if(!cur)return; if(uniq(d.plan.gaps,{id:uid(),current:cur,limitation:((g.limitation||'')+'').trim(),consequence:((g.consequence||'')+'').trim(),future:((g.future||'')+'').trim()},x=>x.current)) nGap++; });
+      (P.risks||[]).forEach(r=>{ const t=((r&&(r.text||r.title))||'').trim(); if(!t)return; if(uniq(d.plan.risks,{id:uid(),text:t,type:((r.type||'')+'').trim()},x=>x.text)) nRisk++; });
+      (P.links||[]).forEach(l=>{ const u=((l&&l.url)||'').trim(); if(!u)return; if(uniq(d.plan.links,{id:uid(),label:((l.label||u)+'').trim(),url:u},x=>x.url)) nLink++; });
+      const F=a.fields||{}; ['crm','location','whyNow','costInaction','blocker','closeLabel','type','domain','contact','role'].forEach(k=>{ if(F[k]!=null&&(''+F[k]).trim()) d[k]=(''+F[k]).trim(); });
+      if(F.users!=null&&(''+F.users).toString().trim()) d.users=parseInt((''+F.users).replace(/[^0-9]/g,''))||d.users;
+      /* stakeholders — resolve against existing people, never duplicate */
+      d.people=d.people||[];
+      (a.stakeholders||[]).forEach(p=>{ const nm=((p&&p.name)||'').trim(); if(!nm)return;
+        const sent=['positive','neutral','negative'].indexOf(p.sentiment)>=0?p.sentiment:'neutral';
+        const ex=d.people.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase());
+        if(ex){ if((p.role||'').trim()) ex.role=p.role; if(p.sentiment) ex.sent=sent; }
+        else { d.people.push({name:nm,role:(p.role||'Influencer'),sent}); nPpl++; } });
+      /* dated milestones -> the journey map */
+      d.journey=d.journey||[];
+      (a.milestones||[]).forEach(m=>{ const lbl=((m&&(m.label||m.name))||'').trim(); if(!lbl)return;
+        const dt=(m.date&&/^\d{4}-\d{2}-\d{2}$/.test(m.date))?m.date:'';
+        const ex=d.journey.find(s=>(s.name||'').toLowerCase()===lbl.toLowerCase());
+        if(ex){ ex.done=true; if(dt&&!ex.date) ex.date=dt; if(m.summary){ ex.notes=ex.notes||[]; ex.notes.push({text:((m.summary)+'').trim(),ts:Date.now()}); } }
+        else { d.journey.push({name:lbl,done:true,date:dt,notes:m.summary?[{text:((m.summary)+'').trim(),ts:Date.now()}]:[]}); nMile++; } });
+      d.journey.sort((x,y)=>((x.date||'9999').localeCompare(y.date||'9999')));
+      /* typed next steps — a "meeting" also becomes a calendar key date */
+      d.steps=d.steps||[]; d.dates=d.dates||[];
+      (a.nextSteps||[]).forEach(s=>{ const t=((s&&(s.text||s.action))||'').trim(); if(t.length<3)return;
+        if(d.steps.some(x=>(x.text||'').toLowerCase()===t.toLowerCase()))return;
+        const due=(s.due&&/^\d{4}-\d{2}-\d{2}$/.test(s.due))?s.due:'';
+        const ty=STEP_TYPES.indexOf(s.type)>=0?s.type:'';
+        d.steps.push({text:t,done:false,due,type:ty}); nStep++;
+        if(ty==='meeting'&&due&&!d.dates.some(x=>x.date===due&&(x.label||'').toLowerCase()===t.toLowerCase())) d.dates.push({date:due,label:t}); });
+      if(a.managerAsk&&(''+a.managerAsk).trim()) d.managerAsk=(''+a.managerAsk).trim();
+      d.plan.updated=Date.now(); d.updated=Date.now();
+      const bits=[nCh?nCh+' challenges':'',nGap?nGap+' gaps':'',nRisk?nRisk+' risks':'',nPpl?nPpl+' people':'',nMile?nMile+' milestones':'',nStep?nStep+' steps':'',nLink?nLink+' links':''].filter(Boolean);
+      d.comments=d.comments||[]; d.comments.push({id:uid(),author:'Helm',text:'Account plan updated — '+(bits.join(', ')||'details refreshed')+'.',ts:Date.now()});
+      saveD(d);
+      chips.push({label:'📋 Plan · '+d.name+(bits.length?' — '+bits.join(', '):''),dealId:d.id}); }
+    /* ── Composite command: "move it to Q4" — also un-sticks recovery deals, which could never land in a quarter. ── */
+    else if(a.type==='move_to_quarter'){
+      const iso=qEndISO(a.quarter);
+      if(!iso){ chips.push({label:'？ Which quarter is “'+(a.quarter||'?')+'”?',warn:true,dealId:d.id}); }
+      else { const old=d.closeDate; d.closeDate=iso; try{ recordSlip(d,old,iso); }catch(e){}
+        if(d.status==='recovery'||d.status==='dormant'){ d.status='engaged'; d.sprint=null; d.retryDate=''; }
+        d.comments=d.comments||[]; d.comments.push({id:uid(),author:'Helm',text:'Moved to '+periodShort(periodFromLabel(a.quarter))+' — close date set to '+fmtShort(iso)+'.',ts:Date.now()});
+        logJourney(d,'Moved to '+periodShort(periodFromLabel(a.quarter)),today,'Close date → '+fmtShort(iso));
+        d.updated=Date.now(); saveD(d);
+        chips.push({label:'→ '+d.name+' now '+periodShort(periodFromLabel(a.quarter))+' · closes '+fmtShort(iso),dealId:d.id}); } }
     else if(a.type==='sprint_update'){ const note=(a.note||'').trim(); if(note){ d.comments=d.comments||[]; d.comments.push({id:uid(),author:userName||'Me',text:'Sprint update: '+note,ts:Date.now()}); d.lastActivity=note.slice(0,80); } const na=(a.nextAction||'').trim(); if(na){ d.steps=d.steps||[]; d.steps.push({text:na,done:false,due:addDays(today,5)}); } saveD(d); chips.push({label:'✓ Sprint · '+d.name,dealId:d.id}); }
     else if(a.type==='set_scores'){ const ch=[]; const clamp=v=>{ let n=parseFloat(v); if(isNaN(n))return null; if(n>0&&n<=1&&!Number.isInteger(n)) n=n*10; return Math.max(0,Math.min(10,Math.round(n))); }; if(a.belief!=null&&(''+a.belief).trim()!==''){ const b=clamp(a.belief); if(b!=null){ d.belief=b; ch.push('belief '+d.belief); } } if(a.deservedness!=null&&(''+a.deservedness).trim()!==''){ const dv=clamp(a.deservedness); if(dv!=null){ d.deserve=dv; ch.push('deservedness '+d.deserve); } } if(ch.length){ saveD(d); chips.push({label:'✓ '+d.name+': '+ch.join(', '),dealId:d.id}); } }
     else if(a.type==='snooze_step'){ const m=((a.match||'')+'').trim().toLowerCase(); const open=(d.steps||[]).filter(s=>!s.done); let step=null; if(m&&open.length){ step=open.find(s=>(s.text||'').toLowerCase().includes(m)||m.includes((s.text||'').toLowerCase())); if(!step){ const w=m.split(/\s+/).filter(x=>x.length>3); step=open.find(s=>{const t=(s.text||'').toLowerCase();return w.some(x=>t.includes(x));}); } } const days=(+a.days>0)?+a.days:3; if(step){ step.due=addDays(today,days); saveD(d); chips.push({label:'✓ Snoozed '+days+'d · '+d.name,dealId:d.id}); } else chips.push({label:'？ No matching task on '+d.name,warn:true,dealId:d.id}); }
@@ -1573,6 +1781,12 @@ async function sendChat(){
   const inp=$('#chatInput'); if(!inp)return; const text=(inp.value||'').trim(); if(!text||chatBusy)return;
   if(RO){ toast('Manager view is read-only'); return; }
   if(!AI_ON()){ toast('The assistant runs on the live site'); return; }
+  /* if a batch is awaiting review, let "approve all" / "cancel" typed in chat act on it (no AI call) */
+  const pend=(meta.chat||[]).slice().reverse().find(m=>m.pendingActions&&m.pendingActions.length);
+  if(pend){ const low=text.toLowerCase().replace(/[.!]/g,'').trim();
+    if(/^(approve|apply|yes|confirm|go ahead|go|do it|apply all|approve all|send it|ok)$/.test(low)){ meta.chat.push({role:'me',text}); inp.value=''; autosize(inp); applyBatchById(pend.batchId); return; }
+    if(/^(cancel|no|stop|discard|nvm|nevermind|never mind|scrap it)$/.test(low)){ meta.chat.push({role:'me',text}); inp.value=''; autosize(inp); cancelBatchById(pend.batchId); return; }
+  }
   chatBusy=true; const sb=$('#chatSend'); if(sb)sb.disabled=true;
   meta.chat=meta.chat||[]; meta.chat.push({role:'me',text}); inp.value=''; autosize(inp);
   meta.chat.push({role:'ai',text:'Thinking…',thinking:true}); renderChat();
@@ -1592,9 +1806,21 @@ async function sendChat(){
 }
 function applyBatchById(bid){
   const m=(meta.chat||[]).find(x=>x.batchId===bid&&x.pendingActions); if(!m)return;
-  const r=commitBatch(m.pendingActions,bid);
-  const acts=m.pendingActions.slice(); delete m.preview; delete m.pendingActions;
-  m.text = r.already?'Already applied — nothing changed.' : (r.error?('Couldn’t apply — nothing changed ('+r.error+').') : ('Applied ✓'+(r.verified===false?' (save unconfirmed — check your connection)':'')));
+  /* read any edits + checkboxes from the review card (scoped to this batch's datalist) */
+  const acts=m.pendingActions.map(a=>JSON.parse(JSON.stringify(a)));
+  let include=acts.map(()=>true);
+  const dlEl=document.getElementById('pvDeals'+bid); const scope=dlEl?dlEl.parentElement:null;
+  if(scope){
+    scope.querySelectorAll('.pv-in[data-i]').forEach(inp=>{ const i=+inp.dataset.i, f=inp.dataset.f; if(!acts[i]||!f)return;
+      if(f.indexOf('.')>0){ const parts=f.split('.'); acts[i][parts[0]]=acts[i][parts[0]]||{}; acts[i][parts[0]][parts[1]]=inp.value; }
+      else acts[i][f]=inp.value; });
+    scope.querySelectorAll('.pv-chk[data-i]').forEach(chk=>{ include[+chk.dataset.i]=chk.checked; });
+  }
+  const chosen=acts.filter((a,i)=>include[i]);
+  if(!chosen.length){ delete m.preview; delete m.pendingActions; m.text='Nothing checked — cancelled, nothing changed.'; save(); renderChat(); return; }
+  const r=commitBatch(chosen,bid);
+  delete m.preview; delete m.pendingActions;
+  m.text = r.already?'Already applied — nothing changed.' : (r.error?('Couldn’t apply — nothing changed ('+r.error+').') : ('Applied ✓ '+chosen.length+' change'+(chosen.length>1?'s':'')+(r.verified===false?' (save unconfirmed)':'')));
   m.acts=r.chips||[];
   save(); renderChat(); renderDeals(); if(openId){ try{ renderPanel(); }catch(e){} }
 }
@@ -1602,13 +1828,39 @@ function cancelBatchById(bid){
   const m=(meta.chat||[]).find(x=>x.batchId===bid&&x.pendingActions); if(!m)return;
   delete m.preview; delete m.pendingActions; m.text='Cancelled — nothing was changed.'; save(); renderChat();
 }
+function actionTypeName(a){ const map={update_account_plan:'Account plan',defer_account:'Defer — reconnect later',move_to_quarter:'Move to quarter',create_lead:'Add future lead',create_deal:'Create deal',update_deal:'Update',set_status:'Set status',add_step:'Add next step',log_update:'Log update',set_ask:'Manager ask',add_commitment:'Commitment',add_activity:'Did this week',brief_note:'1:1 talking point',add_stakeholder:'Add contact',complete_step:'Mark task done',set_scores:'Grade',set_target:'Set target',start_sprint:'Start sprint',snooze_step:'Snooze task',clear_notifications:'Clear notifications',set_focus:'Focus',sprint_update:'Sprint update',open_deal:'Open'}; return map[a.type]||a.type; }
 function previewCardHTML(m){
-  const p=m.preview; const rows=p.items.map(it=>`<div class="pv-row"><span class="pv-risk ${it.risk}" title="${it.risk} impact"></span><span class="pv-label">${esc(it.label)}</span>${it.flag?`<span class="pv-flag">⚠ ${esc(it.flag)}</span>`:''}</div>`).join('');
-  return `<div class="chat-preview">
-    <div class="pv-head">Review before applying${p.maxRisk==='high'?' <span class="pv-hi">high-impact — please confirm</span>':''}</div>
-    <div class="pv-summary">${esc(p.summary)}</div>
-    <div class="pv-rows">${rows}</div>
-    <div class="pv-actions"><button class="pv-apply" data-bid="${m.batchId}">Apply ${p.count} change${p.count>1?'s':''}</button><button class="pv-cancel" data-bid="${m.batchId}">Cancel</button></div>
+  const acts=m.pendingActions||[]; const bid=m.batchId;
+  const dl=deals.map(d=>`<option value="${esc(d.name)}"></option>`).join('');
+  const acctIn=(i,f,val,isName)=>`<div class="pv-field"><label>${isName?'Name':'Account'}</label><input class="pv-in" data-i="${i}" data-f="${f}" list="pvDeals${bid}" value="${esc(val==null?'':val)}" placeholder="${isName?'new name':'type the correct account'}"></div>`;
+  const txtIn=(i,f,label,val)=>`<div class="pv-field"><label>${esc(label)}</label><input class="pv-in" data-i="${i}" data-f="${f}" value="${esc(val==null?'':val)}"></div>`;
+  const cards=acts.map((a,i)=>{
+    const risk=actionRisk(a); let flag='';
+    if(a.type==='create_deal'||a.type==='create_lead'){ const ex=findDealByName(a.name); if(ex) flag='“'+ex.name+'” already exists — change the name to that to UPDATE it instead, or keep to create new'; }
+    let f='';
+    if(a.type==='create_lead'||a.type==='create_deal'){ f+=acctIn(i,'name',a.name,true); if(a.fields&&a.fields.contact!=null) f+=txtIn(i,'fields.contact','Contact',a.fields.contact); }
+    else if(a.deal!=null||['log_update','update_deal','set_status','add_step','set_ask','add_stakeholder','complete_step','snooze_step','sprint_update','set_scores'].indexOf(a.type)>=0){ f+=acctIn(i,'deal',a.deal,false); }
+    if(a.type==='log_update'||a.type==='sprint_update') f+=txtIn(i,'note','Note',a.note);
+    else if(a.type==='add_step'){ f+=txtIn(i,'text','Next step',a.text)+`<div class="pv-field"><label>Due</label><input type="date" class="pv-in" data-i="${i}" data-f="due" value="${a.due||''}"></div>`; }
+    else if(a.type==='set_ask') f+=txtIn(i,'ask','Ask',a.ask);
+    else if(a.type==='add_stakeholder') f+=txtIn(i,'name','Contact',a.name);
+    else if(a.type==='complete_step'||a.type==='snooze_step') f+=txtIn(i,'match','Task words',a.match);
+    else if(a.type==='add_commitment'||a.type==='add_activity') f+=txtIn(i,'text','Text',a.text);
+    else if(a.type==='brief_note') f+=txtIn(i,'note','Text',a.note);
+    else if(a.type==='set_status'){ f+=`<div class="pv-field"><label>Status</label><select class="pv-in" data-i="${i}" data-f="status">${Object.keys(STATUSES).map(k=>`<option value="${k}" ${a.status===k?'selected':''}>${STATUSES[k].label}</option>`).join('')}</select></div>`; }
+    else if(a.type==='update_deal'&&a.updates){ f+=Object.keys(a.updates).map(k=>txtIn(i,'updates.'+k,k,a.updates[k])).join(''); }
+    else if(a.type==='set_scores'){ if(a.belief!=null)f+=txtIn(i,'belief','Belief',a.belief); if(a.deservedness!=null)f+=txtIn(i,'deservedness','Deservedness',a.deservedness); }
+    else if(a.type==='update_account_plan'){ const P=a.plan||{};
+      const bits=[(P.challenges||[]).length+' challenges',(P.gaps||[]).length+' gaps',(P.risks||[]).length+' risks',(a.stakeholders||[]).length+' stakeholders',(a.milestones||[]).length+' milestones',(a.nextSteps||[]).length+' next steps',(P.links||[]).length+' links'].filter(x=>!/^0 /.test(x));
+      f+=`<div class="pv-field"><label>Will file</label><div class="pv-ro">${esc(bits.join(' · ')||'plan details')}</div></div>`; }
+    else if(a.type==='defer_account'){ f+=`<div class="pv-field"><label>Reconnect on</label><input type="date" class="pv-in" data-i="${i}" data-f="reconnectDate" value="${a.reconnectDate||''}"></div>`; }
+    else if(a.type==='move_to_quarter') f+=txtIn(i,'quarter','Quarter',a.quarter);
+    return `<div class="pv-item"><label class="pv-item-h"><input type="checkbox" class="pv-chk" data-i="${i}" checked><span class="pv-risk ${risk}"></span><span class="pv-type">${esc(actionTypeName(a))}</span></label>${flag?`<div class="pv-flag">⚠ ${esc(flag)}</div>`:''}<div class="pv-fields">${f}</div></div>`;
+  }).join('');
+  return `<div class="chat-preview"><datalist id="pvDeals${bid}">${dl}</datalist>
+    <div class="pv-head">Review ${acts.length} change${acts.length>1?'s':''} — fix the account or any value, uncheck what you don’t want${(m.preview&&m.preview.maxRisk==='high')?' <span class="pv-hi">high-impact</span>':''}</div>
+    <div class="pv-items">${cards}</div>
+    <div class="pv-actions"><button class="pv-apply" data-bid="${bid}">Approve checked</button><button class="pv-cancel" data-bid="${bid}">Cancel</button><span class="pv-hint">or type “approve all” / “cancel”</span></div>
   </div>`;
 }
 function renderChat(){
@@ -1706,7 +1958,10 @@ function domainOf(d){ if(d.domain) return cleanDomain(d.domain); const n=(d.name
 function logoHTML(d,size){ const dom=domainOf(d), letter=((d.name||'?').trim().charAt(0)||'?').toUpperCase();
   const fb=`<div class="logo-fallback" style="width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px;display:${dom?'none':'flex'}">${letter}</div>`;
   if(!dom) return fb;
-  return `<img class="logo" src="https://logo.clearbit.com/${dom}" style="width:${size}px;height:${size}px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="logo-fallback" style="width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px;display:none">${letter}</div>`; }
+  /* Clearbit's free logo API was retired (HubSpot) — every request 404'd, so logos silently fell back to initials.
+     Google's favicon service is a live, keyless source; initials remain the fallback if it can't resolve. */
+  const src=`https://www.google.com/s2/favicons?domain=${encodeURIComponent(dom)}&sz=128`;
+  return `<img class="logo" src="${src}" loading="lazy" style="width:${size}px;height:${size}px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="logo-fallback" style="width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px;display:none">${letter}</div>`; }
 function buildBrief(){
   const open=OPEN(), cq=currentPeriod, en=quarterDates(cq)[1], dl=daysLeftInQuarter(cq);
   const inQ=open.filter(d=>quarterOf(d)===cq);
@@ -1728,14 +1983,25 @@ function buildBrief(){
 }
 
 /* ════════ WEEKLY 1:1 ════════ */
-function ooMeta(){ meta.oneOnOne=meta.oneOnOne||{}; const o=meta.oneOnOne; if(o.note==null)o.note=''; if(!Array.isArray(o.history))o.history=[]; if(!Array.isArray(o.commitments))o.commitments=[]; if(!Array.isArray(o.did))o.did=[]; if(!o.hidden||typeof o.hidden!=='object')o.hidden={week:'',ids:[]}; return o; }
+function ooMeta(){ meta.oneOnOne=meta.oneOnOne||{}; const o=meta.oneOnOne; if(o.note==null)o.note='';
+  if(!Array.isArray(o.history))o.history=[]; if(!Array.isArray(o.commitments))o.commitments=[]; if(!Array.isArray(o.did))o.did=[];
+  if(!o.hidden||typeof o.hidden!=='object')o.hidden={week:'',ids:[]};
+  /* talking points are per-week now (so you can prep next week) — migrate the old single blob into this week */
+  if(!o.notes||typeof o.notes!=='object')o.notes={};
+  if(o.note&&!o.notes[weekKey()]){ o.notes[weekKey()]=o.note; o.note=''; }
+  return o; }
+let ooWeek=null, ooCollapse={};
+function ooSelWeek(){ return ooWeek||weekKey(); }
+function nextWeekKey(){ return weekKey(Date.now()+7*864e5); }
+function ooNoteGet(wk){ const o=ooMeta(); return o.notes[wk]||''; }
+function ooNoteSet(wk,v){ const o=ooMeta(); o.notes[wk]=v; }
 function addActivity(text){ const t=(''+(text||'')).trim(); if(!t)return; ooMeta().did.push({id:uid(),text:t,ts:Date.now(),week:weekKey()}); save(); }
 function weekStartDate(ts){ const d=new Date(ts||Date.now()); d.setHours(0,0,0,0); const day=(d.getDay()+6)%7; d.setDate(d.getDate()-day); return d; }
 function weekKey(ts){ return weekStartDate(ts).toISOString().slice(0,10); }
 function daysAgo(ts){ return ts?((Date.now()-ts)/864e5):999; }
 function ooHidden(){ const o=ooMeta(), wk=weekKey(); if(o.hidden.week!==wk) o.hidden={week:wk,ids:[]}; return o.hidden.ids; }
 function ooLastMetrics(){ const o=ooMeta(), wk=weekKey(); const h=o.history.find(x=>x.week!==wk&&x.metrics); return h?h.metrics:null; }
-function addCommitment(text,dealId){ const t=(''+(text||'')).trim(); if(!t)return; ooMeta().commitments.push({id:uid(),text:t,done:false,dealId:dealId||null,week:weekKey()}); save(); }
+function addCommitment(text,dealId,wk){ const t=(''+(text||'')).trim(); if(!t)return; ooMeta().commitments.push({id:uid(),text:t,done:false,dealId:dealId||null,week:wk||weekKey()}); save(); }
 function oneOnOneData(){
   const open=OPEN(), cq=currentPeriod, wk=weekKey(), hid=ooHidden();
   const vis=arr=>arr.filter(d=>hid.indexOf(d.id)<0);
@@ -1759,7 +2025,7 @@ function buildOneOnOneMD(){
   const oo=ooMeta(), sumOf=a=>a.reduce((s,d)=>s+aud(d),0), dl=daysLeftInQuarter(cq);
   const last=ooLastMetrics(), wow=(c,p)=>p==null?'':` (${c-p>=0?'+':''}${fmtA(c-p)} WoW)`;
   const openC=oo.commitments.filter(c=>!c.done), doneC=oo.commitments.filter(c=>c.done&&daysAgo(c.doneTs)<=7);
-  const note=(oo.note||'').trim();
+  const note=(ooNoteGet(weekKey())||'').trim();
   let t=`*Weekly 1:1 — ${userName||'Me'} — week of ${fmtD(weekStartDate())}*\n`;
   t+=`${periodLabel(cq)} · ${dl} days left\n`;
   t+=`Commit ${fmtA(metrics.commit)}${wow(metrics.commit,last&&last.commit)}  |  Best ${fmtA(metrics.best)}  |  In play ${fmtA(metrics.inQ)}${metrics.tgt?`  |  Target ${fmtA(metrics.tgt)} (${(metrics.inQ/metrics.tgt).toFixed(1)}x cover)`:''}\n\n`;
@@ -1780,56 +2046,179 @@ function buildOneOnOneMD(){
 }
 async function copyOneOnOne(){
   const D=oneOnOneData(); const md=buildOneOnOneMD(); const oo=ooMeta(); const wk=weekKey();
-  const snap={week:wk,label:fmtD(weekStartDate()),ts:Date.now(),text:md,note:(oo.note||''),metrics:D.metrics};
+  const snap={week:wk,label:fmtD(weekStartDate()),ts:Date.now(),text:md,note:ooNoteGet(wk),metrics:D.metrics};
   oo.history=oo.history.filter(h=>h.week!==wk); oo.history.unshift(snap); oo.history=oo.history.slice(0,26);
   save();
   try{ await navigator.clipboard.writeText(md); toast('1:1 copied for Slack · week saved'); }catch(e){ toast('Saved — but copy failed, select the text manually'); }
   renderOneOnOne();
 }
+/* ════════ MANAGER PORTFOLIO — every account at a glance, expand in place ════════ */
+let pfFilter='all', pfOpen={};
+function pfSignals(d){
+  const steps=(d.steps||[]).filter(s=>!s.done);
+  const overdue=steps.filter(s=>s.due&&daysUntil(s.due)<0);
+  const stale=d.updated?Math.floor(daysAgo(d.updated)):999;
+  return { noStep:steps.length===0, overdue:overdue.length, stalled:(stale>=30)||d.status==='recovery'||d.status==='dormant',
+    weak:(d.people||[]).length<2, ask:!!(d.managerAsk||'').trim(), attn:needsAttention(d), stale,
+    risk:((d.blocker||'').trim()||(((d.plan||{}).risks||[])[0]||{}).text||(d.threats||'').trim()||'') };
+}
+function pfRow(d){
+  const s=pfSignals(d), q=quarterOf(d), cat=category(d), ts=topStep(d), open=STATUSES[d.status].open;
+  const cov=(d.people||[]).length, pc=planCompleteness(d), tr=trend(d);
+  const chips=[];
+  if(s.ask) chips.push('<span class="pf-chip ask">🙋 Manager ask</span>');
+  if(s.overdue) chips.push('<span class="pf-chip bad">'+s.overdue+' overdue</span>');
+  if(s.noStep) chips.push('<span class="pf-chip bad">No next step</span>');
+  if(s.weak) chips.push('<span class="pf-chip warn">Single-threaded</span>');
+  if(s.stalled) chips.push('<span class="pf-chip warn">Stalled '+(s.stale<900?s.stale+'d':'')+'</span>');
+  if(d.slips) chips.push('<span class="pf-chip warn">⤳ '+d.slips+'× slip</span>');
+  const exp=!!pfOpen[d.id];
+  const p=d.plan||{};
+  const recent=(d.comments||[]).slice().sort((a,b)=>(b.ts||0)-(a.ts||0)).slice(0,3);
+  const risks=(p.risks||[]).slice(0,3);
+  const next3=(d.steps||[]).filter(x=>!x.done).slice(0,3);
+  return `<div class="pf-item ${exp?'open':''}" data-id="${d.id}">
+    <div class="pf-row" data-toggle="${d.id}">
+      <span class="pf-logo">${logoHTML(d,30)}</span>
+      <div class="pf-id"><div class="pf-name"><span class="pf-dot" style="background:${STATUSES[d.status].color}"></span>${esc(d.name)}${open?`<span class="cat-tag ${cat}">${CAT_LABEL[cat]}</span>`:''}${q?`<span class="cat-tag pipe" style="background:var(--fill);color:var(--text-3)">${periodShort(q)}</span>`:''}</div>
+        <div class="pf-meta">${STATUSES[d.status].label} · ${currentStageName(d)||'new'} · ${cov} contact${cov===1?'':'s'} · plan ${pc}%${d.updated?' · '+relTime(d.updated):''}</div></div>
+      <div class="pf-next">${ts?`<span class="pf-nx">→ ${esc(ts.text)}</span>${ts.due?`<span class="pf-due ${daysUntil(ts.due)<0?'bad':''}">${fmtShort(ts.due)}</span>`:''}`:'<span class="pf-nx muted">No next step</span>'}</div>
+      <div class="pf-money">${money(aud(d))}${tr?`<div class="pf-tr" style="color:${tr>0?'var(--green)':'var(--red)'}">${tr>0?'▲':'▼'}${Math.abs(tr)}</div>`:''}</div>
+      ${open?ring(health(d),34):'<span style="width:34px"></span>'}
+      <span class="pf-exp">${exp?'▴':'▾'}</span>
+    </div>
+    ${chips.length?`<div class="pf-chips">${chips.join('')}</div>`:''}
+    ${s.risk?`<div class="pf-risk">⚠ ${esc((''+s.risk).slice(0,120))}</div>`:''}
+    ${exp?`<div class="pf-exp-body">
+      ${p.thesis?`<div class="pf-b"><div class="pf-bk">Why it matters</div><div class="pf-bv">${esc(p.thesis)}</div></div>`:''}
+      ${p.strategy?`<div class="pf-b"><div class="pf-bk">Strategy</div><div class="pf-bv">${esc(p.strategy)}</div></div>`:''}
+      ${d.managerAsk?`<div class="pf-b"><div class="pf-bk" style="color:var(--red)">Needs you</div><div class="pf-bv">${esc(d.managerAsk)}</div></div>`:''}
+      ${risks.length?`<div class="pf-b"><div class="pf-bk">Risks</div><div class="pf-bv">${risks.map(r=>'• '+esc(r.text)).join('<br>')}</div></div>`:''}
+      ${cov?`<div class="pf-b"><div class="pf-bk">Stakeholders</div><div class="pf-bv">${(d.people||[]).map(x=>`<span class="pf-p" style="border-color:${SENTI[x.sent]||SENTI.neutral}">${esc(x.name)}${x.role?' · '+esc(x.role):''}</span>`).join('')}</div></div>`:''}
+      ${next3.length?`<div class="pf-b"><div class="pf-bk">Next actions</div><div class="pf-bv">${next3.map(x=>'• '+esc(x.text)+(x.due?' <span class="muted">('+fmtShort(x.due)+')</span>':'')).join('<br>')}</div></div>`:''}
+      ${recent.length?`<div class="pf-b"><div class="pf-bk">Recent</div><div class="pf-bv">${recent.map(c=>'• '+esc((''+c.text).slice(0,140))+' <span class="muted">'+relTime(c.ts)+'</span>').join('<br>')}</div></div>`:''}
+      <button class="pf-openbtn" data-open="${d.id}">Open the full account plan →</button>
+    </div>`:''}
+  </div>`;
+}
+function renderPortfolio(){
+  const el=$('#portfolioBody'); if(!el)return;
+  const open=OPEN().filter(d=>d.status!=='lead');
+  const leads=deals.filter(d=>d.status==='lead');
+  const sig=d=>pfSignals(d);
+  const buckets={
+    all:{label:'All active',items:open},
+    attn:{label:'Needs attention',items:open.filter(d=>sig(d).attn||sig(d).overdue||sig(d).noStep)},
+    ask:{label:'Manager asks',items:deals.filter(d=>(d.managerAsk||'').trim())},
+    stalled:{label:'Stalled',items:open.filter(d=>sig(d).stalled)},
+    weak:{label:'Single-threaded',items:open.filter(d=>sig(d).weak)},
+    future:{label:'Future pipeline',items:leads},
+  };
+  const sum=a=>a.reduce((s,d)=>s+aud(d),0);
+  const tiles=Object.keys(buckets).map(k=>{ const b=buckets[k];
+    return `<button class="pf-tile ${pfFilter===k?'on':''}" data-f="${k}"><div class="pf-tn">${b.items.length}</div><div class="pf-tl">${b.label}</div><div class="pf-ts">${money(sum(b.items))}</div></button>`; }).join('');
+  const items=(buckets[pfFilter]||buckets.all).items.slice().sort((a,b)=>{
+    const A=sig(a),B=sig(b); const sc=x=>(x.ask?4:0)+(x.overdue?3:0)+(x.noStep?2:0)+(x.attn?1:0);
+    return (sc(B)-sc(A))||(aud(b)-aud(a)); });
+  el.innerHTML=`<div class="pf-tiles">${tiles}</div>
+    <div class="pf-list">${items.map(pfRow).join('')||'<div class="plan-empty">Nothing here.</div>'}</div>`;
+  el.querySelectorAll('.pf-tile[data-f]').forEach(b=>b.addEventListener('click',()=>{ pfFilter=b.dataset.f; renderPortfolio(); }));
+  el.querySelectorAll('.pf-row[data-toggle]').forEach(r=>r.addEventListener('click',()=>{ const id=r.dataset.toggle; pfOpen[id]=!pfOpen[id]; renderPortfolio(); }));
+  el.querySelectorAll('.pf-openbtn[data-open]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); openDeal(b.dataset.open); }));
+  const n=items.length, s=$('#portfolioSub');
+  if(s) s.textContent=`${n} account${n===1?'':'s'} · ${money(sum(items))} — sorted by what needs you first. Expand any row for the story; nothing to open.`;
+}
+/* What keeps blocking Clifton's deals — patterns across blockers, loss reasons and plan risks */
+const BLOCK_PATTERNS=[
+  {k:'Budget / cost',rx:/budget|cost|price|expensive|unbudget|too dear/i},
+  {k:'Data residency / sovereignty',rx:/residency|sovereign|hosting|offshore|data.*austral/i},
+  {k:'Timing / no decision',rx:/timing|no decision|priorit|back burner|not now|gone quiet|quiet|deprioriti/i},
+  {k:'Product gap',rx:/product gap|capability|roadmap|missing|cannot do|can\x27t do/i},
+  {k:'Migration / implementation',rx:/migrat|implementation|resource|capacity|runway/i},
+  {k:'Single-threaded / no champion',rx:/champion|single|only contact|no sponsor|went dark/i},
+  {k:'Competitor / incumbent',rx:/competitor|incumbent|chargebee|configure one|built in-house|in-house/i},
+];
+function blockerTrends(){
+  const out={};
+  deals.forEach(d=>{
+    const hay=[d.blocker,d.lossReason,d.lossDetail,d.threats].concat((((d.plan||{}).risks)||[]).map(r=>r.text)).filter(Boolean).join(' · ');
+    if(!hay.trim())return;
+    BLOCK_PATTERNS.forEach(p=>{ if(p.rx.test(hay)){ out[p.k]=out[p.k]||{n:0,sum:0,names:[]}; out[p.k].n++; out[p.k].sum+=aud(d); if(out[p.k].names.length<6) out[p.k].names.push(d.name); } });
+  });
+  return Object.keys(out).map(k=>Object.assign({k},out[k])).sort((a,b)=>b.n-a.n||b.sum-a.sum);
+}
 function renderOneOnOne(){
   const el=$('#oneoneBody'); if(!el)return;
-  const D=oneOnOneData(); const {cq,inQ,recovery,leads,blockers,asks,wins,changed,nextWeek,upcoming,metrics,hid}=D;
-  const oo=ooMeta(), sumOf=a=>a.reduce((s,d)=>s+aud(d),0), dl=daysLeftInQuarter(cq), tgt=metrics.tgt;
+  const oo=ooMeta(); const wk=ooSelWeek(), curWk=weekKey(), nxtWk=nextWeekKey();
+  const isNext=(wk===nxtWk), snap=oo.history.find(h=>h.week===wk&&wk!==curWk&&!isNext);
+  /* ── week strip: this week · prep next week · the weeks you've already presented ── */
+  const chips=[`<button class="oo-wk ${wk===curWk?'on':''}" data-wk="${curWk}">This week<span>${fmtD(weekStartDate())}</span></button>`,
+    `<button class="oo-wk ${isNext?'on':''}" data-wk="${nxtWk}">Prep next week<span>${fmtD(weekStartDate(Date.now()+7*864e5))}</span></button>`]
+    .concat(oo.history.filter(h=>h.week!==curWk).slice(0,8).map(h=>`<button class="oo-wk ${wk===h.week?'on':''}" data-wk="${h.week}">Week of ${h.label}<span>${h.metrics?'Commit '+fmtA(h.metrics.commit):'saved'}</span></button>`)).join('');
+  const strip=`<div class="oo-strip">${chips}</div>`;
+  if(snap){ el.innerHTML=strip+`<div class="oo-sec"><div class="oo-sec-h"><span class="oo-sec-t">Week of ${snap.label}</span><span class="oo-sec-n">${relTime(snap.ts)}</span></div><pre class="oo-snap">${esc(snap.text)}</pre><div class="oo-addrow"><button class="oo-showhidden" id="ooSnapCopy">⧉ Copy this week again</button></div></div>`;
+    el.querySelectorAll('.oo-wk[data-wk]').forEach(b=>b.addEventListener('click',()=>{ ooWeek=b.dataset.wk; renderOneOnOne(); }));
+    const sc=$('#ooSnapCopy'); if(sc) sc.addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(snap.text); toast('Copied'); }catch(e){} });
+    return; }
+
+  const D=oneOnOneData(); const {cq,inQ,recovery,leads,asks,wins,changed,nextWeek,upcoming,metrics,hid}=D;
+  const sumOf=a=>a.reduce((s,d)=>s+aud(d),0), dl=daysLeftInQuarter(cq), tgt=metrics.tgt;
   const last=ooLastMetrics();
-  const dnote=(c,p)=>{ if(p==null)return'<div class="sum-meta">—</div>'; const d=c-p; if(!d)return'<div class="sum-meta">flat vs last wk</div>'; const col=d>0?'var(--green)':'var(--red)'; return `<div class="sum-meta" style="color:${col};font-weight:650">${d>0?'▲':'▼'} ${money(Math.abs(d))} vs last wk</div>`; };
+  const dnote=(c,p)=>{ if(p==null)return'<div class="sum-meta">—</div>'; const dd=c-p; if(!dd)return'<div class="sum-meta">flat vs last wk</div>'; const col=dd>0?'var(--green)':'var(--red)'; return `<div class="sum-meta" style="color:${col};font-weight:650">${dd>0?'▲':'▼'} ${money(Math.abs(dd))} vs last wk</div>`; };
   const gap=Math.max(0,tgt-metrics.inQ), cov=tgt?(metrics.inQ/tgt):0;
-  const cardWrap=d=>`<div class="oo-cw">${cardHTML(d)}<button class="oo-x" data-hide="${d.id}" title="Hide from this brief">✕</button></div>`;
-  const grp=(title,tint,items)=> items.length?`<div class="group"><div class="group-head"><span class="group-dot" style="background:${tint}"></span><span class="group-name">${title}</span><span class="group-count">${items.length}</span><span class="group-sum">${money(sumOf(items))}</span></div><div class="card-stack">${items.map(cardWrap).join('')}</div></div>`:'';
-  const listSec=(title,n,rows)=>`<div class="oo-sec"><div class="oo-sec-h"><span class="oo-sec-t">${title}</span><span class="oo-sec-n">${n}</span></div>${rows||'<div class="oo-empty">— none</div>'}</div>`;
-  const drow=(d,extra,dotCol)=>`<div class="oo-row" data-id="${d.id}"><span class="oo-dot" style="background:${dotCol||STATUSES[d.status].color}"></span><span class="oo-name">${esc(d.name)}</span><span class="oo-extra">${extra||''}</span><span class="oo-arr">${money(aud(d))}</span><button class="oo-x oo-x-row" data-hide="${d.id}" title="Hide">✕</button></div>`;
-  const openC=oo.commitments.filter(c=>!c.done).sort((a,b)=>(a.week||'').localeCompare(b.week||'')), doneC=oo.commitments.filter(c=>c.done&&daysAgo(c.doneTs)<=7);
-  const commRows=openC.map(c=>`<div class="oo-comm"><button class="oo-check" data-cid="${c.id}"></button><span class="oo-comm-t">${esc(c.text)}${c.week&&c.week<D.wk?' <span class="oo-carry">carried</span>':''}${c.dealId?` <span class="oo-godeal" data-id="${c.dealId}">↗ deal</span>`:''}</span><button class="oo-x" data-cdel="${c.id}" title="Remove">✕</button></div>`).join('')
+  const drow=(d,extra,dotCol)=>`<div class="oo-row" data-id="${d.id}"><span class="oo-dot" style="background:${dotCol||STATUSES[d.status].color}"></span><span class="oo-name">${esc(d.name)}</span><span class="oo-extra">${extra||''}</span><span class="oo-arr">${money(aud(d))}</span><button class="oo-x oo-x-row" data-hide="${d.id}" title="Hide from this brief">✕</button></div>`;
+  /* collapsible section — only the two that matter are open by default. This is what kills the long page. */
+  const sec=(key,title,n,rows,defOpen)=>{ const openS=(ooCollapse[key]===undefined)?!!defOpen:!ooCollapse[key];
+    return `<div class="oo-sec"><div class="oo-sec-h oo-toggle" data-sec="${key}"><span class="oo-caret">${openS?'▾':'▸'}</span><span class="oo-sec-t">${title}</span><span class="oo-sec-n">${n}</span></div>${openS?(rows||'<div class="oo-empty">— none</div>'):''}</div>`; };
+  /* commitments for the selected week (carried-over ones follow you forward) */
+  const openC=oo.commitments.filter(c=>!c.done&&(isNext?(c.week===nxtWk):(c.week||'')<=curWk)).sort((a,b)=>(a.week||'').localeCompare(b.week||''));
+  const doneC=isNext?[]:oo.commitments.filter(c=>c.done&&daysAgo(c.doneTs)<=7);
+  const commRows=openC.map(c=>`<div class="oo-comm"><button class="oo-check" data-cid="${c.id}"></button><span class="oo-comm-t">${esc(c.text)}${c.week&&c.week<curWk?' <span class="oo-carry">carried</span>':''}${c.dealId?` <span class="oo-godeal" data-id="${c.dealId}">↗ deal</span>`:''}</span>${isNext?'':`<button class="oo-next" data-cnext="${c.id}" title="Move to next week">→ next wk</button>`}<button class="oo-x" data-cdel="${c.id}" title="Remove">✕</button></div>`).join('')
     +doneC.map(c=>`<div class="oo-comm done"><button class="oo-check on" data-cid="${c.id}">✓</button><span class="oo-comm-t">${esc(c.text)}</span></div>`).join('')
-    +`<div class="oo-addrow"><input id="ooCommIn" class="oo-addin" placeholder="+ Add a commitment for this week (Enter to add)"></div>`;
-  const didWk=oo.did.filter(x=>x.week===D.wk||daysAgo(x.ts)<=7);
+    +`<div class="oo-addrow"><input id="ooCommIn" class="oo-addin" placeholder="+ Add a commitment for ${isNext?'next week':'this week'} (Enter to add)"></div>`;
+  const didWk=isNext?[]:oo.did.filter(x=>x.week===curWk||daysAgo(x.ts)<=7);
   const didRows=didWk.map(x=>`<div class="oo-comm"><span class="oo-diddot">✓</span><span class="oo-comm-t">${esc(x.text)}</span><button class="oo-x" data-ddel="${x.id}" title="Remove">✕</button></div>`).join('')
     +`<div class="oo-addrow"><input id="ooDidIn" class="oo-addin" placeholder="+ What did you do this week? (built the sales deck, set up a BAC cadence…) — Enter to add"></div>`;
+  /* At risk — reuses the same signals the manager Portfolio uses, so both agree */
+  const atRisk=OPEN().filter(d=>d.status!=='lead'&&hid.indexOf(d.id)<0).map(d=>({d,s:pfSignals(d)})).filter(x=>x.s.noStep||x.s.overdue||x.s.stalled||x.s.weak||x.d.slips)
+    .sort((a,b)=>aud(b.d)-aud(a.d));
+  const riskRows=atRisk.map(x=>{ const why=[x.s.overdue?x.s.overdue+' overdue':'',x.s.noStep?'no next step':'',x.s.stalled?'stalled '+(x.s.stale<900?x.s.stale+'d':''):'',x.s.weak?'single-threaded':'',x.d.slips?x.d.slips+'× slip':''].filter(Boolean).join(' · ');
+    return drow(x.d,esc(why),'var(--orange)'); }).join('');
+  const trends=blockerTrends();
+  const trendRows=trends.map(t=>`<div class="oo-row"><span class="oo-dot" style="background:var(--red)"></span><span class="oo-name">${esc(t.k)}</span><span class="oo-extra">${esc(t.names.join(', '))}</span><span class="oo-arr">${t.n} · ${money(t.sum)}</span></div>`).join('');
+  const activeRows=inQ.map(d=>drow(d,(currentStageName(d)||'new')+(topStep(d)?' · '+esc(topStep(d).text):''))).join('')
+    +upcoming.map(x=>`<div class="oo-row" data-id="${x.d.id}"><span class="oo-dot" style="background:${x.du<=7?'var(--orange)':'var(--gray)'}"></span><span class="oo-name">${esc(x.d.name)}</span><span class="oo-extra">📅 ${esc(x.label)}</span><span class="oo-arr" style="color:var(--text-3);font-weight:600">in ${x.du}d</span></div>`).join('');
+  const doneRows=wins.map(d=>drow(d,d.status==='won'?'WON':'advanced to '+(currentStageName(d)||'next stage'),'var(--green)')).join('')
+    +changed.map(d=>drow(d,relTime(d.updated)+(d.lastActivity?' · '+esc((''+d.lastActivity).slice(0,55)):''))).join('');
 
-  let html=`<div class="summary" style="margin-bottom:16px"><div class="sum-head"><div class="sum-title">${periodLabel(cq)} · ${dl} days left</div>${hid.length?`<button class="oo-showhidden" id="ooShowHidden">Show ${hid.length} hidden</button>`:''}</div>
+  let html=strip
+    +(isNext?`<div class="oo-prep">🗓 <b>Prepping next week</b> — jot what you want to raise, or just talk to the assistant. Your live numbers and deal sections fill in on the day.<button class="oo-showhidden" id="ooPrepChat" style="margin-left:auto">Open the assistant</button></div>`:'')
+    +(isNext?'':`<div class="summary" style="margin-bottom:14px"><div class="sum-head"><div class="sum-title">${periodLabel(cq)} · ${dl} days left</div>${hid.length?`<button class="oo-showhidden" id="ooShowHidden">Show ${hid.length} hidden</button>`:''}</div>
     <div class="sum-stats">
       <div class="sum-cell"><div class="sum-label">Commit</div><div class="sum-value green">${money(metrics.commit)}</div>${dnote(metrics.commit,last&&last.commit)}</div>
       <div class="sum-cell"><div class="sum-label">Best case</div><div class="sum-value accent">${money(metrics.best)}</div>${dnote(metrics.best,last&&last.best)}</div>
       <div class="sum-cell"><div class="sum-label">In play</div><div class="sum-value">${money(metrics.inQ)}</div>${dnote(metrics.inQ,last&&last.inQ)}</div>
       <div class="sum-cell"><div class="sum-label">${tgt?'Gap to target':'Target'}</div><div class="sum-value">${tgt?money(gap):'—'}</div><div class="sum-meta">${tgt?cov.toFixed(1)+'× coverage':'set in Targets'}</div></div>
-    </div></div>
-    <div class="oo-note-card"><div class="oo-sec-t" style="margin-bottom:7px">Your talking points <span class="st-hint" style="font-weight:500;color:var(--text-3)">— your framing. Type here, or say to the assistant "note for my 1:1: …"</span></div>
-      <textarea id="ooNote" class="oo-note" rows="3" placeholder="e.g. Recovered Scott Systems for Q3 — CFO ROI session booked. Pushing 2 more back this fortnight. Need product ETA on AC3 data-residency.">${esc(oo.note||'')}</textarea></div>
-    ${listSec('What I did this week',didWk.length,didRows)}
-    ${listSec('Commitments this week',openC.length+(doneC.length?' · '+doneC.length+' done':''),commRows,'var(--accent)')}
-    ${asks.length?listSec('Asks for my manager',asks.length,asks.map(d=>drow(d,esc((''+d.managerAsk).slice(0,90)),'var(--red)')).join(''),'var(--red)'):''}
-    ${grp('Wins this week','var(--green)',wins)}
-    ${blockers.length?listSec('Blockers',blockers.length,blockers.map(d=>drow(d,esc((''+d.blocker).slice(0,90)))).join(''),'var(--red)'):''}
-    ${grp('In play for '+periodShort(cq),'var(--accent)',inQ)}
-    ${grp('Recovery — bringing back','var(--orange)',recovery)}
-    ${grp('Future pipeline — callbacks','#8b5cf6',leads)}
-    ${upcoming.length?listSec('Upcoming — next 2 weeks',upcoming.length,upcoming.map(x=>`<div class="oo-row" data-id="${x.d.id}"><span class="oo-dot" style="background:${x.du<=7?'var(--orange)':'var(--gray)'}"></span><span class="oo-name">${esc(x.d.name)}</span><span class="oo-extra">${esc(x.label)}</span><span class="oo-arr" style="color:var(--text-3);font-weight:600">in ${x.du}d · ${fmtShort(x.date)}</span></div>`).join('')):''}
-    ${listSec('Moved this week',changed.length,changed.map(d=>drow(d,relTime(d.updated)+(d.lastActivity?' · '+esc((''+d.lastActivity).slice(0,55)):''))).join(''))}
-    ${listSec('Planned next week',nextWeek.length,nextWeek.map(x=>`<div class="oo-row" data-id="${x.d.id}"><span class="oo-dot" style="background:${x.du<=2?'var(--orange)':'var(--gray)'}"></span><span class="oo-name">${esc(x.d.name)}</span><span class="oo-extra">${esc(x.s.text)}</span><span class="oo-arr" style="color:var(--text-3);font-weight:600">${fmtShort(x.s.due)}</span></div>`).join(''))}
-    ${oo.history.length?listSec('Past weeks',oo.history.length,oo.history.map((h,i)=>`<div class="oo-row oo-hist" data-h="${i}"><span class="oo-dot" style="background:var(--gray)"></span><span class="oo-name">Week of ${h.label}</span><span class="oo-extra">${h.metrics?'Commit '+fmtA(h.metrics.commit):''}</span><span class="oo-arr" style="color:var(--accent);font-weight:600">view</span></div>`).join('')):''}
-  `;
+    </div></div>`)
+    +`<div class="oo-note-card"><div class="oo-sec-t" style="margin-bottom:7px">Your talking points <span class="st-hint" style="font-weight:500;color:var(--text-3)">— your framing. Type here, or say to the assistant "note for my 1:1: …"</span></div>
+      <textarea id="ooNote" class="oo-note" rows="3" placeholder="e.g. Recovered Scott Systems for Q3 — CFO ROI session booked. Pushing 2 more back this fortnight. Need product ETA on AC3 data-residency.">${esc(ooNoteGet(wk))}</textarea></div>`
+    +(isNext?'':sec('did','What I did this week',didWk.length,didRows,true))
+    +sec('commit','Commitments'+(isNext?' for next week':' this week'),openC.length+(doneC.length?' · '+doneC.length+' done':''),commRows,true)
+    +(isNext?'':sec('decision','Needs a decision',asks.length,asks.map(d=>drow(d,esc((''+d.managerAsk).slice(0,90)),'var(--red)')).join(''),true))
+    +(isNext?'':sec('risk','At risk',atRisk.length,riskRows,true))
+    +(isNext?'':sec('active','Active priorities',inQ.length+upcoming.length,activeRows,false))
+    +(isNext?'':sec('future','Future pipeline',leads.length,leads.map(d=>drow(d,'reach out '+(d.callbackDate?fmtShort(d.callbackDate):'tbd')+(d.convProb?' · '+d.convProb+'%':''),'#8b5cf6')).join(''),false))
+    +(isNext?'':sec('recovery','Recovery',recovery.length,recovery.map(d=>drow(d,(d.sprint?'sprint live':'no sprint')+(topStep(d)?' · '+esc(topStep(d).text):''),'var(--orange)')).join(''),false))
+    +sec('planned','Planned next week',nextWeek.length,nextWeek.map(x=>`<div class="oo-row" data-id="${x.d.id}"><span class="oo-dot" style="background:${x.du<=2?'var(--orange)':'var(--gray)'}"></span><span class="oo-name">${esc(x.d.name)}</span><span class="oo-extra">${esc(x.s.text)}</span><span class="oo-arr" style="color:var(--text-3);font-weight:600">${fmtShort(x.s.due)}</span></div>`).join(''),false)
+    +(isNext?'':sec('done','Recently completed',wins.length+changed.length,doneRows,false))
+    +(isNext?'':sec('trends','What keeps blocking me',trends.length,trendRows,false));
   el.innerHTML=html;
-  const nt=$('#ooNote'); if(nt) nt.addEventListener('input',()=>{ ooMeta().note=nt.value; save(); });
-  const ci=$('#ooCommIn'); if(ci) ci.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addCommitment(ci.value); renderOneOnOne(); const f=$('#ooCommIn'); if(f)f.focus(); } });
+  el.querySelectorAll('.oo-wk[data-wk]').forEach(b=>b.addEventListener('click',()=>{ ooWeek=b.dataset.wk; renderOneOnOne(); }));
+  el.querySelectorAll('.oo-toggle[data-sec]').forEach(h=>h.addEventListener('click',()=>{ const k=h.dataset.sec; const cur=(ooCollapse[k]===undefined)?false:ooCollapse[k]; ooCollapse[k]=!cur; renderOneOnOne(); }));
+  el.querySelectorAll('.oo-next[data-cnext]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const c=oo.commitments.find(x=>x.id===b.dataset.cnext); if(c){ c.week=nextWeekKey(); save(); renderOneOnOne(); toast('Moved to next week'); } }));
+  const pc=$('#ooPrepChat'); if(pc) pc.addEventListener('click',()=>openChatPop());
+  const nt=$('#ooNote'); if(nt) nt.addEventListener('input',()=>{ ooNoteSet(wk,nt.value); save(); });
+  const ci=$('#ooCommIn'); if(ci) ci.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addCommitment(ci.value,null,ooSelWeek()); renderOneOnOne(); const f=$('#ooCommIn'); if(f)f.focus(); } });
   const di=$('#ooDidIn'); if(di) di.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addActivity(di.value); renderOneOnOne(); const f=$('#ooDidIn'); if(f)f.focus(); } });
   el.querySelectorAll('.oo-x[data-ddel]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); oo.did=oo.did.filter(x=>x.id!==b.dataset.ddel); save(); renderOneOnOne(); }));
   el.querySelectorAll('.oo-check[data-cid]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const c=oo.commitments.find(x=>x.id===b.dataset.cid); if(c){ c.done=!c.done; c.doneTs=c.done?Date.now():0; save(); renderOneOnOne(); } }));
@@ -1861,7 +2250,7 @@ function applyChrome(){
   { const sb=$('#stagingBanner'); if(sb) sb.style.display=(activeEnv()==='staging')?'block':'none'; }
   $('#curBtn').textContent=meta.displayMode==='both'?'A$ + US$':(meta.displayMode==='USD'?'US$':'A$');
 }
-function renderActive(){ const a=$('#seg button.active').dataset.view; if(a==='deals')renderDeals(); else if(a==='plan')renderPlan(); else if(a==='calendar')renderCalendar(); else if(a==='oneone')renderOneOnOne(); else renderForecast(); }
+function renderActive(){ const a=$('#seg button.active').dataset.view; if(a==='deals')renderDeals(); else if(a==='plan')renderPlan(); else if(a==='calendar')renderCalendar(); else if(a==='oneone')renderOneOnOne(); else if(a==='portfolio')renderPortfolio(); else renderForecast(); }
 
 /* ════════ PLAN (week / sprint) ════════ */
 function renderPlan(){
@@ -2338,8 +2727,96 @@ function openDeal(id){ openId=id; panelTab='overview'; renderPanel(); $('#scrim'
 function closePanel(){ $('#scrim').classList.remove('open'); $('#panel').classList.remove('open'); $('#statusMenu').classList.remove('open'); openId=null; }
 function deal(){ return deals.find(d=>d.id===openId); }
 function paintStatusPill(d){ const m=STATUSES[d.status],p=$('#statusPill'); p.style.background=m.soft; p.style.color=m.color; p.innerHTML=`<span class="dot" style="background:${m.color}"></span>${m.label}${RO?'':`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>`}`; p.style.cursor=RO?'default':'pointer'; }
-function renderGrade(d){ const cb=$('#catBadge'); if(cb){ cb.className='fw-cat '+category(d); cb.textContent=CAT_LABEL[category(d)]; } const hr=$('#heroRing'); if(hr)hr.innerHTML=ring(health(d),56); const pv=$('#proofVal'); if(pv)pv.textContent=proofScore(d)+'/10'; const pf=$('#proofFill'); if(pf)pf.style.width=(proofScore(d)*10)+'%'; const ff=$('#fwFormula'); if(ff)ff.innerHTML=formulaHTML(d); }
-function formulaHTML(d){ return `Health <b>${health(d)}</b> = Belief ${d.belief}×3 + Proof ${proofScore(d)}×5 + Deservedness ${d.deserve}×2<br><span style="color:var(--text-3)">Currently <b style="color:var(--text-2)">${CAT_LABEL[category(d)]}</b> — a deal becomes <b style="color:var(--text-2)">Commit</b> automatically when Deservedness ≥ 7 and it's Closing or Advancing.</span>`; }
+function renderGrade(d){ const cb=$('#catBadge'); if(cb){ cb.className='fw-cat '+category(d); cb.textContent=CAT_LABEL[category(d)]; } const hr=$('#heroRing'); if(hr)hr.innerHTML=ring(health(d),56); const pv=$('#proofVal'); if(pv)pv.textContent=proofScore(d)+'/10'; const pf=$('#proofFill'); if(pf)pf.style.width=(proofScore(d)*10)+'%'; const ff=$('#fwFormula'); if(ff){ ff.innerHTML=formulaHTML(d); if(!RO) wireCatOverride(d); } }
+/* ════════ ACCOUNT PLAN — structured, editable, at-a-glance ════════ */
+function planCompleteness(d){
+  const p=d.plan||{}; const checks=[!!(p.thesis||'').trim(),(p.challenges||[]).length>0,(p.gaps||[]).length>0,(d.people||[]).length>=2,!!(p.strategy||'').trim(),(d.steps||[]).some(s=>!s.done),(d.journey||[]).some(s=>s.done),!!(d.whyNow||'').trim()];
+  return Math.round(checks.filter(Boolean).length/checks.length*100);
+}
+function planHTML(d){
+  const p=d.plan||{}; const q=quarterOf(d); const pc=planCompleteness(d);
+  const nd=nextDate(d), ts=topStep(d);
+  const glance=[['Status',STATUSES[d.status].label],['Value',money(aud(d))],['Timing',q?periodLabel(q):'Unscheduled'],['Users',d.users||'—'],['CRM',d.crm||'—'],['Region',d.location||'—'],['Next meeting',nd?fmtD(new Date(nd.date+'T00:00')):'—'],['Next step',ts?ts.text:'—']];
+  const ta=(id,val,ph,rows)=>`<textarea class="plan-ta" id="${id}" rows="${rows||3}" placeholder="${ph}">${esc(val||'')}</textarea>`;
+  const chRows=(p.challenges||[]).map(c=>`<div class="plan-item" data-k="challenges" data-id="${c.id}">
+    <div class="plan-item-h"><input class="plan-in plan-title" data-f="title" value="${esc(c.title||'')}" placeholder="Challenge"><button class="plan-x" data-del="challenges" data-id="${c.id}">✕</button></div>
+    <input class="plan-in" data-f="detail" value="${esc(c.detail||'')}" placeholder="What's happening">
+    <div class="plan-two"><input class="plan-in" data-f="impact" value="${esc(c.impact||'')}" placeholder="Impact (cost / time / risk)"><input class="plan-in" data-f="evidence" value="${esc(c.evidence||'')}" placeholder="Evidence / who said it"></div></div>`).join('');
+  const gapRows=(p.gaps||[]).map(g=>`<div class="plan-item" data-k="gaps" data-id="${g.id}">
+    <div class="plan-item-h"><input class="plan-in plan-title" data-f="current" value="${esc(g.current||'')}" placeholder="Current process"><button class="plan-x" data-del="gaps" data-id="${g.id}">✕</button></div>
+    <div class="plan-two"><input class="plan-in" data-f="limitation" value="${esc(g.limitation||'')}" placeholder="Limitation"><input class="plan-in" data-f="consequence" value="${esc(g.consequence||'')}" placeholder="Consequence"></div>
+    <input class="plan-in" data-f="future" value="${esc(g.future||'')}" placeholder="Future state / our response"></div>`).join('');
+  const riskRows=(p.risks||[]).map(r=>`<div class="plan-row" data-k="risks" data-id="${r.id}"><span class="plan-dot" style="background:var(--red)"></span><input class="plan-in" data-f="text" value="${esc(r.text||'')}" placeholder="Risk or objection"><input class="plan-in plan-narrow" data-f="type" value="${esc(r.type||'')}" placeholder="type"><button class="plan-x" data-del="risks" data-id="${r.id}">✕</button></div>`).join('');
+  const linkRows=(p.links||[]).map(l=>`<div class="plan-row" data-k="links" data-id="${l.id}"><a class="plan-link" href="${esc(l.url)}" target="_blank" rel="noopener">↗</a><input class="plan-in plan-narrow" data-f="label" value="${esc(l.label||'')}" placeholder="Business case"><input class="plan-in" data-f="url" value="${esc(l.url||'')}" placeholder="https://…"><button class="plan-x" data-del="links" data-id="${l.id}">✕</button></div>`).join('');
+  const sfLines=(d.steps||[]).filter(s=>!s.done).map(s=>stepSfLine(d,s)).join('\n');
+  return `
+  <div class="plan-head"><div class="plan-hl">Account plan</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="plan-add" id="planPush" style="margin:0" title="Raise this account at your next 1:1">↗ Push to my 1:1</button>
+      <div class="plan-meter" title="How complete this plan is"><div class="plan-meter-bar"><div class="plan-meter-fill" style="width:${pc}%;background:${pc>=70?'var(--green)':(pc>=40?'var(--accent)':'var(--orange)')}"></div></div><span>${pc}% complete</span></div>
+    </div></div>
+  <div class="plan-glance">${glance.map(([k,v])=>`<div class="plan-g"><div class="plan-gk">${k}</div><div class="plan-gv">${esc(''+v)}</div></div>`).join('')}</div>
+  <div class="sec"><div class="sec-title">Why this account matters <span class="st-hint">the thesis — why they'd change, why now</span></div>${ta('planThesis',p.thesis,'e.g. Chargebee can\'t handle their reseller model; quoting, billing and reporting all break — and the renewal forces a decision.')}</div>
+  <div class="sec"><div class="sec-title">Company context</div>${ta('planContext',p.context,'Who they are, how they sell, what changed.',2)}</div>
+  <div class="sec"><div class="sec-title">Customer challenges <span class="st-hint">what's actually broken — with impact &amp; evidence</span></div>
+    <div id="planChallenges">${chRows||'<div class="plan-empty">Nothing captured yet — paste your notes into the assistant and it fills this in.</div>'}</div>
+    <button class="plan-add" data-add="challenges">＋ Add a challenge</button></div>
+  <div class="sec"><div class="sec-title">Current-state gaps <span class="st-hint">today → the limitation → what it costs → where we take them</span></div>
+    <div id="planGaps">${gapRows||'<div class="plan-empty">No gaps captured yet.</div>'}</div>
+    <button class="plan-add" data-add="gaps">＋ Add a gap</button></div>
+  <div class="sec"><div class="sec-title">Strategy &amp; plan to progress</div>${ta('planStrategy',p.strategy,'The objective, the hypothesis, the play to advance it, the proof still required.')}</div>
+  <div class="sec"><div class="sec-title">Risks &amp; objections</div>
+    <div id="planRisks">${riskRows||'<div class="plan-empty">No risks captured yet.</div>'}</div>
+    <button class="plan-add" data-add="risks">＋ Add a risk</button></div>
+  <div class="sec"><div class="sec-title">Links <span class="st-hint">business case, DealRoom, requirements…</span></div>
+    <div id="planLinks">${linkRows||'<div class="plan-empty">No links yet.</div>'}</div>
+    <button class="plan-add" data-add="links">＋ Add a link</button></div>
+  ${sfLines?`<div class="sec"><div class="sec-title">Next steps for Salesforce <span class="st-hint">copy straight into your CRM</span></div><pre class="plan-sf" id="planSf">${esc(sfLines)}</pre><button class="plan-add" id="planSfCopy">⧉ Copy next steps</button></div>`:''}
+  `;
+}
+function wirePlan(d){
+  const bind=(id,k)=>{ const el=$('#'+id); if(!el)return; el.addEventListener('input',()=>{ d.plan=d.plan||{}; d.plan[k]=el.value; d.plan.updated=Date.now(); saveD(d); }); };
+  bind('planThesis','thesis'); bind('planContext','context'); bind('planStrategy','strategy');
+  $('#panelBody').querySelectorAll('.plan-item,.plan-row').forEach(row=>{
+    const k=row.dataset.k, id=row.dataset.id; if(!k||!id)return;
+    row.querySelectorAll('.plan-in[data-f]').forEach(inp=>inp.addEventListener('input',()=>{
+      const it=(d.plan[k]||[]).find(x=>x.id===id); if(it){ it[inp.dataset.f]=inp.value; d.plan.updated=Date.now(); saveD(d); } }));
+  });
+  $('#panelBody').querySelectorAll('.plan-x[data-del]').forEach(b=>b.addEventListener('click',()=>{
+    const k=b.dataset.del; d.plan[k]=(d.plan[k]||[]).filter(x=>x.id!==b.dataset.id); saveD(d); renderPanel(); }));
+  $('#panelBody').querySelectorAll('.plan-add[data-add]').forEach(b=>b.addEventListener('click',()=>{
+    const k=b.dataset.add; d.plan=d.plan||{}; d.plan[k]=d.plan[k]||[];
+    const blank={challenges:{id:uid(),title:'',detail:'',impact:'',evidence:''},gaps:{id:uid(),current:'',limitation:'',consequence:'',future:''},risks:{id:uid(),text:'',type:''},links:{id:uid(),label:'',url:''}}[k];
+    d.plan[k].push(blank); saveD(d); renderPanel(); }));
+  const sf=$('#planSfCopy'); if(sf) sf.addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(($('#planSf')||{}).textContent||''); toast('Next steps copied — paste into Salesforce'); }catch(e){ toast('Copy failed'); } });
+  const pu=$('#planPush'); if(pu) pu.addEventListener('click',()=>{
+    ooMeta(); const wk=ooSelWeek(); const cur=ooNoteGet(wk);
+    const ts=topStep(d), risk=(d.blocker||'').trim()||((((d.plan||{}).risks)||[])[0]||{}).text||'';
+    const line=`${d.name} (${money(aud(d))}${quarterOf(d)?' · '+periodShort(quarterOf(d)):''}) — ${(d.plan&&d.plan.thesis?(''+d.plan.thesis).slice(0,110):(currentStageName(d)||STATUSES[d.status].label))}${risk?' · risk: '+(''+risk).slice(0,80):''}${ts?' · next: '+ts.text:''}`;
+    if((cur||'').indexOf(d.name)>=0){ toast(d.name+' is already in this week’s talking points'); return; }
+    ooNoteSet(wk,(cur&&cur.trim()?cur.trim()+'\n':'')+line); save();
+    toast('Added to your 1:1 talking points'+(wk===nextWeekKey()?' (next week)':''));
+    if($('#seg button.active')&&$('#seg button.active').dataset.view==='oneone') renderOneOnOne(); });
+}
+function wireCatOverride(d){
+  const sel=$('#catOvrSel'); if(sel) sel.addEventListener('change',()=>{ const v=sel.value;
+    if(!v) d.catOverride=null;
+    else d.catOverride={value:v,by:(userName||'Me'),ts:Date.now(),why:(($('#catOvrWhy')&&$('#catOvrWhy').value)||'').trim()};
+    saveD(d); renderGrade(d); renderDeals(); toast(v?('Forecast set to '+CAT_LABEL[v]+' — your call, recorded'):'Back to the engine’s call'); });
+  const why=$('#catOvrWhy'); if(why) why.addEventListener('input',()=>{ if(d.catOverride){ d.catOverride.why=why.value; saveD(d); } });
+  const clr=$('#catOvrClear'); if(clr) clr.addEventListener('click',()=>{ d.catOverride=null; saveD(d); renderGrade(d); renderDeals(); toast('Override cleared — using the engine’s call'); });
+}
+function formulaHTML(d){
+  const auto=categoryAuto(d), o=d.catOverride, overridden=!!(o&&o.value&&CAT_LABEL[o.value]);
+  const why=`Deservedness ${d.deserve}/10${(d.deserve>=7&&(d.status==='closing'||d.status==='advancing'))?' + a closing stage':(d.deserve>=7?` but stage is ${STATUSES[d.status].label} (Commit needs Closing or Advancing)`:(d.deserve>=5?' (Commit needs 7+)':' (Best case needs 5+)'))}`;
+  const src=overridden
+    ? `<b style="color:var(--orange)">${CAT_LABEL[o.value]}</b> — <b>set by you</b>${o.by?' ('+esc(o.by)+')':''}${o.ts?' · '+relTime(o.ts):''}${o.why?' · “'+esc(o.why)+'”':''}.<br>The engine calculates <b style="color:var(--text-2)">${CAT_LABEL[auto]}</b> from ${why}.`
+    : `<b style="color:var(--text-2)">${CAT_LABEL[auto]}</b> — <b>calculated by the engine</b> from ${why}.`;
+  const opts=['commit','best','pipe'].map(k=>`<option value="${k}" ${overridden&&o.value===k?'selected':''}>${CAT_LABEL[k]}</option>`).join('');
+  return `Health <b>${health(d)}</b> = Belief ${d.belief}×3 + Proof ${proofScore(d)}×5 + Deservedness ${d.deserve}×2
+    <br><span style="color:var(--text-3)">Forecast category: ${src}</span>
+    <div class="cat-ovr"><label>Override</label><select id="catOvrSel"><option value="">Use the engine (${CAT_LABEL[auto]})</option>${opts}</select><input id="catOvrWhy" placeholder="why (optional)" value="${overridden?esc(o.why||''):''}">${overridden?'<button id="catOvrClear">Clear</button>':''}</div>`;
+}
 
 function glanceHTML(d){
   const cat=category(d), m=STATUSES[d.status], ts=topStep(d), nd=nextDate(d), q=quarterOf(d);
@@ -2450,6 +2927,7 @@ function renderPanel(){
 
     <div class="wtabs" id="wtabs">
       <button data-t="overview" class="${panelTab==='overview'?'active':''}">Overview</button>
+      <button data-t="plan" class="${panelTab==='plan'?'active':''}">Plan</button>
       <button data-t="journey" class="${panelTab==='journey'?'active':''}">Journey</button>
       <button data-t="grade" class="${panelTab==='grade'?'active':''}">Grade</button>
       <button data-t="people" class="${panelTab==='people'?'active':''}">People</button>
@@ -2462,11 +2940,18 @@ function renderPanel(){
 
     ${glanceHTML(d)}
 
+    <div class="sec"><div class="sec-title">Next steps <span class="st-hint">type &amp; press Enter · add a due date to surface it in Focus</span></div><div id="taskList">${steps}</div>
+      <div class="add-row" id="addStepRow"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><input id="newStep" placeholder="Add a next step…"></div></div>
+
     ${sprintHTML}
 
     ${lossHTML}
 
     ${askHTML}
+    </div>
+
+    <div class="wtab ${panelTab==='plan'?'active':''}" data-t="plan">
+    ${planHTML(d)}
     </div>
 
     <div class="wtab ${panelTab==='journey'?'active':''}" data-t="journey">
@@ -2488,9 +2973,6 @@ function renderPanel(){
     </div>
 
     <div class="wtab ${panelTab==='grade'?'active':''}" data-t="grade">
-    <div class="sec"><div class="sec-title">Next steps <span class="st-hint">type & press Enter · add a due date to surface it in Focus</span></div><div id="taskList">${steps}</div>
-      <div class="add-row" id="addStepRow"><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><input id="newStep" placeholder="Add a next step…"></div></div>
-
     <div class="sec"><div class="sec-title">Deal grade <span class="fw-cat ${category(d)}" id="catBadge">${CAT_LABEL[category(d)]}</span></div>
       <div class="fw-block">
         <div class="fw-formula" id="fwFormula">${formulaHTML(d)}</div>
@@ -2570,6 +3052,7 @@ function wirePanel(d){
   bind('fName','name'); bind('fContact','contact'); bind('fRole','role'); bind('fCrm','crm'); bind('fUsers','users',true);
   bind('fType','type'); bind('fLoc','location'); bind('fDomain','domain'); bind('fClose','closeLabel'); bind('fRisk','risk'); bind('fLast','lastActivity'); bind('fNotes','notes');
   bind('fWhy','whyNow'); bind('fCost','costInaction'); bind('fThreats','threats'); bind('fOneLiner','oneLiner'); bind('fAsk','managerAsk');
+  wireCatOverride(d); wirePlan(d);
   ['fWhy','fCost','fThreats','fNotes'].forEach(id=>{ const el=$('#'+id); if(el){autosize(el);el.addEventListener('input',()=>autosize(el));} });
   $('#fCloseDate').addEventListener('change',e=>{ const old=d.closeDate; d.closeDate=e.target.value; recordSlip(d,old,e.target.value); saveD(d); renderDeals(); renderPanel(); });
 
@@ -2734,6 +3217,7 @@ function renderSettings(){
         <div style="flex:1;min-width:150px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Your name</label><input id="setName" value="${esc(userName)}" placeholder="Used on updates &amp; briefs" style="${spStyle}"></div>
         <div style="width:130px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">A$ per US$1</label><input id="setFx" inputmode="decimal" value="${fxUSD()}" style="${spStyle}"></div>
         <div style="width:150px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">A$ per seat / month</label><input id="setPerUser" inputmode="numeric" value="${perSeat()}" style="${spStyle}"></div>
+        <div style="width:190px"><label style="font-size:11.5px;font-weight:650;color:var(--text-2);display:block;margin-bottom:4px">Quarters read as</label><select id="setFyLabel" style="${spStyle}"><option value="calendar" ${fyLabelStyle()==='calendar'?'selected':''}>Q3 · 2026 (calendar year)</option><option value="sf" ${fyLabelStyle()==='sf'?'selected':''}>Q3 · FY27 (Salesforce FY)</option><option value="start" ${fyLabelStyle()==='start'?'selected':''}>Q3 · FY26 (FY start year)</option></select></div>
       </div>
       <div class="st-hint" style="color:var(--text-3);font-size:12px;margin-top:8px">The FX rate converts USD deals to AUD. The <b>per-seat</b> rate is a <b>monthly</b> price — a future lead's ARR = seats × rate × 12 (e.g. 10 × A$250 × 12 = A$30,000/yr). Used in the Future pipeline section.</div>
     </div>
@@ -2752,6 +3236,7 @@ function renderSettings(){
   const setName=$('#setName'); if(setName) setName.addEventListener('input',()=>{ userName=setName.value.trim(); try{localStorage.setItem('pcc_user',userName);}catch(e){} });
   const setFx=$('#setFx'); if(setFx) setFx.addEventListener('input',()=>{ meta.fx=parseFloat((setFx.value||'').replace(/[^0-9.]/g,''))||AUD_PER_USD; save(); applyChrome(); renderActive(); });
   const setPU=$('#setPerUser'); if(setPU) setPU.addEventListener('input',()=>{ meta.perUser=parseInt((setPU.value||'').replace(/[^0-9]/g,''))||250; save(); });
+  const setFy=$('#setFyLabel'); if(setFy) setFy.addEventListener('change',()=>{ meta.fyLabel=setFy.value; save(); renderActive(); renderFilters(); });
   const setExport=$('#setExport'); if(setExport) setExport.addEventListener('click',()=>{ try{ const blob=new Blob([JSON.stringify(currentState(),null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='helm-backup-'+activeEnv()+'-'+today+'.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1500); toast('Backup downloaded'); }catch(e){ toast('Export failed'); } });
   const setStages=$('#setStages'); if(setStages) setStages.addEventListener('input',()=>{ meta.journeyTemplate=setStages.value.split('\n').map(s=>s.trim()).filter(Boolean); save(); });
   const setStagesReset=$('#setStagesReset'); if(setStagesReset) setStagesReset.addEventListener('click',()=>{ delete meta.journeyTemplate; save(); renderSettings(); toast('Deal flow reset to built-in'); });
@@ -2762,10 +3247,18 @@ function renderSettings(){
 }
 
 /* ════════ EVENTS ════════ */
-$('#seg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+/* Switch view + remember it, so a refresh lands you back where you were (not bounced to Deals). */
+function activateView(name){
+  const b=document.querySelector('#seg [data-view="'+name+'"]'); if(!b) return false;
   $('#seg').querySelectorAll('button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); $('#view-'+b.dataset.view).classList.add('active');
-  if(b.dataset.view==='plan')renderPlan(); if(b.dataset.view==='calendar')renderCalendar(); if(b.dataset.view==='forecast')renderForecast(); if(b.dataset.view==='oneone')renderOneOnOne(); });
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const v=$('#view-'+name); if(v) v.classList.add('active');
+  try{ localStorage.setItem('pcc_view',name); }catch(e){}
+  if(name==='plan')renderPlan(); else if(name==='calendar')renderCalendar(); else if(name==='forecast')renderForecast(); else if(name==='oneone')renderOneOnOne(); else if(name==='portfolio')renderPortfolio(); else renderDeals();
+  return true;
+}
+function restoreView(){ try{ const v=localStorage.getItem('pcc_view'); if(v&&v!=='deals') activateView(v); }catch(e){} }
+$('#seg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; activateView(b.dataset.view); });
 $('#statusPill').addEventListener('click',()=>{ if(!RO)$('#statusMenu').classList.toggle('open'); });
 document.addEventListener('click',e=>{ if(!e.target.closest('.status-select'))$('#statusMenu').classList.remove('open'); });
 $('#panelClose').addEventListener('click',closePanel); $('#scrim').addEventListener('click',closePanel);
@@ -2970,6 +3463,65 @@ function runChatSelfTest(){
   ok('batchApplied blocks a known id', batchApplied('dup-1')===true);
   ok('batchApplied allows a fresh id', batchApplied('fresh-'+Date.now())===false);
   meta.appliedBatches=_save;
+  /* composite command: defer_account must fire ALL its consequences from ONE instruction */
+  try{
+    const tmp=blankDeal('SelfTest Defer Co'); tmp.status='recovery'; tmp.contact='Testy';
+    tmp.sprint={goal:'recover',start:today,end:addDays(today,14)}; deals.push(tmp);
+    applyChatActions([{type:'defer_account',deal:'SelfTest Defer Co',reconnectDate:'2026-10-15',note:'not now, reconnect Oct'}]);
+    const t=deals.find(x=>x.id===tmp.id);
+    ok('defer_account: recovery sprint closed', !!t&&!t.sprint);
+    ok('defer_account: moved to warm Future tier', !!t&&t.status==='future');
+    ok('defer_account: callback date set', !!t&&t.callbackDate==='2026-10-15');
+    ok('defer_account: reconnect task created on that date', !!t&&(t.steps||[]).some(s=>/reconnect/i.test(s.text||'')&&s.due==='2026-10-15'));
+    ok('defer_account: lands in the callback quarter', !!t&&quarterOf(t)===periodKey('2026-10-15'));
+    const ix=deals.findIndex(x=>x.id===tmp.id); if(ix>=0) deals.splice(ix,1);
+  }catch(e){ ok('defer_account: ran without throwing ('+(e&&e.message)+')', false); }
+  /* composite command: move_to_quarter must un-stick a recovery deal (the "Q4 never moved" bug) */
+  try{
+    const tmp2=blankDeal('SelfTest Quarter Co'); tmp2.status='recovery'; deals.push(tmp2);
+    applyChatActions([{type:'move_to_quarter',deal:'SelfTest Quarter Co',quarter:'Q4'}]);
+    const t2=deals.find(x=>x.id===tmp2.id);
+    ok('move_to_quarter: un-sticks a recovery deal', !!t2&&t2.status==='engaged');
+    ok('move_to_quarter: actually lands in Q4', !!t2&&periodShort(quarterOf(t2))==='Q4');
+    const ix2=deals.findIndex(x=>x.id===tmp2.id); if(ix2>=0) deals.splice(ix2,1);
+  }catch(e){ ok('move_to_quarter: ran without throwing ('+(e&&e.message)+')', false); }
+  /* CONNECTIVITY: enter it once — assert it lands in every place it belongs. */
+  try{
+    const tmp=blankDeal('SelfTest Connect Co'); tmp.status='engaged'; tmp.closeDate=addDays(today,60); deals.push(tmp);
+    applyChatActions([{type:'update_account_plan',deal:'SelfTest Connect Co',
+      plan:{thesis:'Their quoting is broken',challenges:[{title:'Quoting is manual',impact:'2 days a month'}],risks:[{text:'Budget unapproved',type:'commercial'}]},
+      stakeholders:[{name:'Zed Tester',role:'Champion',sentiment:'positive'}],
+      milestones:[{date:'2026-01-15',label:'First call'}],
+      nextSteps:[{text:'Meet Zed to review the business case',due:addDays(today,3),type:'meeting'}],
+      managerAsk:'Need pricing approval'}]);
+    const t=deals.find(x=>x.id===tmp.id)||{};
+    ok('connectivity: stakeholder → the account', (t.people||[]).some(p=>p.name==='Zed Tester'));
+    ok('connectivity: dated milestone → the journey map', (t.journey||[]).some(s=>s.name==='First call'&&s.done));
+    ok('connectivity: challenge → the account plan', (((t.plan||{}).challenges)||[]).some(c=>c.title==='Quoting is manual'));
+    ok('connectivity: typed next step → the account', (t.steps||[]).some(s=>s.type==='meeting'));
+    ok('connectivity: a meeting → the Calendar', (t.dates||[]).some(x=>/Meet Zed/.test(x.label||'')));
+    ok('connectivity: manager ask → the 1:1', oneOnOneData().asks.some(x=>x.id===t.id));
+    ok('connectivity: risk signals → the Portfolio', !!pfSignals(t));
+    ok('connectivity: lands in a quarter', !!quarterOf(t));
+    const ix=deals.findIndex(x=>x.id===tmp.id); if(ix>=0) deals.splice(ix,1);
+  }catch(e){ ok('connectivity: ran without throwing ('+(e&&e.message)+')', false); }
+  /* DATA INTEGRITY: no orphans, blanks, unknown states or duplicate ids. */
+  try{
+    const issues=[]; const ids=[];
+    deals.forEach(d=>{
+      ids.push(d.id);
+      if(!d.id) issues.push('a deal with no id');
+      if(!(''+(d.name||'')).trim()) issues.push('a deal with no name');
+      if(!STATUSES[d.status]) issues.push((d.name||'?')+': unknown status "'+d.status+'"');
+      (d.steps||[]).forEach(s=>{ if(!(''+((s||{}).text||'')).trim()) issues.push((d.name||'?')+': next step with no text'); });
+      (d.people||[]).forEach(p=>{ if(!(''+((p||{}).name||'')).trim()) issues.push((d.name||'?')+': stakeholder with no name'); });
+      (d.journey||[]).forEach(s=>{ if(!(''+((s||{}).name||'')).trim()) issues.push((d.name||'?')+': journey step with no name'); });
+    });
+    const dupe=ids.filter((x,i)=>x&&ids.indexOf(x)!==i);
+    if(dupe.length) issues.push(dupe.length+' duplicate deal id(s)');
+    ok('integrity: no orphans, blanks or duplicate ids'+(issues.length?' — '+issues.slice(0,3).join('; '):''), issues.length===0);
+  }catch(e){ ok('integrity: check ran without throwing', false); }
+  try{ save(); }catch(e){}
   const pass=res.every(r=>r.indexOf('PASS')===0);
   document.documentElement.setAttribute('data-selftest', pass?'PASS':'FAIL');
   document.title=(pass?'SELFTEST PASS':'SELFTEST FAIL — '+res.filter(r=>r.indexOf('FAIL')===0).join(' | '));
@@ -2978,7 +3530,7 @@ function runChatSelfTest(){
 }
 
 /* ════════ INIT ════════ */
-loadState(); checkSprints(); recordSnapshots(); save(); applyChrome(); renderDeals(); initSync();
+loadState(); checkSprints(); recordSnapshots(); save(); applyChrome(); renderDeals(); restoreView(); initSync();
 if(location.search.indexOf('selftest=1')>=0){ setTimeout(()=>{ try{ runChatSelfTest(); }catch(e){ document.title='SELFTEST ERR '+(e&&e.message); } }, 300); }
 /* Boot canary — only set if the whole script parsed AND init ran without throwing.
    The smoke test (tools/smoke-test.ps1) asserts this exists. If it's missing, the build is broken. */
