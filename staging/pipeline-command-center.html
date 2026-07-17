@@ -257,7 +257,16 @@
   .plan-auto{resize:none;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
   /* inside a COLUMN flex box, flex:1 hands height control to the browser and collapses the box to one
      line, overriding the auto-grow. Opt these out so their measured height wins. */
-  .plan-item>.plan-auto,.plan-f>.plan-auto,.plan-collap-b>.plan-auto{flex:0 0 auto;width:100%}
+  .plan-item>.plan-auto,.plan-f>.plan-auto,.plan-collap-b>.plan-auto,.ch-f>.plan-auto{flex:0 0 auto;width:100%}
+  /* ── Lovable atoms: micro-label + the numbered challenge list ── */
+  .micro-label{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+  .ch-num{font-size:19px;font-weight:750;color:var(--text-3);font-variant-numeric:tabular-nums;letter-spacing:-.5px;min-width:25px;flex:none;opacity:.65}
+  .ch-grid{display:grid;grid-template-columns:1fr 1fr 230px;gap:16px;padding:2px 0 2px 25px}
+  .ch-f{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .ch-f .plan-in{font-size:13px;line-height:1.55;padding:3px 6px;margin-left:-6px}
+  .ch-ev{background:var(--surface-2);border:1px solid var(--hair);border-radius:14px;padding:9px 11px}
+  .ch-ev .plan-in{margin-left:0}
+  @media(max-width:820px){.ch-grid{grid-template-columns:1fr;gap:11px;padding-left:0}}
   .plan-f{flex:1;min-width:150px;display:flex;flex-direction:column;gap:3px}
   .plan-fl{font-size:9.5px;font-weight:650;text-transform:uppercase;letter-spacing:.4px;color:var(--text-3)}
   .plan-riskitem .plan-item-h{align-items:flex-start}
@@ -2845,10 +2854,15 @@ function planHTML(d){
   const ta=(id,val,ph)=>`<textarea class="plan-ta plan-auto" id="${id}" rows="1" placeholder="${ph}">${esc(val||'')}</textarea>`;
   const pin=(f,val,ph,cls)=>`<textarea class="plan-in plan-auto ${cls||''}" rows="1" data-f="${f}" placeholder="${esc(ph)}">${esc(val==null?'':val)}</textarea>`;
   const lbl=t=>`<div class="plan-fl">${t}</div>`;
-  const chRows=(p.challenges||[]).map(c=>`<div class="plan-item plan-collap${c.title?' collapsed':''}" data-k="challenges" data-id="${c.id}">
-    <div class="plan-item-h"><button class="plan-chev" data-toggle="1" aria-label="Expand or collapse">›</button>${pin('title',c.title,'Challenge','plan-title')}<button class="plan-x" data-del="challenges" data-id="${c.id}">✕</button></div>
-    <div class="plan-collap-b">${pin('detail',c.detail,'What is happening')}
-    <div class="plan-two"><div class="plan-f">${lbl('Impact')}${pin('impact',c.impact,'cost / time / risk')}</div><div class="plan-f">${lbl('Evidence')}${pin('evidence',c.evidence,'who said it, when')}</div></div></div></div>`).join('');
+  /* Lovable's pattern: a numbered, hairline-divided list — collapsed shows "01 · headline",
+     open splits into Today / Cost / Evidence. No nested boxes; every field still editable. */
+  const chRows=(p.challenges||[]).map((c,i)=>`<div class="plan-item plan-collap${c.title?' collapsed':''}" data-k="challenges" data-id="${c.id}">
+    <div class="plan-item-h"><span class="ch-num">${String(i+1).padStart(2,'0')}</span><button class="plan-chev" data-toggle="1" aria-label="Expand or collapse">›</button>${pin('title',c.title,'Challenge','plan-title')}<button class="plan-x" data-del="challenges" data-id="${c.id}">✕</button></div>
+    <div class="plan-collap-b"><div class="ch-grid">
+      <div class="ch-f"><div class="micro-label">Today</div>${pin('detail',c.detail,'What is happening')}</div>
+      <div class="ch-f"><div class="micro-label">Cost</div>${pin('impact',c.impact,'cost / time / risk')}</div>
+      <div class="ch-f ch-ev"><div class="micro-label">Evidence</div>${pin('evidence',c.evidence,'who said it, when')}</div>
+    </div></div></div>`).join('');
   const gapRows=(p.gaps||[]).map(g=>`<div class="plan-item" data-k="gaps" data-id="${g.id}">
     <div class="plan-item-h">${pin('current',g.current,'Current process','plan-title')}<button class="plan-x" data-del="gaps" data-id="${g.id}">✕</button></div>
     <div class="plan-two"><div class="plan-f">${lbl('Limitation')}${pin('limitation',g.limitation,'what it cannot do')}</div><div class="plan-f">${lbl('Consequence')}${pin('consequence',g.consequence,'what it costs them')}</div></div>
