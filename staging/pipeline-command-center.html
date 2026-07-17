@@ -246,8 +246,8 @@
   .plan-meter{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:650;color:var(--text-3)}
   .plan-meter-bar{width:90px;height:6px;border-radius:20px;background:var(--fill-2);overflow:hidden}
   .plan-meter-fill{height:100%;border-radius:20px;transition:width .3s var(--ease)}
-  .plan-glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:14px;overflow:hidden;margin-bottom:16px}
-  .plan-g{background:var(--surface);padding:9px 12px}
+  .plan-glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-bottom:18px}
+  .plan-g{background:var(--surface-2);border:1px solid var(--hair);padding:10px 13px;border-radius:13px}
   .plan-gk{font-size:9.5px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)}
   .plan-gv{font-size:13px;font-weight:700;color:var(--text);margin-top:3px;line-height:1.4;overflow-wrap:anywhere}
   .plan-ta{width:100%;font-family:inherit;font-size:13.5px;line-height:1.55;padding:10px 12px;border-radius:10px;border:1px solid var(--hair);background:var(--surface-2);color:var(--text)}
@@ -261,6 +261,12 @@
   .plan-riskitem .plan-item-h{align-items:flex-start}
   .plan-item{border:1px solid var(--hair);border-radius:12px;padding:9px 10px;margin-bottom:8px;background:var(--surface-2);display:flex;flex-direction:column;gap:6px}
   .plan-item-h{display:flex;align-items:center;gap:7px}
+  .plan-chev{width:20px;height:20px;border-radius:6px;color:var(--text-3);font-size:15px;line-height:1;flex-shrink:0;transition:transform .18s var(--ease)}
+  .plan-chev:hover{background:var(--fill);color:var(--text-2)}
+  .plan-collap:not(.collapsed) .plan-chev{transform:rotate(90deg)}
+  .plan-collap.collapsed{padding-bottom:9px}
+  .plan-collap.collapsed .plan-collap-b{display:none}
+  .plan-collap-b{display:flex;flex-direction:column;gap:6px}
   .plan-two{display:flex;gap:7px;flex-wrap:wrap}
   .plan-two .plan-in{flex:1;min-width:130px}
   .plan-row{display:flex;align-items:center;gap:7px;margin-bottom:6px}
@@ -2835,10 +2841,10 @@ function planHTML(d){
   const ta=(id,val,ph)=>`<textarea class="plan-ta plan-auto" id="${id}" rows="1" placeholder="${ph}">${esc(val||'')}</textarea>`;
   const pin=(f,val,ph,cls)=>`<textarea class="plan-in plan-auto ${cls||''}" rows="1" data-f="${f}" placeholder="${esc(ph)}">${esc(val==null?'':val)}</textarea>`;
   const lbl=t=>`<div class="plan-fl">${t}</div>`;
-  const chRows=(p.challenges||[]).map(c=>`<div class="plan-item" data-k="challenges" data-id="${c.id}">
-    <div class="plan-item-h">${pin('title',c.title,'Challenge','plan-title')}<button class="plan-x" data-del="challenges" data-id="${c.id}">✕</button></div>
-    ${pin('detail',c.detail,'What is happening')}
-    <div class="plan-two"><div class="plan-f">${lbl('Impact')}${pin('impact',c.impact,'cost / time / risk')}</div><div class="plan-f">${lbl('Evidence')}${pin('evidence',c.evidence,'who said it, when')}</div></div></div>`).join('');
+  const chRows=(p.challenges||[]).map(c=>`<div class="plan-item plan-collap${c.title?' collapsed':''}" data-k="challenges" data-id="${c.id}">
+    <div class="plan-item-h"><button class="plan-chev" data-toggle="1" aria-label="Expand or collapse">›</button>${pin('title',c.title,'Challenge','plan-title')}<button class="plan-x" data-del="challenges" data-id="${c.id}">✕</button></div>
+    <div class="plan-collap-b">${pin('detail',c.detail,'What is happening')}
+    <div class="plan-two"><div class="plan-f">${lbl('Impact')}${pin('impact',c.impact,'cost / time / risk')}</div><div class="plan-f">${lbl('Evidence')}${pin('evidence',c.evidence,'who said it, when')}</div></div></div></div>`).join('');
   const gapRows=(p.gaps||[]).map(g=>`<div class="plan-item" data-k="gaps" data-id="${g.id}">
     <div class="plan-item-h">${pin('current',g.current,'Current process','plan-title')}<button class="plan-x" data-del="gaps" data-id="${g.id}">✕</button></div>
     <div class="plan-two"><div class="plan-f">${lbl('Limitation')}${pin('limitation',g.limitation,'what it cannot do')}</div><div class="plan-f">${lbl('Consequence')}${pin('consequence',g.consequence,'what it costs them')}</div></div>
@@ -2853,8 +2859,8 @@ function planHTML(d){
       <div class="plan-meter" title="How complete this plan is"><div class="plan-meter-bar"><div class="plan-meter-fill" style="width:${pc}%;background:${pc>=70?'var(--green)':(pc>=40?'var(--accent)':'var(--orange)')}"></div></div><span>${pc}% complete</span></div>
     </div></div>
   <div class="plan-glance">${glance.map(([k,v])=>`<div class="plan-g"><div class="plan-gk">${k}</div><div class="plan-gv">${esc(''+v)}</div></div>`).join('')}</div>
+  <div class="sec"><div class="sec-title">Company context <span class="st-hint">who they are, how they sell, what changed</span></div>${ta('planContext',p.context,'Who they are, how they sell, what changed.',2)}</div>
   <div class="sec"><div class="sec-title">Why this account matters <span class="st-hint">the thesis — why they'd change, why now</span></div>${ta('planThesis',p.thesis,'e.g. Chargebee can\'t handle their reseller model; quoting, billing and reporting all break — and the renewal forces a decision.')}</div>
-  <div class="sec"><div class="sec-title">Company context</div>${ta('planContext',p.context,'Who they are, how they sell, what changed.',2)}</div>
   <div class="sec"><div class="sec-title">Customer challenges <span class="st-hint">what's actually broken — with impact &amp; evidence</span></div>
     <div id="planChallenges">${chRows||'<div class="plan-empty">Nothing captured yet — paste your notes into the assistant and it fills this in.</div>'}</div>
     <button class="plan-add" data-add="challenges">＋ Add a challenge</button></div>
@@ -2885,6 +2891,11 @@ function wirePlan(d){
   const grow=el=>{ if(!el)return; el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; };
   $('#panelBody').querySelectorAll('.plan-auto').forEach(el=>{ el.addEventListener('input',()=>grow(el)); });
   growPlanFields();
+  /* collapse/expand a challenge — re-grow its fields on expand (a display:none textarea measures 0 and clips) */
+  $('#panelBody').querySelectorAll('.plan-chev[data-toggle]').forEach(b=>b.addEventListener('click',()=>{
+    const it=b.closest('.plan-collap'); if(!it)return; it.classList.toggle('collapsed');
+    if(!it.classList.contains('collapsed')) it.querySelectorAll('.plan-auto').forEach(grow);
+  }));
   const bind=(id,k)=>{ const el=$('#'+id); if(!el)return; el.addEventListener('input',()=>{ d.plan=d.plan||{}; d.plan[k]=el.value; d.plan.updated=Date.now(); saveD(d); }); };
   bind('planThesis','thesis'); bind('planContext','context'); bind('planStrategy','strategy');
   $('#panelBody').querySelectorAll('.plan-item,.plan-row').forEach(row=>{
