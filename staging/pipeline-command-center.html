@@ -79,7 +79,7 @@
   .qchip.active .now-dot{background:#5ea8ff}
 
   /* summary card */
-  .summary{background:var(--surface);border-radius:var(--r-l);box-shadow:var(--shadow-s);border:1px solid var(--hair);padding:22px 24px;margin-bottom:16px}
+  .summary{background:var(--surface);border-radius:26px;box-shadow:0 12px 38px rgba(40,30,70,.09),0 2px 8px rgba(40,30,70,.04);border:1px solid rgba(255,255,255,.6);padding:26px 28px;margin-bottom:18px}
   .sum-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
   .sum-title{font-size:15px;font-weight:650;letter-spacing:-.2px;display:flex;align-items:center;gap:10px}
   .sum-countdown{font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--fill);padding:4px 11px;border-radius:100px;display:inline-flex;align-items:center;gap:6px}
@@ -92,8 +92,8 @@
   .sum-cell{padding:0 20px;border-right:1px solid var(--hair)}
   .sum-cell:first-child{padding-left:0}
   .sum-cell:last-child{border-right:none}
-  .sum-label{font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-3)}
-  .sum-value{font-size:24px;font-weight:750;letter-spacing:-.8px;margin-top:6px;line-height:1.05}
+  .sum-label{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+  .sum-value{font-size:31px;font-weight:760;letter-spacing:-1.2px;margin-top:8px;line-height:1.02}
   .sum-value.accent{color:var(--accent)}.sum-value.green{color:var(--green)}
   .sum-sub{font-size:12px;color:var(--text-3);font-weight:600;margin-top:3px}
   .sum-meta{font-size:12px;color:var(--text-2);margin-top:4px;font-weight:500}
@@ -242,7 +242,9 @@
   .glance-ovr:hover{color:var(--text-2);border-color:var(--accent)}
   /* account plan */
   .plan-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-  .plan-hl{font-size:19px;font-weight:750;letter-spacing:-.3px}
+  /* The 46px account name above is the hero — "Account plan" must not compete with it.
+     Lovable's pattern: a micro-label eyebrow, then the big name. */
+  .plan-hl{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
   .plan-meter{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:650;color:var(--text-3)}
   .plan-meter-bar{width:90px;height:6px;border-radius:20px;background:var(--fill-2);overflow:hidden}
   .plan-meter-fill{height:100%;border-radius:20px;transition:width .3s var(--ease)}
@@ -251,6 +253,8 @@
   .plan-gk{font-size:9.5px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)}
   .plan-gv{font-size:13px;font-weight:700;color:var(--text);margin-top:3px;line-height:1.4;overflow-wrap:anywhere}
   .plan-ta{width:100%;font-family:inherit;font-size:14px;line-height:1.62;padding:7px 9px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--text);transition:background .12s,border-color .12s,box-shadow .12s}
+  /* The thesis is the keynote line of the account — Lovable sets it 34-42px. It is not a form field. */
+  #planThesis{font-size:24px;font-weight:600;letter-spacing:-.028em;line-height:1.3;padding:4px 8px;margin-left:-8px}
   .plan-ta:hover{background:var(--surface-2)}
   .plan-ta:focus{background:#fff;border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
   /* auto-grow: no inner scrollbars, no sideways cut-off — the box fits the content */
@@ -554,7 +558,9 @@
   .sf-copy svg{width:14px;height:14px}
   .agenda-date.over{background:var(--red-soft)}
   .agenda-date.over .d{color:var(--red)}
-  .panel-name{font-size:28px;font-weight:760;letter-spacing:-.8px;width:100%;border:none;background:none;outline:none;padding:2px 0;margin-bottom:12px}
+  /* Hero name — Lovable runs the account name at 64-80px. 46px is the honest ceiling here:
+     it is an editable input inside a panel, not a full-bleed page. */
+  .panel-name{font-size:46px;font-weight:780;letter-spacing:-2.2px;line-height:1.04;width:100%;border:none;background:none;outline:none;padding:2px 0;margin-bottom:12px}
   .panel-name::placeholder{color:var(--text-3)}
   .panel-name:disabled{opacity:1}
 
@@ -599,9 +605,25 @@
   .glance-v .muted{color:var(--text-3);font-weight:500}
   .glance-cat{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;text-transform:uppercase}
 
-  .sec{background:#fff;border:1px solid rgba(255,255,255,.6);border-radius:26px;padding:26px 28px;margin-bottom:16px;box-shadow:0 12px 38px rgba(40,30,70,.09),0 2px 8px rgba(40,30,70,.04)}
-  .sec-title{font-size:12px;font-weight:650;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-  .sec-title .st-hint{font-size:11px;font-weight:500;color:var(--text-3);text-transform:none;letter-spacing:0}
+  .sec{background:#fff;border:1px solid rgba(255,255,255,.6);border-radius:26px;padding:32px 34px;margin-bottom:20px;box-shadow:0 12px 38px rgba(40,30,70,.09),0 2px 8px rgba(40,30,70,.04)}
+  /* Mercury "reveal" — sections rise in on a stagger instead of appearing all at once.
+     Purely presentational: no layout shift once settled, and it respects reduced-motion. */
+  .wtab.active .sec{animation:secReveal .62s cubic-bezier(.2,.9,.25,1) both}
+  .wtab.active .sec:nth-child(2){animation-delay:.04s}
+  .wtab.active .sec:nth-child(3){animation-delay:.08s}
+  .wtab.active .sec:nth-child(4){animation-delay:.12s}
+  .wtab.active .sec:nth-child(n+5){animation-delay:.16s}
+  @keyframes secReveal{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.wtab.active .sec{animation:none}}
+  /* Editorial section headers (Lovable/Mercury): a statement, not a 12px admin label.
+     The old 12px grey uppercase caption is the single biggest reason Helm read as a SaaS form
+     while the same content in Lovable read as a calm instrument. The st-hint becomes the
+     right-hand caption, matching Lovable's SectionHeader(eyebrow, title, right). */
+  /* Lovable SectionHeader = small eyebrow + big statement title, optional right caption */
+  .sec-hd{margin-bottom:20px}
+  .sec-eye{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:7px}
+  .sec-title{font-size:27px;font-weight:720;text-transform:none;letter-spacing:-.032em;line-height:1.06;color:var(--text);margin-bottom:0;display:flex;align-items:baseline;justify-content:space-between;gap:18px}
+  .sec-title .st-hint{font-size:11.5px;font-weight:500;color:var(--text-3);text-transform:none;letter-spacing:0;text-align:right;flex:0 0 auto;max-width:44%;line-height:1.45}
 
   .fw-cat{font-size:11px;font-weight:700;letter-spacing:.3px;padding:3px 10px;border-radius:20px;text-transform:uppercase}
   .fw-cat.commit{background:var(--green-soft);color:var(--green)}
@@ -2877,22 +2899,22 @@ function planHTML(d){
       <div class="plan-meter" title="How complete this plan is"><div class="plan-meter-bar"><div class="plan-meter-fill" style="width:${pc}%;background:${pc>=70?'var(--green)':(pc>=40?'var(--accent)':'var(--orange)')}"></div></div><span>${pc}% complete</span></div>
     </div></div>
   <div class="plan-glance">${glance.map(([k,v])=>`<div class="plan-g"><div class="plan-gk">${k}</div><div class="plan-gv">${esc(''+v)}</div></div>`).join('')}</div>
-  <div class="sec"><div class="sec-title">Company context <span class="st-hint">who they are, how they sell, what changed</span></div>${ta('planContext',p.context,'Who they are, how they sell, what changed.',2)}</div>
-  <div class="sec"><div class="sec-title">Why this account matters <span class="st-hint">the thesis — why they'd change, why now</span></div>${ta('planThesis',p.thesis,'e.g. Chargebee can\'t handle their reseller model; quoting, billing and reporting all break — and the renewal forces a decision.')}</div>
-  <div class="sec"><div class="sec-title">Customer challenges <span class="st-hint">what's actually broken — with impact &amp; evidence</span></div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">The account</div><div class="sec-title">Company context <span class="st-hint">who they are, how they sell, what changed</span></div></div>${ta('planContext',p.context,'Who they are, how they sell, what changed.',2)}</div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">The thesis</div><div class="sec-title">Why this account matters <span class="st-hint">why they\'d change, why now</span></div></div>${ta('planThesis',p.thesis,'e.g. Chargebee can\'t handle their reseller model; quoting, billing and reporting all break — and the renewal forces a decision.')}</div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">What\'s broken</div><div class="sec-title">Customer challenges <span class="st-hint">impact &amp; evidence</span></div></div>
     <div id="planChallenges">${chRows||'<div class="plan-empty">Nothing captured yet — paste your notes into the assistant and it fills this in.</div>'}</div>
     <button class="plan-add" data-add="challenges">＋ Add a challenge</button></div>
-  <div class="sec"><div class="sec-title">Current-state gaps <span class="st-hint">today → the limitation → what it costs → where we take them</span></div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">Today → tomorrow</div><div class="sec-title">Current-state gaps <span class="st-hint">the limitation, and where we take them</span></div></div>
     <div id="planGaps">${gapRows||'<div class="plan-empty">No gaps captured yet.</div>'}</div>
     <button class="plan-add" data-add="gaps">＋ Add a gap</button></div>
-  <div class="sec"><div class="sec-title">Strategy &amp; plan to progress</div>${ta('planStrategy',p.strategy,'The objective, the hypothesis, the play to advance it, the proof still required.')}</div>
-  <div class="sec"><div class="sec-title">Risks &amp; objections</div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">The play</div><div class="sec-title">Strategy &amp; plan to progress</div></div>${ta('planStrategy',p.strategy,'The objective, the hypothesis, the play to advance it, the proof still required.')}</div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">Watch-outs</div><div class="sec-title">Risks &amp; objections</div></div>
     <div id="planRisks">${riskRows||'<div class="plan-empty">No risks captured yet.</div>'}</div>
     <button class="plan-add" data-add="risks">＋ Add a risk</button></div>
-  <div class="sec"><div class="sec-title">Links <span class="st-hint">business case, DealRoom, requirements…</span></div>
+  <div class="sec"><div class="sec-hd"><div class="sec-eye">Proof</div><div class="sec-title">Links <span class="st-hint">business case, DealRoom, requirements</span></div></div>
     <div id="planLinks">${linkRows||'<div class="plan-empty">No links yet.</div>'}</div>
     <button class="plan-add" data-add="links">＋ Add a link</button></div>
-  ${sfLines?`<div class="sec"><div class="sec-title">Next steps for Salesforce <span class="st-hint">copy straight into your CRM</span></div><pre class="plan-sf" id="planSf">${esc(sfLines)}</pre><button class="plan-add" id="planSfCopy">⧉ Copy next steps</button></div>`:''}
+  ${sfLines?`<div class="sec"><div class="sec-hd"><div class="sec-eye">Hand-off</div><div class="sec-title">Next steps for Salesforce <span class="st-hint">copy straight into your CRM</span></div></div><pre class="plan-sf" id="planSf">${esc(sfLines)}</pre><button class="plan-add" id="planSfCopy">⧉ Copy next steps</button></div>`:''}
   `;
 }
 /* Size auto-grow fields to their content. MUST run while the tab is visible — a display:none
