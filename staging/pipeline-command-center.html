@@ -505,8 +505,12 @@
   .panel.open{transform:none;opacity:1;pointer-events:auto}
   .panel.open{transform:none}
   .panel-head{display:flex;align-items:center;padding:14px 0;border-bottom:1px solid var(--hair);flex-shrink:0;background:rgba(255,255,255,.5);backdrop-filter:blur(14px)}
-  .panel-head-inner{display:flex;align-items:center;gap:8px;width:100%;max-width:1180px;margin:0 auto;padding:0 28px}
-  .panel-inner{max-width:1180px;margin:0 auto;padding:0 28px}
+  .panel-head-inner{display:flex;align-items:center;gap:8px;width:100%;max-width:1060px;margin:0 auto;padding:0 28px}
+  .panel-inner{max-width:1060px;margin:0 auto;padding:0 28px}
+  /* Lovable caps prose at ~720px so it reads as a calm column, not a full-width sprawl.
+     The single biggest reason the account plan felt like a dense CRM: 1180px-wide lines.
+     Grids (challenges, facts) still use the full card width; only prose is constrained. */
+  #planThesis,#planContext,#planStrategy{max-width:720px}
   .icon-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:.15s var(--ease)}
   .icon-btn:hover{background:var(--fill);color:var(--text)}
   .icon-btn svg{width:18px;height:18px}
