@@ -409,6 +409,10 @@
   .dc-sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
   .logo{border-radius:9px;object-fit:contain;background:#fff;border:1px solid var(--hair);display:block}
   .logo-fallback{border-radius:9px;background:linear-gradient(140deg,#5b5bef,#8a63ff);color:#fff;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+  /* Lovable hero rule: ACCOUNT · {status}  ——————  updated {when} */
+  .acct-rule{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .acct-rule .rl{height:1px;flex:1;background:var(--hair)}
+  .acct-rule .upd{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);font-variant-numeric:tabular-nums;white-space:nowrap}
   .panel-name-row{display:flex;align-items:center;gap:15px;margin-bottom:22px}
   .panel-name-row .panel-name{margin-bottom:0}
   .panel-logo{flex-shrink:0}
@@ -3074,6 +3078,7 @@ function renderPanel(){
   const commentItems=(d.comments||[]).slice().sort((a,b)=>(a.ts||0)-(b.ts||0)).map(c=>`<div class="cmt ${c.author===userName?'mine':''}"><div class="cmt-head"><span class="cmt-author">${esc(c.author||'Anon')}</span><span class="cmt-time">${relTime(c.ts)}</span></div><div class="cmt-text">${esc(c.text)}</div></div>`).join('')||`<div class="cmt-empty">No comments yet — ask a question or leave a note.</div>`;
 
   $('#panelBody').innerHTML=`<div class="panel-inner">
+    <div class="acct-rule"><span class="micro-label">Account · ${STATUSES[d.status].label}</span><span class="rl"></span><span class="upd">updated ${d.updated?relTime(d.updated):'just now'}</span></div>
     <div class="panel-name-row"><span class="panel-logo">${logoHTML(d,42)}</span><input class="panel-name" id="fName" value="${esc(d.name)}" placeholder="Account name"></div>
     <div class="hero-grid">
       <div class="hero-cell"><div class="hk">Pipeline (ARR)</div><div class="hero-arr-row"><input class="hero-arr-input" id="fArr" value="${esc(d.arr)}" inputmode="numeric"><select class="cur-select" id="fCur">${curOpts}</select></div><div class="hero-aud" id="audHint" style="${audLine?'':'display:none'}">${audLine}</div></div>
