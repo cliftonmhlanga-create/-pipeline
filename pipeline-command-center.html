@@ -3544,7 +3544,23 @@ function autosize(el){ if(!el)return; el.style.height='auto'; el.style.height=el
 function wirePanel(d){
   $('#deleteBtn').style.display=''; $('#focusBtn').style.display='';
   const bind=(id,key,num)=>{ const el=$('#'+id); if(!el)return; el.addEventListener('input',()=>{ d[key]=num?(parseFloat(el.value.replace(/[^0-9.]/g,''))||0):el.value; saveD(d); renderDeals(); }); };
-  bind('fName','name'); bind('fContact','contact'); bind('fRole','role'); bind('fCrm','crm'); bind('fUsers','users',true);
+  bind('fName','name'); bind('fContact','contact'); bind('fRole','role'); bind('fCrm','crm');
+  /* Seats drive revenue: change the user count and the ARR follows (users x per-seat x 12).
+     It does NOT overwrite a negotiated figure — only a value that is empty or still equal to
+     the seat calculation. A custom price is left alone and the human is told why. */
+  { const el=$('#fUsers'); if(el) el.addEventListener('input',()=>{
+      const before=+d.users||0, prevSeat=seatARR(before), cur=parseAmt(d.arr);
+      const n=parseInt((el.value||'').replace(/[^0-9]/g,''))||0;
+      d.users=n;
+      const custom = cur>0 && Math.round(cur)!==Math.round(prevSeat);
+      if(!custom){
+        d.arr=seatARR(n);
+        const ai=$('#fArr'); if(ai) ai.value=d.arr;
+        const ah=$('#audHint'); if(ah&&n>0){ ah.style.display=''; ah.textContent=n+' seats x '+money(perSeat())+'/mo x 12'; }
+      }
+      saveD(d); renderDeals(); try{ renderGrade(d); }catch(e){}
+      if(custom&&n>0) toast('Users updated. ARR left at '+money(cur)+' — it is a custom figure. Clear it to use '+money(seatARR(n))+'.',6000);
+    }); }
   bind('fType','type'); bind('fLoc','location'); bind('fDomain','domain'); bind('fClose','closeLabel'); bind('fRisk','risk'); bind('fLast','lastActivity'); bind('fNotes','notes');
   bind('fWhy','whyNow'); bind('fCost','costInaction'); bind('fThreats','threats'); bind('fOneLiner','oneLiner'); bind('fAsk','managerAsk');
   wireCatOverride(d); wirePlan(d); wireAgreements(d);
