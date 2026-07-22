@@ -634,6 +634,29 @@
   .sec-hd.row{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
   .sec-hd .owned{text-align:right}
   /* Account snapshot — Lovable's 10-card stat grid, on the canvas (no outer card) */
+  /* Forecast — buyer-agreement breakdown */
+  .fcg-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .fcg-cell{background:var(--surface-2);border:1px solid var(--hair);border-radius:14px;padding:12px 13px}
+  .fcg-n{font-size:22px;font-weight:750;letter-spacing:-.6px;margin-top:5px}
+  .fcg-s{font-size:12.5px;font-weight:650;color:var(--accent);margin-top:1px}
+  .fcg-l{font-size:11px;color:var(--text-3);margin-top:4px;font-weight:550}
+  @media(max-width:760px){.fcg-row{grid-template-columns:repeat(2,1fr)}}
+  /* 1:1 buyer-journey card */
+  .agc{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-s);cursor:pointer;transition:.15s var(--ease)}
+  .agc:hover{transform:translateY(-1px);box-shadow:var(--shadow-m)}
+  .agc-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .agc-logo{display:flex;flex-shrink:0}
+  .agc-name{font-size:14px;font-weight:700;letter-spacing:-.15px}
+  .agc-meta{font-size:11.5px;color:var(--text-3);font-weight:550}
+  .agc-stage{margin-left:auto;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .agc-track{display:flex;gap:6px;margin-top:12px}
+  .agc-seg{flex:1;min-width:0}
+  .agc-bar{display:block;height:5px;border-radius:4px}
+  .agc-lb{display:block;font-size:9.5px;font-weight:650;letter-spacing:.03em;text-transform:uppercase;color:var(--text-3);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .agc-lb.on{color:var(--green-deep)}
+  .agc-seg.cur .agc-lb{color:var(--accent)}
+  .agc-gap{margin-top:12px;padding-top:11px;border-top:1px solid var(--hair)}
+  .agc-gap-t{font-size:13px;line-height:1.5;color:var(--text);margin-top:4px}
   /* Quarter read */
   .qread .oo-sec-t{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
   .qread-stamp{margin-left:auto;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
@@ -644,7 +667,11 @@
   .qread.empty{border-style:dashed}
   @media(max-width:760px){.qread-grid{grid-template-columns:1fr}}
   /* Buyer agreements */
-  .ag-stage{font-size:20px;font-weight:750;letter-spacing:-.5px;margin-top:3px}
+  .ag-stage{font-size:20px;font-weight:750;letter-spacing:-.5px;margin-top:3px;white-space:nowrap}
+  .ag-sub{font-size:11.5px;color:var(--text-3);font-weight:550;margin-top:2px;white-space:nowrap}
+  .ag-sel{cursor:pointer}
+  .ag-sel:hover{filter:brightness(.94)}
+  .ag-row.given .ag-n{background:var(--green-soft);color:var(--green-deep)}
   .ag-track{display:flex;gap:5px;margin-bottom:20px}
   .ag-seg{height:5px;flex:1;border-radius:4px}
   .ag-list{display:flex;flex-direction:column}
@@ -1052,6 +1079,7 @@
       <button class="brief-btn" id="briefBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>Copy 1:1 manager brief</button></div>
     <div id="accuracy"></div>
     <div class="scen-grid" id="scenGrid"></div>
+    <div id="fcGate"></div>
     <div class="breakdown" id="breakdown"></div>
     <div class="breakdown" id="velocity"></div>
     <div id="prodgap"></div>
@@ -1245,14 +1273,20 @@ const AGREE_STATUS={
   revalidate:{label:'Revalidate',  color:'var(--indigo)', soft:'var(--indigo-soft)', rank:2},
   complete:  {label:'Complete',    color:'var(--green)',  soft:'var(--green-soft)',  rank:3},
 };
-/* The furthest agreement genuinely complete — the honest read of where the deal is. */
+/* An agreement counts as GIVEN if it is complete, or complete-but-needs-revalidating —
+   "revalidate" means the buyer did agree; it just needs re-confirming. Treating it as zero
+   read as "Stage 0 of 5" on a deal that has clearly cleared problem agreement. */
+function agreeGiven(s){ return s==='complete'||s==='revalidate'; }
+/* How many consecutive agreements the buyer has actually given. */
 function agreeStage(d){ const a=(d&&d.agree)||{}; let n=0;
-  for(let i=0;i<AGREEMENTS.length;i++){ const s=a[AGREEMENTS[i].k]; if(s&&s.status==='complete') n=i+1; else break; }
+  for(let i=0;i<AGREEMENTS.length;i++){ if(agreeGiven((a[AGREEMENTS[i].k]||{}).status)) n=i+1; else break; }
   return n; }
-/* The stage being worked right now = the first that isn't complete. */
+/* The stage being worked right now = the first one not yet given. */
 function agreeCurrent(d){ const a=(d&&d.agree)||{};
-  for(let i=0;i<AGREEMENTS.length;i++){ const s=a[AGREEMENTS[i].k]||{}; if(s.status!=='complete') return AGREEMENTS[i]; }
+  for(let i=0;i<AGREEMENTS.length;i++){ if(!agreeGiven((a[AGREEMENTS[i].k]||{}).status)) return AGREEMENTS[i]; }
   return null; }
+/* 1-based number of the stage you are ON — how a seller actually talks ("we're at stage 2"). */
+function agreeOnNum(d){ const c=agreeCurrent(d); return c?(AGREEMENTS.findIndex(x=>x.k===c.k)+1):5; }
 /* What's left on the stage we're actually on — the gap the 1:1 should surface. */
 function agreeGap(d){ const c=agreeCurrent(d); if(!c) return ''; const s=((d.agree||{})[c.k])||{}; return (s.left||'').trim(); }
 function agreeFilled(d){ const a=(d&&d.agree)||{}; return AGREEMENTS.some(x=>{ const s=a[x.k]||{}; return (s.status&&s.status!=='none')||(s.done||'').trim()||(s.left||'').trim(); }); }
@@ -2322,7 +2356,7 @@ function pfRow(d){
     <div class="pf-row" data-toggle="${d.id}">
       <span class="pf-logo">${logoHTML(d,30)}</span>
       <div class="pf-id"><div class="pf-name"><span class="pf-dot" style="background:${STATUSES[d.status].color}"></span>${esc(d.name)}${open?`<span class="cat-tag ${cat}">${CAT_LABEL[cat]}</span>`:''}${q?`<span class="cat-tag pipe" style="background:var(--fill);color:var(--text-3)">${periodShort(q)}</span>`:''}</div>
-        <div class="pf-meta">${STATUSES[d.status].label} · ${currentStageName(d)||'new'} · ${cov} contact${cov===1?'':'s'} · plan ${pc}%${d.updated?' · '+relTime(d.updated):''}</div></div>
+        <div class="pf-meta">${agreeFilled(d)?`<b style="color:var(--accent)">Stage ${agreeOnNum(d)}${agreeCurrent(d)?' · '+esc(agreeCurrent(d).label.replace(' agreement','')):' · signed'}</b> · `:''}${STATUSES[d.status].label} · ${currentStageName(d)||'new'} · ${cov} contact${cov===1?'':'s'} · plan ${pc}%${d.updated?' · '+relTime(d.updated):''}</div></div>
       <div class="pf-next">${ts?`<span class="pf-nx">→ ${esc(ts.text)}</span>${ts.due?`<span class="pf-due ${daysUntil(ts.due)<0?'bad':''}">${fmtShort(ts.due)}</span>`:''}`:'<span class="pf-nx muted">No next step</span>'}</div>
       <div class="pf-money">${money(aud(d))}${tr?`<div class="pf-tr" style="color:${tr>0?'var(--green)':'var(--red)'}">${tr>0?'▲':'▼'}${Math.abs(tr)}</div>`:''}</div>
       ${open?ring(health(d),34):'<span style="width:34px"></span>'}
@@ -2331,6 +2365,7 @@ function pfRow(d){
     ${chips.length?`<div class="pf-chips">${chips.join('')}</div>`:''}
     ${s.risk?`<div class="pf-risk">⚠ ${esc((''+s.risk).slice(0,120))}</div>`:''}
     ${exp?`<div class="pf-exp-body">
+      ${agreeFilled(d)?`<div class="pf-b"><div class="pf-bk">Where the buyer is</div><div class="pf-bv">${agreeCardHTML(d)}</div></div>`:''}
       ${p.thesis?`<div class="pf-b"><div class="pf-bk">Why it matters</div><div class="pf-bv">${esc(p.thesis)}</div></div>`:''}
       ${p.strategy?`<div class="pf-b"><div class="pf-bk">Strategy</div><div class="pf-bv">${esc(p.strategy)}</div></div>`:''}
       ${d.managerAsk?`<div class="pf-b"><div class="pf-bk" style="color:var(--red)">Needs you</div><div class="pf-bv">${esc(d.managerAsk)}</div></div>`:''}
@@ -2448,7 +2483,7 @@ function renderOneOnOne(){
     +sec('commit','Commitments'+(isNext?' for next week':' this week'),openC.length+(doneC.length?' · '+doneC.length+' done':''),commRows,true)
     +(isNext?'':sec('decision','Needs a decision',asks.length,asks.map(d=>drow(d,esc((''+d.managerAsk).slice(0,90)),'var(--red)')).join(''),true))
     +(isNext?'':sec('risk','At risk',atRisk.length,riskRows,true))
-    +(isNext?'':sec('agree','Where the buyer is',inQ.filter(x=>x.status==='advancing'&&agreeFilled(x)).length,inQ.filter(x=>x.status==='advancing'&&agreeFilled(x)).map(x=>{const c=agreeCurrent(x),g=agreeGap(x);return drow(x,'Stage '+agreeStage(x)+'/5'+(c?' · '+esc(c.label):' · all agreed')+(g?' — left: '+esc(g.slice(0,120)):''),'var(--accent)');}).join(''),true))
+    +(isNext?'':sec('agree','Where the buyer is',inQ.filter(x=>agreeFilled(x)).length,inQ.filter(x=>agreeFilled(x)).map(x=>agreeCardHTML(x)).join(''),true))
     +(isNext?'':sec('active','Active priorities',inQ.length+upcoming.length,activeRows,false))
     +(isNext?'':sec('future','Future pipeline',leads.length,leads.map(d=>drow(d,'reach out '+(d.callbackDate?fmtShort(d.callbackDate):'tbd')+(d.convProb?' · '+d.convProb+'%':''),'#8b5cf6')).join(''),false))
     +(isNext?'':sec('recovery','Recovery',recovery.length,recovery.map(d=>drow(d,(d.sprint?'sprint live':'no sprint')+(topStep(d)?' · '+esc(topStep(d).text):''),'var(--orange)')).join(''),false))
@@ -2910,7 +2945,21 @@ function renderForecast(){
   const commitD=open.filter(d=>category(d)==='commit'), bestD=open.filter(d=>category(d)==='best');
   const commit=commitD.reduce((s,d)=>s+aud(d),0), best=commit+bestD.reduce((s,d)=>s+aud(d),0);
   const s2=a=>showBoth()?`<div class="scen-sub2">${secondary(a)}</div>`:'';
-  $('#forecastSub').textContent=`Commit / Best / Pipeline across all open deals — gated by Deservedness.`;
+  $('#forecastSub').textContent=`Commit / Best / Pipeline across all open deals — gated by Deservedness and by the agreement the buyer has actually given.`;
+  /* Why the forecast is what it is: the buyer-agreement ceiling, in plain sight. */
+  { const gated=open.filter(d=>{ const cap=agreeCap(d); if(!cap)return false;
+      const base=((d.deserve||0)>=7&&(d.status==='closing'||d.status==='advancing'))?'commit':(((d.deserve||0)>=5)?'best':'pipe');
+      const r={pipe:0,best:1,commit:2}; return r[cap]<r[base]; });
+    const withA=open.filter(agreeFilled);
+    const fg=$('#fcGate');
+    if(fg) fg.innerHTML = withA.length? `<div class="summary" style="margin-top:14px"><div class="sec-eye">The honest read</div>
+      <div class="sec-title" style="font-size:20px;margin-bottom:12px">What the buyer has actually agreed</div>
+      <div class="fcg-row">${[1,2,3,4,5].map(n=>{ const at=withA.filter(d=>agreeOnNum(d)===n&&agreeCurrent(d));
+        const sum=at.reduce((s,d)=>s+aud(d),0);
+        return `<div class="fcg-cell"><div class="micro-label">Stage ${n}</div><div class="fcg-n">${at.length}</div><div class="fcg-s">${money(sum)}</div><div class="fcg-l">${AGREEMENTS[n-1].label.replace(' agreement','')}</div></div>`; }).join('')}</div>
+      ${gated.length?`<div class="note" style="margin-top:12px"><b>${gated.length} deal${gated.length>1?'s':''} capped by the buyer</b> — the score would place ${gated.length>1?'them':'it'} higher, but the agreement isn't there yet: ${gated.map(d=>esc(d.name)+' (stage '+agreeOnNum(d)+')').join(' · ')}. Commit needs Value agreement; Best case needs Priority agreement.</div>`:'<div class="note" style="margin-top:12px">No deal is being held back by a missing agreement.</div>'}
+      </div>`:'';
+  }
   $('#scenGrid').innerHTML=`
     <div class="scen commit"><div class="scen-label">Commit</div><div class="scen-value">${money(commit)}</div>${s2(commit)}<div class="scen-note">${commitD.map(d=>esc(d.name)).join(', ')||'Nothing has earned commit yet'}</div></div>
     <div class="scen best"><div class="scen-label">Best case</div><div class="scen-value">${money(best)}</div>${s2(best)}<div class="scen-note">Commit + ${bestD.map(d=>esc(d.name)).join(', ')||'—'}</div></div>
@@ -3131,6 +3180,22 @@ function formulaHTML(d){
     <div class="cat-ovr"><label>Override</label><select id="catOvrSel"><option value="">Use the engine (${CAT_LABEL[auto]})</option>${opts}</select><input id="catOvrWhy" placeholder="why (optional)" value="${overridden?esc(o.why||''):''}">${overridden?'<button id="catOvrClear">Clear</button>':''}</div>`;
 }
 
+/* The 1:1 card — the whole buying journey of one account at a glance, so the manager
+   conversation happens here instead of opening every account. */
+function agreeCardHTML(d){
+  const a=d.agree||{}, cur=agreeCurrent(d), gap=agreeGap(d), q=quarterOf(d);
+  return `<div class="agc" data-id="${d.id}">
+    <div class="agc-h"><span class="agc-logo">${logoHTML(d,26)}</span><span class="agc-name">${esc(d.name)}</span>
+      <span class="agc-meta">${money(aud(d))}${q?' · '+periodShort(q):''} · ${STATUSES[d.status].label}</span>
+      <span class="agc-stage">${cur?('Stage '+agreeOnNum(d)+' · '+esc(cur.label)):'All 5 agreed'}</span></div>
+    <div class="agc-track">${AGREEMENTS.map(g=>{ const s=(a[g.k]||{}).status||'none'; const m=AGREE_STATUS[s];
+      const on=agreeGiven(s), isC=cur&&cur.k===g.k;
+      return `<div class="agc-seg ${isC?'cur':''}" title="${g.label} — ${m.label}">
+        <span class="agc-bar" style="background:${on?'var(--green)':(s==='none'?'var(--fill-2)':m.color)};opacity:${on||s==='none'?1:.5}"></span>
+        <span class="agc-lb ${on?'on':''}">${on?'✓ ':''}${g.label.replace(' agreement','')}</span></div>`; }).join('')}</div>
+    ${gap?`<div class="agc-gap"><span class="micro-label">What's left to clear stage ${agreeOnNum(d)}</span><div class="agc-gap-t">${esc(gap)}</div></div>`:''}
+  </div>`;
+}
 /* Buyer agreements — where the BUYER is, not what we did. Editable inline; the current stage
    and its "what's left" are what the 1:1 and Portfolio surface. */
 function agreementsHTML(d){
@@ -3138,8 +3203,9 @@ function agreementsHTML(d){
   const rows=AGREEMENTS.map((g,i)=>{ const s=a[g.k]||{status:'none',done:'',left:''};
     const m=AGREE_STATUS[s.status]||AGREE_STATUS.none; const isCur=cur&&cur.k===g.k;
     const opts=Object.keys(AGREE_STATUS).map(k=>`<option value="${k}" ${s.status===k?'selected':''}>${AGREE_STATUS[k].label}</option>`).join('');
-    return `<div class="ag-row ${isCur?'now':''}" data-ag="${g.k}">
-      <div class="ag-n">${i+1}</div>
+    const given=agreeGiven(s.status);
+    return `<div class="ag-row ${isCur?'now':''} ${given?'given':''}" data-ag="${g.k}">
+      <div class="ag-n">${given?'✓':(i+1)}</div>
       <div class="ag-main">
         <div class="ag-h"><span class="ag-label">${g.label}</span>${RO?`<span class="ag-pill" style="background:${m.soft};color:${m.color}">${m.label}</span>`:`<select class="ag-sel" data-ag-status="${g.k}" style="background:${m.soft};color:${m.color}">${opts}</select>`}${isCur?'<span class="ag-here">← you are here</span>':''}</div>
         <div class="ag-q">${g.q}</div>
@@ -3149,7 +3215,7 @@ function agreementsHTML(d){
         </div>
       </div></div>`; }).join('');
   return `<div class="sec"><div class="sec-hd row"><div><div class="sec-eye">Where the buyer is</div><div class="sec-title">Agreements</div></div>
-      <div class="owned"><div class="micro-label">Stage</div><div class="ag-stage">${done} of 5</div></div></div>
+      <div class="owned"><div class="micro-label">${cur?'Now at':'All agreed'}</div><div class="ag-stage">${cur?('Stage '+agreeOnNum(d)):'Signed'}</div><div class="ag-sub">${cur?esc(cur.label)+' · '+done+' of 5 given':'5 of 5'}</div></div></div>
     <div class="ag-track">${AGREEMENTS.map((g,i)=>{ const s=(a[g.k]||{}).status||'none'; const m=AGREE_STATUS[s];
       return `<span class="ag-seg" title="${g.label} — ${m.label}" style="background:${s==='none'?'var(--fill)':m.color};opacity:${s==='none'?1:(s==='partial'||s==='current'?.55:1)}"></span>`; }).join('')}</div>
     <div class="ag-list">${rows}</div>
