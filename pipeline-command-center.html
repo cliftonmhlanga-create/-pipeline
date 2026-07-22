@@ -660,6 +660,14 @@
   /* Quarter read */
   .qread .oo-sec-t{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
   .qread-stamp{margin-left:auto;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+  .qread-qs{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+  .qread-q{position:relative;font-size:11.5px;font-weight:650;color:var(--text-2);background:var(--fill);border-radius:20px;padding:4px 12px;display:inline-flex;align-items:center;gap:5px}
+  .qread-q:hover{background:var(--fill-2)}
+  .qread-q.on{background:var(--accent-soft);color:var(--accent)}
+  .qread-dot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+  .qread-now{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+  .qread-clear{margin-left:auto;font-size:11px;font-weight:600;color:var(--text-3)}
+  .qread-clear:hover{color:var(--red)}
   .qread-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:11px}
   .qread-f{min-width:0}
   .qread-in{margin-top:4px;min-height:60px}
@@ -1461,12 +1469,44 @@ const Local={
    Tags every write with CLIENT_ID so we can ignore the echo of our own writes. */
 const DB={
   _doc:null, _ready:false, _timer:null,
+  /* The newest remote write this client has actually SEEN. A write is only allowed if the
+     remote has not moved on since — otherwise we would be overwriting someone else's newer
+     state with our older one. 2026-07-22: a shared manager link did exactly that and wiped a
+     day of work, because push() used a blind .set() with no version check. Never again. */
+  _lastSeen:0,
   available(){ return !!(window.firebase && activeFbConfig().apiKey); },
   ready(){ return this._ready && !!this._doc; },
   init(){ firebase.initializeApp(activeFbConfig()); this._doc=firebase.firestore().collection('pipeline').doc(SYNC_DOC_ID); this._ready=true; },
   subscribe(onSnap,onErr){ this._doc.onSnapshot(onSnap,onErr); },
-  push(payloadStr){ clearTimeout(this._timer); this._timer=setTimeout(()=>{ this._doc.set({payload:payloadStr,updated:Date.now(),writer:CLIENT_ID}).catch(()=>{}); },400); }
+  seen(ts){ if(ts&&ts>this._lastSeen) this._lastSeen=ts; },
+  push(payloadStr){
+    if(RO) return;                                   // a read-only/manager view NEVER writes
+    clearTimeout(this._timer);
+    this._timer=setTimeout(()=>{
+      const doc=this._doc; if(!doc) return; const seen=this._lastSeen;
+      firebase.firestore().runTransaction(tx=>tx.get(doc).then(s=>{
+        const remote=(s.exists&&s.data()&&s.data().updated)||0;
+        /* Someone else wrote after the last state we saw — refuse rather than clobber. */
+        if(seen&&remote>seen) return Promise.reject({__stale:true,remote:remote});
+        const now=Date.now();
+        tx.set(doc,{payload:payloadStr,updated:now,writer:CLIENT_ID});
+        DB._pending=now; return null;
+      })).then(()=>{ if(DB._pending){ DB.seen(DB._pending); DB._pending=0; } })
+        .catch(e=>{ if(e&&e.__stale) onStaleWrite(e.remote); });
+    },400);
+  }
 };
+/* A newer version exists remotely. Do not silently lose either side: keep a local rescue copy
+   of what we were about to save, tell the human plainly, and let them choose. */
+function onStaleWrite(remoteTs){
+  try{ localStorage.setItem('pcc_rescue_'+Date.now(),JSON.stringify(currentState())); }catch(e){}
+  updateSyncBadge(false);
+  const when=remoteTs?new Date(remoteTs).toLocaleTimeString():'just now';
+  if(!DB._staleWarned){ DB._staleWarned=true;
+    try{ toast('Someone else changed this data at '+when+' — your changes were NOT overwritten, and theirs were not either. Reload to merge.',9000); }catch(e){}
+    try{ alert('Helm stopped a save to protect your data.\n\nAnother device (or a shared link) changed this book at '+when+'.\nNothing has been overwritten on either side.\n\nA rescue copy of your current screen has been saved locally.\nReload the page to pull the latest, then re-apply anything missing.'); }catch(e){}
+  }
+}
 
 /* Public persistence API — used across the whole app */
 function save(){ Local.save(currentState()); pushRemote(); try{ updateNotifBadge(); const np=$('#notifPop'); if(np&&np.classList.contains('open')) renderNotifs(); }catch(e){} }
@@ -1491,14 +1531,26 @@ function initSync(){
       if(!snap.exists){ pushRemote(true); return; }
       if(snap.metadata&&snap.metadata.hasPendingWrites) return;   // our own optimistic echo — ignore
       const data=snap.data(); if(!data||!data.payload) return;
+      DB.seen(data.updated||0);                                   // remember the newest remote version we have seen
       if(data.writer===CLIENT_ID) return;                         // our own confirmed write — never overwrite local edits with it
       applyRemoteState(data.payload);
     }, err=>{ updateSyncBadge(false); });
     syncReady=true; updateSyncBadge(true);
   }catch(e){ updateSyncBadge(false); }
 }
+/* Rolling local safety net: keep the last few states this browser held BEFORE remote replaced
+   them. If a bad remote state ever lands again, the previous good one is still on the machine. */
+function stashLocalSnapshot(){
+  try{
+    const cur=localStorage.getItem(KEY); if(!cur) return;
+    localStorage.setItem('pcc_prev_'+Date.now(),cur);
+    const keys=Object.keys(localStorage).filter(k=>k.indexOf('pcc_prev_')===0).sort();
+    while(keys.length>6){ localStorage.removeItem(keys.shift()); }   // keep the newest 6
+  }catch(e){}
+}
 function applyRemoteState(payloadStr){
   try{
+    stashLocalSnapshot();
     const parsed=JSON.parse(payloadStr);
     applyingRemote=true;
     deals=parsed.deals||deals;
@@ -2265,7 +2317,10 @@ function ooMeta(){ meta.oneOnOne=meta.oneOnOne||{}; const o=meta.oneOnOne; if(o.
   if(!o.notes||typeof o.notes!=='object')o.notes={};
   if(o.note&&!o.notes[weekKey()]){ o.notes[weekKey()]=o.note; o.note=''; }
   return o; }
-let ooWeek=null, ooCollapse={};
+let ooWeek=null, ooCollapse={}, ooReadQ=null;
+/* Which quarter the read is being written for. Defaults to the CURRENT quarter, but the whole
+   point of a read is writing it before a quarter starts — so it is switchable. */
+function ooReadQuarter(){ const ps=activePeriods(); if(ooReadQ&&ps.indexOf(ooReadQ)>=0) return ooReadQ; return currentPeriod; }
 function ooSelWeek(){ return ooWeek||weekKey(); }
 function nextWeekKey(){ return weekKey(Date.now()+7*864e5); }
 function ooNoteGet(wk){ const o=ooMeta(); return o.notes[wk]||''; }
@@ -2476,14 +2531,17 @@ function renderOneOnOne(){
       <div class="sum-cell"><div class="sum-label">In play</div><div class="sum-value">${money(metrics.inQ)}</div>${dnote(metrics.inQ,last&&last.inQ)}</div>
       <div class="sum-cell"><div class="sum-label">${tgt?'Gap to target':'Target'}</div><div class="sum-value">${tgt?money(gap):'—'}</div><div class="sum-meta">${tgt?cov.toFixed(1)+'× coverage':'set in Targets'}</div></div>
     </div></div>`)
-    +(isNext?'':qReadHTML(cq))
+    +(isNext?'':qReadHTML(ooReadQuarter()))
     +`<div class="oo-note-card"><div class="oo-sec-t" style="margin-bottom:7px">Your talking points <span class="st-hint" style="font-weight:500;color:var(--text-3)">— your framing. Type here, or say to the assistant "note for my 1:1: …"</span></div>
       <textarea id="ooNote" class="oo-note" rows="3" placeholder="e.g. Recovered Scott Systems for Q3 — CFO ROI session booked. Pushing 2 more back this fortnight. Need product ETA on AC3 data-residency.">${esc(ooNoteGet(wk))}</textarea></div>`
     +(isNext?'':sec('did','What I did this week',didWk.length,didRows,true))
     +sec('commit','Commitments'+(isNext?' for next week':' this week'),openC.length+(doneC.length?' · '+doneC.length+' done':''),commRows,true)
     +(isNext?'':sec('decision','Needs a decision',asks.length,asks.map(d=>drow(d,esc((''+d.managerAsk).slice(0,90)),'var(--red)')).join(''),true))
     +(isNext?'':sec('risk','At risk',atRisk.length,riskRows,true))
-    +(isNext?'':sec('agree','Where the buyer is',inQ.filter(x=>agreeFilled(x)).length,inQ.filter(x=>agreeFilled(x)).map(x=>agreeCardHTML(x)).join(''),true))
+    /* Every open deal you have done the agreement work on — NOT just this quarter. Phriendly
+       closes in Q3, so a current-quarter filter hid the one account the 1:1 was built for. */
+    +(isNext?'':(function(){ const ag=OPEN().filter(agreeFilled).sort((a,b)=>agreeOnNum(b)-agreeOnNum(a)||aud(b)-aud(a));
+        return sec('agree','Where the buyer is',ag.length,ag.map(agreeCardHTML).join(''),true); })())
     +(isNext?'':sec('active','Active priorities',inQ.length+upcoming.length,activeRows,false))
     +(isNext?'':sec('future','Future pipeline',leads.length,leads.map(d=>drow(d,'reach out '+(d.callbackDate?fmtShort(d.callbackDate):'tbd')+(d.convProb?' · '+d.convProb+'%':''),'#8b5cf6')).join(''),false))
     +(isNext?'':sec('recovery','Recovery',recovery.length,recovery.map(d=>drow(d,(d.sprint?'sprint live':'no sprint')+(topStep(d)?' · '+esc(topStep(d).text):''),'var(--orange)')).join(''),false))
@@ -2496,9 +2554,14 @@ function renderOneOnOne(){
   el.querySelectorAll('.oo-next[data-cnext]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const c=oo.commitments.find(x=>x.id===b.dataset.cnext); if(c){ c.week=nextWeekKey(); save(); renderOneOnOne(); toast('Moved to next week'); } }));
   const pc=$('#ooPrepChat'); if(pc) pc.addEventListener('click',()=>openChatPop());
   const nt=$('#ooNote'); if(nt) nt.addEventListener('input',()=>{ ooNoteSet(wk,nt.value); save(); });
-  el.querySelectorAll('.qread-in[data-qr]').forEach(t=>{ let first=!qReadGet(cq);
-    t.addEventListener('input',()=>{ qReadSet(cq,t.dataset.qr,t.value);
-      if(first&&t.value.trim()){ first=false; const s=el.querySelector('.qread-stamp'); if(s)s.textContent='written '+fmtShort(today); } }); });
+  { const rq=ooReadQuarter();
+    el.querySelectorAll('.qread-in[data-qr]').forEach(t=>{ let first=!qReadGet(rq);
+      t.addEventListener('input',()=>{ qReadSet(rq,t.dataset.qr,t.value);
+        if(first&&t.value.trim()){ first=false; const s=el.querySelector('.qread-stamp'); if(s)s.textContent='written '+fmtShort(today); } }); });
+    el.querySelectorAll('.qread-q[data-qrq]').forEach(b=>b.addEventListener('click',()=>{ ooReadQ=b.dataset.qrq; renderOneOnOne(); }));
+    const cl=el.querySelector('.qread-clear[data-qrclear]'); if(cl) cl.addEventListener('click',()=>{
+      const k=cl.dataset.qrclear; if(!confirm('Clear your read on '+periodShort(k)+'? This cannot be undone.'))return;
+      meta.reads=meta.reads||{}; delete meta.reads[k]; save(); renderOneOnOne(); toast('Read cleared'); }); }
   const ci=$('#ooCommIn'); if(ci) ci.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addCommitment(ci.value,null,ooSelWeek()); renderOneOnOne(); const f=$('#ooCommIn'); if(f)f.focus(); } });
   const di=$('#ooDidIn'); if(di) di.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addActivity(di.value); renderOneOnOne(); const f=$('#ooDidIn'); if(f)f.focus(); } });
   el.querySelectorAll('.oo-x[data-ddel]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); oo.did=oo.did.filter(x=>x.id!==b.dataset.ddel); save(); renderOneOnOne(); }));
@@ -3105,8 +3168,12 @@ function qReadSet(key,f,v){ meta.reads=meta.reads||{};
 function qReadHTML(key){
   const r=qReadGet(key)||{}, has=QREAD_FIELDS.some(f=>((r[f.k]||'')).trim());
   const stamp=r.written?`written ${fmtShort(new Date(r.written).toISOString().slice(0,10))}${r.updated&&r.updated>r.written?' · updated '+relTime(r.updated):''}`:'not written yet';
+  /* quarter chips — a read is usually written for the quarter that has not started yet */
+  const chips=activePeriods().map(k=>{ const w=qReadGet(k), f=w&&QREAD_FIELDS.some(x=>((w[x.k]||'')).trim());
+    return `<button class="qread-q ${k===key?'on':''}" data-qrq="${k}">${periodShort(k)}${f?'<span class="qread-dot"></span>':''}${k===currentPeriod?'<span class="qread-now">now</span>':''}</button>`; }).join('');
   return `<div class="oo-note-card qread ${has?'':'empty'}">
     <div class="oo-sec-t" style="margin-bottom:3px">My read on ${periodShort(key)} <span class="st-hint" style="font-weight:500;color:var(--text-3)">— the call you make before the quarter runs</span><span class="qread-stamp">${stamp}</span></div>
+    <div class="qread-qs">${chips}${has&&!RO?`<button class="qread-clear" data-qrclear="${key}">Clear</button>`:''}</div>
     <div class="qread-grid">${QREAD_FIELDS.map(f=>`<div class="qread-f"><div class="micro-label">${f.label}</div>${RO?`<div class="qread-ro">${esc(r[f.k]||'')||'—'}</div>`:`<textarea class="oo-note qread-in" data-qr="${f.k}" rows="2" placeholder="${esc(f.ph)}">${esc(r[f.k]||'')}</textarea>`}</div>`).join('')}</div></div>`;
 }
 function wireAgreements(d){
