@@ -538,6 +538,14 @@
   .jstep::before{content:'';position:absolute;left:10px;top:24px;bottom:-2px;width:2px;background:var(--fill-2)}
   .jstep.done::before{background:var(--accent)}
   .jdot{width:20px;height:20px;border-radius:50%;border:2px solid var(--fill-2);background:var(--surface);flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;color:#fff;transition:.2s var(--ease)}
+  /* foldable plan sections — a long account plan reads as a contents page, not a wall */
+  .sec.folded>*:not(.sec-hd){display:none}
+  .sec.folded .sec-hd{margin-bottom:0}
+  .sec.folded .sec-caret{transform:rotate(-90deg)}
+  .sec-caret{margin-left:auto;color:var(--text-3);font-size:12px;transition:transform .18s var(--ease);flex:none;align-self:center}
+  .sec-hd .sec-title{display:flex;align-items:baseline;gap:10px}
+  .sec-count{font-size:12px;font-weight:700;color:var(--text-3);background:var(--fill);border-radius:20px;padding:1px 9px;letter-spacing:0}
+  .slip-badge{display:inline-block;margin-left:8px;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--orange);background:var(--orange-soft);padding:2px 9px;border-radius:20px;white-space:nowrap}
   .task-type{font-family:inherit;font-size:11.5px;font-weight:600;color:var(--text-2);background:var(--fill);border:none;border-radius:8px;padding:3px 7px;cursor:pointer}
   .task-type.is-meeting{background:var(--indigo-soft);color:#463fb0}
   .jstep.done .jdot{background:var(--accent);border-color:var(--accent)}
@@ -638,7 +646,8 @@
      while the same content in Lovable read as a calm instrument. The st-hint becomes the
      right-hand caption, matching Lovable's SectionHeader(eyebrow, title, right). */
   /* Lovable SectionHeader = small eyebrow + big statement title, optional right caption */
-  .sec-hd{margin-bottom:20px}
+  .sec-hd{margin-bottom:20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .sec-hd>div:first-child{flex:1;min-width:0}
   .sec-hd.row{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
   .sec-hd .owned{text-align:right}
   /* Account snapshot — Lovable's 10-card stat grid, on the canvas (no outer card) */
@@ -3293,10 +3302,35 @@ function wireAgreements(d){
       d.agree=d.agree||{}; d.agree[k]=d.agree[k]||{status:'none',done:'',left:''};
       d.agree[k][f]=t.value; d.updated=Date.now(); saveD(d); }); });
 }
+/* A 12-challenge, 20-stakeholder account plan is unreadable as one long scroll. Every section in
+   the Plan folds, shows how much is inside, and remembers its state — so a big document becomes
+   a contents page you open one part at a time instead of a wall you scroll past. */
+function wirePlanFolds(){
+  const b=$('#panelBody'); if(!b)return;
+  const tab=b.querySelector('.wtab[data-t=plan]'); if(!tab)return;
+  meta.planFold=meta.planFold||{};
+  tab.querySelectorAll('.sec').forEach(sec=>{
+    const hd=sec.querySelector('.sec-hd'); if(!hd||hd.dataset.fold)return; hd.dataset.fold='1';
+    const t=sec.querySelector('.sec-title'); const key=((t&&t.textContent)||'').trim().slice(0,40); if(!key)return;
+    /* count the real items inside so the header says what it is hiding */
+    const n=sec.querySelectorAll('.plan-item').length||sec.querySelectorAll('.plan-row').length||0;
+    if(n){ const c=document.createElement('span'); c.className='sec-count'; c.textContent=n; t.appendChild(c); }
+    const car=document.createElement('span'); car.className='sec-caret'; car.textContent='▾'; hd.appendChild(car);
+    hd.style.cursor='pointer';
+    if(meta.planFold[key]) sec.classList.add('folded');
+    hd.addEventListener('click',e=>{
+      if(e.target.closest('input,textarea,select,button,a'))return;   /* never fold while editing */
+      sec.classList.toggle('folded');
+      meta.planFold[key]=sec.classList.contains('folded'); save();
+      if(!sec.classList.contains('folded')) growPlanFields();
+    });
+  });
+}
 function wirePlan(d){
   const grow=el=>{ if(!el)return; el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; };
   $('#panelBody').querySelectorAll('.plan-auto').forEach(el=>{ el.addEventListener('input',()=>grow(el)); });
   growPlanFields();
+  wirePlanFolds();
   /* collapse/expand a challenge — re-grow its fields on expand (a display:none textarea measures 0 and clips) */
   $('#panelBody').querySelectorAll('.plan-chev[data-toggle]').forEach(b=>b.addEventListener('click',()=>{
     const it=b.closest('.plan-collap'); if(!it)return; it.classList.toggle('collapsed');
@@ -3417,7 +3451,7 @@ function glanceHTML(d){
   const cat=category(d), m=STATUSES[d.status], ts=topStep(d), nd=nextDate(d), q=quarterOf(d);
   const champ=(d.people||[]).find(p=>p.role==='Champion');
   const rows=[];
-  rows.push(['Status',`<span class="glance-cat" style="background:${m.soft};color:${m.color}">${m.label}</span> ${STATUSES[d.status].open?`<span class="glance-cat ${cat}" style="margin-left:4px" title="${d.catOverride?'Your call':'Calculated from Deservedness'}">${CAT_LABEL[cat]}${d.catOverride?' · yours':''}</span>${RO?'':`<select class="glance-ovr" id="glanceCat" title="Your call — overrides the engine"><option value="">${CAT_LABEL[categoryAuto(d)]} (engine)</option>${['commit','best','pipe'].map(k=>`<option value="${k}" ${d.catOverride&&d.catOverride.value===k?'selected':''}>${CAT_LABEL[k]}</option>`).join('')}</select>`}`:''} ${q?`<span class="muted" style="margin-left:6px">${periodLabel(q)}</span>`:'<span class="muted" style="margin-left:6px">Unscheduled</span>'}`]);
+  rows.push(['Status',`<span class="glance-cat" style="background:${m.soft};color:${m.color}">${m.label}</span> ${STATUSES[d.status].open?`<span class="glance-cat ${cat}" style="margin-left:4px" title="${d.catOverride?'Your call':'Calculated from Deservedness'}">${CAT_LABEL[cat]}${d.catOverride?' · yours':''}</span>${RO?'':`<select class="glance-ovr" id="glanceCat" title="Your call — overrides the engine"><option value="">${CAT_LABEL[categoryAuto(d)]} (engine)</option>${['commit','best','pipe'].map(k=>`<option value="${k}" ${d.catOverride&&d.catOverride.value===k?'selected':''}>${CAT_LABEL[k]}</option>`).join('')}</select>`}`:''} ${q?`<span class="muted" style="margin-left:6px">${periodLabel(q)}</span>`:'<span class="muted" style="margin-left:6px">Unscheduled</span>'}${isSlipped(d)?`<span class="slip-badge" title="Its quarter ended and it was neither closed nor re-dated">⤳ Slipped · ${slipDays(d)}d past ${fmtShort(d.closeDate)}</span>`:''}`]);
   if(d.oneLiner) rows.push(['Business case',`<span style="font-weight:600">${esc(d.oneLiner)}</span>`]);
   rows.push(['Next step',ts?`${esc(ts.text)}${ts.due?` <span class="muted">· ${fmtShort(ts.due)}</span>`:''}`:'<span class="muted">None set</span>']);
   if(nd) rows.push(['Next date',`${esc(nd.label)} <span class="muted">· ${fmtShort(nd.date)}</span>`]);
